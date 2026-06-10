@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATeam Academy — Aruna & Arjun</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --aruna-1: #e91e8c;
+    --aruna-2: #6c3fc5;
+    --arjun-1: #1565c0;
+    --arjun-2: #0097a7;
+    --dark: #0f0c1e;
+    --dark2: #1a1635;
+    --surface: #231e3d;
+    --surface2: #2e2852;
+    --text: #f0ecff;
+    --text-muted: rgba(240,236,255,0.5);
+    --accent: #fff;
+    --radius: 16px;
+    --transition: 0.2s ease;
+  }
+
+  body {
+    font-family: 'Lexend', 'Segoe UI', system-ui, sans-serif;
+    background: var(--dark);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  
+  line-height: 1.7;
+
+  word-spacing: 0.05em;
+
+  font-size: 1rem;
+}
+
+  /* ===== HEADER ===== */
+  header {
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .logo {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo-icon {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, var(--aruna-1), var(--arjun-2));
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+  }
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+  .breadcrumb span { color: var(--text); font-weight: 600; }
+  .breadcrumb .sep { opacity: 0.3; }
+
+  /* ===== MAIN LAYOUT ===== */
+  main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 48px 24px;
+  }
+
+  .screen { display: none; width: 100%; max-width: 860px; animation: fadeIn 0.25s ease; }
+  .screen.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ===== SCREEN HEADING ===== */
+  .screen-heading {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .screen-heading h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .screen-heading p {
+    color: var(--text-muted);
+    font-size: 1rem;
+  }
+  .screen-heading .greeting-name {
+    background: var(--user-grad, linear-gradient(135deg, var(--aruna-1), var(--aruna-2)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ===== STUDENT CARDS ===== */
+  .student-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .student-card {
+    border-radius: var(--radius);
+    padding: 40px 32px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+  .student-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.12;
+    transition: opacity var(--transition);
+  }
+  .student-card:hover { transform: translateY(-4px); }
+  .student-card:hover::before { opacity: 0.22; }
+
+  .student-card.aruna { background: linear-gradient(145deg, #2a1248, #1f0e38); }
+  .student-card.aruna::before { background: linear-gradient(135deg, var(--aruna-1), var(--aruna-2)); }
+  .student-card.aruna:hover { border-color: var(--aruna-1); box-shadow: 0 8px 32px rgba(233,30,140,0.25); }
+
+  .student-card.arjun { background: linear-gradient(145deg, #0a2040, #071628); }
+  .student-card.arjun::before { background: linear-gradient(135deg, var(--arjun-1), var(--arjun-2)); }
+  .student-card.arjun:hover { border-color: var(--arjun-2); box-shadow: 0 8px 32px rgba(0,151,167,0.25); }
+
+  .student-avatar {
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.2rem;
+    margin: 0 auto 20px;
+    overflow: hidden;
+    border: 3px solid transparent;
+  }
+  .student-avatar img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    border-radius: 50%;
+  }
+  .aruna .student-avatar { border-color: var(--aruna-1); box-shadow: 0 0 0 3px rgba(233,30,140,0.25); }
+  .arjun .student-avatar { border-color: var(--arjun-2); box-shadow: 0 0 0 3px rgba(0,151,167,0.25); }
+
+  .student-card h3 { font-size: 1.6rem; font-weight: 700; margin-bottom: 6px; }
+  .student-card .year-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+  .aruna .year-badge { background: rgba(233,30,140,0.2); color: #f472b6; }
+  .arjun .year-badge { background: rgba(0,151,167,0.2); color: #67e8f9; }
+
+  .student-card .subject-count {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+  .student-card .subject-count strong { color: var(--text); }
+
+  /* ===== SUBJECT GRID ===== */
+  .subject-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px;
+  }
+
+  .subject-card {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 20px 18px;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: transform var(--transition), border-color var(--transition), background var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .subject-card:hover { background: var(--surface2); transform: translateY(-2px); }
+  .subject-card.has-content:hover { border-color: var(--user-accent, #e91e8c); }
+
+  .subject-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+  .subject-info { flex: 1; min-width: 0; }
+  .subject-info h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .subject-info .sub-tag {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 10px;
+    display: inline-block;
+  }
+  .sub-tag.gcse { background: rgba(233,30,140,0.15); color: #f472b6; }
+  .sub-tag.btec { background: rgba(108,63,197,0.2); color: #c4b5fd; }
+  .sub-tag.ks3 { background: rgba(0,151,167,0.15); color: #67e8f9; }
+  .sub-tag.core { background: rgba(255,255,255,0.08); color: var(--text-muted); }
+  .sub-tag.available { background: rgba(76,175,80,0.15); color: #86efac; }
+
+  /* ===== TOPIC GRID ===== */
+  .topic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+  }
+
+  .topic-card {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 18px 20px;
+    cursor: pointer;
+    border: 1.5px solid rgba(255,255,255,0.06);
+    transition: transform var(--transition), border-color var(--transition), background var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .topic-card:hover { background: var(--surface2); transform: translateY(-2px); border-color: var(--user-accent, #e91e8c); }
+  .topic-card.locked { opacity: 0.45; cursor: default; }
+  .topic-card.locked:hover { transform: none; background: var(--surface); border-color: rgba(255,255,255,0.06); }
+
+  .topic-left { display: flex; align-items: center; gap: 12px; }
+  .topic-num {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.07);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+  .topic-title { font-size: 0.92rem; font-weight: 500; }
+  .topic-right { font-size: 1.1rem; opacity: 0.5; }
+  .topic-card:not(.locked) .topic-right { opacity: 0.7; }
+
+  /* ===== CONTENT LAUNCHER ===== */
+  .content-launcher {
+    text-align: center;
+  }
+  .content-launcher .big-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    display: block;
+  }
+  .content-launcher h2 { font-size: 1.8rem; font-weight: 700; margin-bottom: 10px; }
+  .content-launcher p { color: var(--text-muted); margin-bottom: 32px; max-width: 480px; margin-left: auto; margin-right: auto; }
+
+  .content-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 24px;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    transition: transform var(--transition), box-shadow var(--transition), opacity var(--transition);
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .btn-primary {
+    background: var(--user-grad, linear-gradient(135deg, var(--aruna-1), var(--aruna-2)));
+    color: white;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  }
+  .btn-primary:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.4); }
+  .btn-secondary {
+    background: var(--surface2);
+    color: var(--text);
+    border: 1.5px solid rgba(255,255,255,0.1);
+  }
+  .btn-secondary:hover { background: var(--surface); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1.5px solid rgba(255,255,255,0.1);
+  }
+  .btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+  .btn.disabled { opacity: 0.4; pointer-events: none; }
+
+  /* ===== BACK / NAV BUTTONS ===== */
+  .nav-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    cursor: pointer;
+    padding: 8px 0;
+    transition: color var(--transition);
+  }
+  .back-btn:hover { color: var(--text); }
+  .nav-sep {
+    color: rgba(255,255,255,0.15);
+    font-size: 0.8rem;
+    line-height: 1;
+  }
+  .home-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(255,255,255,0.05);
+    border: 1.5px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    cursor: pointer;
+    padding: 5px 12px;
+    transition: color var(--transition), background var(--transition), border-color var(--transition);
+  }
+  .home-btn:hover { color: var(--text); background: rgba(255,255,255,0.09); border-color: rgba(255,255,255,0.18); }
+  .switch-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(255,255,255,0.05);
+    border: 1.5px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    cursor: pointer;
+    padding: 5px 12px;
+    transition: color var(--transition), background var(--transition), border-color var(--transition);
+  }
+  .switch-btn:hover { color: var(--text); background: rgba(255,255,255,0.09); border-color: rgba(255,255,255,0.18); }
+
+  /* Breadcrumb clickable */
+  .breadcrumb .bc-link {
+    cursor: pointer;
+    transition: color var(--transition);
+  }
+  .breadcrumb .bc-link:hover { color: var(--user-accent, #e91e8c); }
+
+  /* ===== COMING SOON BADGE ===== */
+  .coming-soon {
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 10px;
+    color: var(--text-muted);
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 600px) {
+    .student-grid { grid-template-columns: 1fr; }
+    header { padding: 16px 20px; }
+    main { padding: 32px 16px; }
+    .screen-heading h2 { font-size: 1.5rem; }
+    .student-card { padding: 28px 20px; }
+  }
+
+
+  /* ── A11Y TOOLBAR ── */
+  #a11y-toolbar{position:fixed!important;bottom:24px!important;right:24px!important;z-index:2147483647!important;font-family:'Lexend','Segoe UI',sans-serif;}
+  #a11y-fab{width:50px;height:50px;border-radius:50%;background:#1565c0;border:none;color:#fff;font-size:1.3rem;cursor:pointer;box-shadow:0 4px 18px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;transition:transform .2s,background .2s;}
+  #a11y-fab:hover{background:#0d47a1;transform:scale(1.07);}
+  #a11y-fab.open{background:#0d47a1;}
+  #a11y-panel{position:absolute;bottom:62px;right:0;background:#fff;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.2);padding:16px;width:260px;border:1px solid rgba(0,0,0,.07);}
+  #a11y-panel[hidden]{display:none!important;}
+  .a11y-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#888;margin-bottom:12px;}
+  .a11y-action-btn{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border-radius:10px;background:#f0f7ff;border:1.5px solid #cde4f5;color:#1565c0;font-size:.9rem;font-weight:600;cursor:pointer;font-family:inherit;}
+  .a11y-action-btn.a11y-stop{background:#fee2e2;border-color:#fca5a5;color:#dc2626;}
+  .a11y-divider{height:1px;background:#e5e7eb;margin:12px 0;}
+  .a11y-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+  .a11y-col-row{flex-direction:column;align-items:flex-start;gap:8px;margin-bottom:4px;}
+  .a11y-label{font-size:.85rem;color:#222;font-weight:500;}
+  .a11y-pill{padding:4px 14px;border-radius:20px;border:2px solid #d1d5db;background:#f3f4f6;color:#6b7280;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;}
+  .a11y-pill.on{background:#1565c0;border-color:#1565c0;color:#fff;}
+  #a11y-colours{display:flex;gap:7px;flex-wrap:wrap;}
+  .a11y-col-chip{width:28px;height:28px;border-radius:50%;border:2.5px solid #d1d5db;cursor:pointer;font-size:.65rem;display:flex;align-items:center;justify-content:center;background:#e5e7eb;}
+  .a11y-col-chip.sel{border-color:#1565c0;border-width:3px;}
+  #a11y-overlay{position:fixed!important;inset:0;pointer-events:none;z-index:2147483646!important;transition:background .35s;}
+  b.bionic-b{font-weight:800;}
+  .a11y-stepper{display:flex;gap:4px;}
+  .a11y-step-btn{width:32px;height:28px;border-radius:8px;border:2px solid #d1d5db;background:#f3f4f6;color:#6b7280;font-size:.82rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;transition:background .15s,border-color .15s;}
+  .a11y-step-btn.on{background:#1565c0;border-color:#1565c0;color:#fff;}
+  #a11y-ruler-line{position:fixed!important;left:0;right:0;height:34px;pointer-events:none;z-index:2147483645!important;background:rgba(21,101,192,.1);border-top:2px solid rgba(21,101,192,.35);border-bottom:2px solid rgba(21,101,192,.35);display:none;top:0;}
+  body.ruler-on #a11y-ruler-line{display:block;}
+  body.opendyslexic,body.opendyslexic *{font-family:'OpenDyslexic','Lexend','Segoe UI',sans-serif!important;}
+
+</style>
+</head>
+<body>
+<div id="a11y-toolbar"><button id="a11y-fab" title="Accessibility tools" aria-label="Accessibility tools">&#9681;</button><div id="a11y-panel" hidden><div class="a11y-title">Accessibility</div><button id="a11y-tts" class="a11y-action-btn"><span id="a11y-tts-icon">&#128266;</span><span id="a11y-tts-label"> Read aloud</span></button><div class="a11y-divider"></div><div class="a11y-row"><span class="a11y-label">Bionic reading</span><button id="a11y-bionic" class="a11y-pill">Off</button></div><div class="a11y-row"><span class="a11y-label">OpenDyslexic font</span><button id="a11y-od" class="a11y-pill">Off</button></div><div class="a11y-row"><span class="a11y-label">Reading ruler</span><button id="a11y-ruler-btn" class="a11y-pill">Off</button></div><div class="a11y-divider"></div><div class="a11y-row"><span class="a11y-label">Text size</span><div class="a11y-stepper"><button class="a11y-step-btn on" id="a11y-sz1" title="Normal">A</button><button class="a11y-step-btn" id="a11y-sz2" title="Large">A+</button><button class="a11y-step-btn" id="a11y-sz3" title="XL">A++</button></div></div><div class="a11y-row"><span class="a11y-label">Line spacing</span><div class="a11y-stepper"><button class="a11y-step-btn on" id="a11y-ls1" title="Normal">1&#215;</button><button class="a11y-step-btn" id="a11y-ls2" title="Relaxed">1.5&#215;</button><button class="a11y-step-btn" id="a11y-ls3" title="Wide">2&#215;</button></div></div><div class="a11y-divider"></div><div class="a11y-row a11y-col-row"><span class="a11y-label">Colour overlay</span><div id="a11y-colours"><button class="a11y-col-chip sel" data-col="none" title="None">&#x2715;</button><button class="a11y-col-chip" data-col="cream" style="background:#fdf6e3" title="Cream"></button><button class="a11y-col-chip" data-col="yellow" style="background:#fff9c4" title="Yellow"></button><button class="a11y-col-chip" data-col="blue" style="background:#dbeafe" title="Blue"></button><button class="a11y-col-chip" data-col="green" style="background:#dcfce7" title="Green"></button><button class="a11y-col-chip" data-col="peach" style="background:#fce7f3" title="Peach"></button></div></div></div></div><div id="a11y-overlay"></div><div id="a11y-ruler-line"></div>
+
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">📚</div>
+    ATeam Academy
+  </div>
+  <div class="breadcrumb" id="breadcrumb">
+    <span>Home</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- SCREEN 1: STUDENT SELECT -->
+  <div class="screen active" id="screen-home">
+    <div class="screen-heading">
+      <h2>Who's studying today?</h2>
+      <p>Select your name to get started</p>
+    </div>
+    <div class="student-grid">
+      <div class="student-card aruna" onclick="selectStudent('aruna')">
+        <div class="student-avatar"><img src="Aruna.jpeg" alt="Aruna"></div>
+        <h3>Aruna</h3>
+        <div class="year-badge">Year 10 · Wilmington Academy</div>
+        <p class="subject-count"><strong>7</strong> subjects · GCSE & BTEC</p>
+      </div>
+      <div class="student-card arjun" onclick="selectStudent('arjun')">
+        <div class="student-avatar"><img src="Arjun.jpeg" alt="Arjun"></div>
+        <h3>Arjun</h3>
+        <div class="year-badge">Year 8 · Wilmington Grammar</div>
+        <p class="subject-count"><strong>12</strong> subjects · Key Stage 3</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 2: SUBJECT SELECT -->
+  <div class="screen" id="screen-subjects">
+    <div class="nav-bar">
+      <button class="back-btn" onclick="goHome()">← Back</button>
+      <span class="nav-sep">·</span>
+      <button class="home-btn" onclick="goHome()">🏠 Home</button>
+    </div>
+    <div class="screen-heading" id="subject-heading">
+      <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:10px;">
+        <img id="subject-avatar" src="Aruna.jpeg" alt="" style="width:52px;height:52px;border-radius:50%;object-fit:cover;object-position:center top;border:2px solid var(--user-accent,#e91e8c);box-shadow:0 0 0 3px rgba(233,30,140,0.2);">
+        <h2>Hi <span class="greeting-name" id="greeting-name">Aruna</span>!</h2>
+      </div>
+      <p>Choose what you want to study today</p>
+    </div>
+    <div class="subject-grid" id="subject-grid"></div>
+  </div>
+
+  <!-- SCREEN 3: TOPIC SELECT -->
+  <div class="screen" id="screen-topics">
+    <div class="nav-bar">
+      <button class="back-btn" onclick="goSubjects()">← Back to subjects</button>
+      <span class="nav-sep">·</span>
+      <button class="home-btn" onclick="goHome()">🏠 Home</button>
+    </div>
+    <div class="screen-heading">
+      <h2 id="topic-heading-title">Choose a topic</h2>
+      <p id="topic-heading-sub">Select a topic to start studying</p>
+    </div>
+    <div class="topic-grid" id="topic-grid"></div>
+  </div>
+
+  <!-- SCREEN 4: CONTENT -->
+  <div class="screen" id="screen-content">
+    <div class="nav-bar">
+      <button class="back-btn" onclick="goTopics()">← Back to topics</button>
+      <span class="nav-sep">·</span>
+      <button class="switch-btn" onclick="goSubjects()">📚 Switch subject</button>
+      <span class="nav-sep">·</span>
+      <button class="home-btn" onclick="goHome()">🏠 Home</button>
+    </div>
+    <div class="content-launcher" id="content-launcher"></div>
+  </div>
+
+</main>
+
+<script>
+(function(){
+var S='ateam_a11y',st={bionic:false,overlay:'none',od:false,ruler:false,sz:1,ls:1};
+try{Object.assign(st,JSON.parse(localStorage.getItem(S)||'{}'));}catch(e){}
+var fab,panel,ttsBtn,ttsIcon,ttsLbl,bioBtn,ovl,ttsOn=false;
+function init(){
+  fab=document.getElementById('a11y-fab');
+  panel=document.getElementById('a11y-panel');
+  ttsBtn=document.getElementById('a11y-tts');
+  ttsIcon=document.getElementById('a11y-tts-icon');
+  ttsLbl=document.getElementById('a11y-tts-label');
+  bioBtn=document.getElementById('a11y-bionic');
+  ovl=document.getElementById('a11y-overlay');
+  if(!fab)return;
+  var OV={none:'transparent',cream:'rgba(253,246,227,.5)',yellow:'rgba(255,249,196,.5)',blue:'rgba(219,234,254,.5)',green:'rgba(220,252,231,.5)',peach:'rgba(252,231,243,.5)'};
+  fab.addEventListener('click',function(e){e.stopPropagation();var o=panel.hasAttribute('hidden');if(o)panel.removeAttribute('hidden');else panel.setAttribute('hidden','');fab.classList.toggle('open',o);});
+  document.addEventListener('click',function(e){var tb=document.getElementById('a11y-toolbar');if(tb&&!tb.contains(e.target))panel.setAttribute('hidden','');});
+  var ttsOn=false;
+  function getText(){var fc=document.getElementById('flashcard');if(fc){var id=fc.classList.contains('flipped')?'cardAnswer':'cardQuestion';var el=document.getElementById(id);if(el&&el.innerText.trim())return el.innerText.trim();}var q=document.querySelector('.screen.active .q-text');if(q)return q.innerText.trim();var ns=document.querySelectorAll('.notes-section.open .notes-section-body');if(ns.length)return Array.from(ns).map(function(n){return n.innerText.trim();}).join('\n\n');var m=document.querySelector('main')||document.querySelector('.screen.active');return m?m.innerText.trim().slice(0,2500):'';}
+  function startTTS(){window.speechSynthesis.cancel();var t=getText();if(!t)return;var u=new SpeechSynthesisUtterance(t);u.rate=0.88;u.onend=u.onerror=function(){setTS(false);};window.speechSynthesis.speak(u);setTS(true);}
+  function stopTTS(){window.speechSynthesis.cancel();setTS(false);}
+  function setTS(on){ttsOn=on;ttsBtn.classList.toggle('a11y-stop',on);ttsIcon.innerHTML=on?'&#9209;':'&#128266;';ttsLbl.textContent=on?' Stop':' Read aloud';}
+  ttsBtn.addEventListener('click',function(){ttsOn?stopTTS():startTTS();});
+  function bioW(w){if(w.length<=2)return w;var h=Math.ceil(w.length/2);return '<b class="bionic-b">'+w.slice(0,h)+'</b>'+w.slice(h);}
+  function walkBold(node){if(node.nodeType===3){var t=node.textContent;if(!t.trim())return;var html=t.replace(/([A-Za-zÀ-ɏ]{2,})/g,function(w){return bioW(w);});if(html===t)return;var s=document.createElement('span');s.innerHTML=html;node.parentNode.replaceChild(s,node);}else if(node.nodeType===1&&!/^(SCRIPT|STYLE|B|BUTTON|INPUT)$/.test(node.tagName))Array.from(node.childNodes).forEach(walkBold);}
+  var TG='#cardQuestion,#cardAnswer,.q-text,.option-btn,.notes-section-body,.card-text,.home-hero p';
+  function applyBio(){document.querySelectorAll(TG).forEach(function(el){if(el.dataset.bd)return;el.dataset.bd='1';el.dataset.bo=el.innerHTML;walkBold(el);});}
+  function removeBio(){document.querySelectorAll('[data-bd]').forEach(function(el){el.innerHTML=el.dataset.bo||el.innerHTML;delete el.dataset.bd;delete el.dataset.bo;});}
+  ['flipCard','loadQuestion','showQuestion','nextCard','prevCard'].forEach(function(fn){if(typeof window[fn]==='function'){var o=window[fn];window[fn]=function(){var r=o.apply(this,arguments);if(st.bionic)setTimeout(applyBio,80);return r;};}});
+  var bt;new MutationObserver(function(){if(!st.bionic)return;clearTimeout(bt);bt=setTimeout(applyBio,80);}).observe(document.body,{childList:true,subtree:true});
+  function setBio(on){st.bionic=on;bioBtn.textContent=on?'On':'Off';bioBtn.classList.toggle('on',on);if(on)applyBio();else removeBio();save();}
+  bioBtn.addEventListener('click',function(){setBio(!st.bionic);});
+  function setOvl(col){st.overlay=col;ovl.style.background=OV[col]||'transparent';document.querySelectorAll('.a11y-col-chip').forEach(function(c){c.classList.toggle('sel',c.dataset.col===col);});save();}
+  document.querySelectorAll('.a11y-col-chip').forEach(function(btn){btn.addEventListener('click',function(){setOvl(btn.dataset.col);});});
+  // OpenDyslexic font
+  var odBtn=document.getElementById('a11y-od');
+  function setOD(on){st.od=on;document.body.classList.toggle('opendyslexic',on);if(on&&!document.getElementById('od-font')){var l=document.createElement('link');l.id='od-font';l.rel='stylesheet';l.href='https://fonts.cdnfonts.com/css/opendyslexic';document.head.appendChild(l);}if(odBtn){odBtn.textContent=on?'On':'Off';odBtn.classList.toggle('on',on);}save();}
+  if(odBtn)odBtn.addEventListener('click',function(){setOD(!st.od);});
+  // Reading ruler
+  var rulerEl=document.getElementById('a11y-ruler-line'),rulerBtn=document.getElementById('a11y-ruler-btn');
+  function setRuler(on){st.ruler=on;document.body.classList.toggle('ruler-on',on);if(rulerBtn){rulerBtn.textContent=on?'On':'Off';rulerBtn.classList.toggle('on',on);}save();}
+  document.addEventListener('mousemove',function(e){if(st.ruler&&rulerEl)rulerEl.style.top=(e.clientY-17)+'px';});
+  if(rulerBtn)rulerBtn.addEventListener('click',function(){setRuler(!st.ruler);});
+  // Text size (3 steps: 100% / 118% / 136%)
+  var SZ=[1,1.18,1.36],szBtns=[document.getElementById('a11y-sz1'),document.getElementById('a11y-sz2'),document.getElementById('a11y-sz3')];
+  function setSz(i){st.sz=i;document.documentElement.style.fontSize=(SZ[i-1]*16)+'px';szBtns.forEach(function(b,idx){if(b)b.classList.toggle('on',idx+1===i);});save();}
+  szBtns.forEach(function(b,i){if(b)b.addEventListener('click',function(){setSz(i+1);});});
+  // Line spacing (3 steps: 1.7 / 2.1 / 2.6)
+  var LS=[1.7,2.1,2.6],lsBtns=[document.getElementById('a11y-ls1'),document.getElementById('a11y-ls2'),document.getElementById('a11y-ls3')];
+  function setLs(i){st.ls=i;document.body.style.lineHeight=LS[i-1];lsBtns.forEach(function(b,idx){if(b)b.classList.toggle('on',idx+1===i);});save();}
+  lsBtns.forEach(function(b,i){if(b)b.addEventListener('click',function(){setLs(i+1);});});
+  // Save & restore all settings
+  function save(){try{localStorage.setItem(S,JSON.stringify({bionic:st.bionic,overlay:st.overlay,od:st.od,ruler:st.ruler,sz:st.sz,ls:st.ls}));}catch(e){}}
+  setOvl(st.overlay);if(st.bionic)setBio(true);setOD(!!st.od);setRuler(!!st.ruler);setSz(st.sz||1);setLs(st.ls||1);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+<script>
+  // ───────────────────────────────────────────────
+  // DATA
+  // ───────────────────────────────────────────────
+
+  const STUDENTS = {
+    aruna: {
+      name: 'Aruna',
+      photo: 'Aruna.jpeg',
+      grad: 'linear-gradient(135deg, #e91e8c, #6c3fc5)',
+      accent: '#e91e8c',
+      subjects: [
+        {
+          id: 'maths', label: 'Mathematics', icon: '📐',
+          iconBg: 'rgba(21,101,192,0.25)', tag: 'gcse', tagLabel: 'GCSE',
+          topics: [
+            { label: 'Number & Algebra',        available: true,  content: { type: 'flashcards', file: 'aruna_maths_flashcards.html', quizFile: 'aruna_maths_quizzes.html', section: 'Number' } },
+            { label: 'Ratio, Proportion & Rates', available: true, content: { type: 'flashcards', file: 'aruna_maths_flashcards.html', quizFile: 'aruna_maths_quizzes.html', section: 'Ratio' } },
+            { label: 'Geometry & Measures',     available: true,  content: { type: 'flashcards', file: 'aruna_maths_flashcards.html', quizFile: 'aruna_maths_quizzes.html', section: 'Geometry' } },
+            { label: 'Statistics & Probability', available: true, content: { type: 'flashcards', file: 'aruna_maths_flashcards.html', quizFile: 'aruna_maths_quizzes.html', section: 'Statistics' } },
+            { label: 'Graphs & Functions',       available: true,  content: { type: 'flashcards', file: 'aruna_maths_flashcards.html', quizFile: 'aruna_maths_quizzes.html', section: 'Graphs' } },
+          ]
+        },
+        {
+          id: 'english', label: 'English Language & Lit', icon: '✏️',
+          iconBg: 'rgba(233,30,140,0.2)', tag: 'gcse', tagLabel: 'GCSE',
+          topics: [
+            { label: 'Language Paper 1 — Fiction', available: false, content: null },
+            { label: 'Language Paper 2 — Non-fiction', available: false, content: null },
+            { label: 'Literature — Macbeth', available: false, content: null },
+            { label: 'Literature — An Inspector Calls', available: false, content: null },
+            { label: 'Literature — Poetry', available: false, content: null },
+          ]
+        },
+        {
+          id: 'science', label: 'Combined Science', icon: '🔬',
+          iconBg: 'rgba(0,150,136,0.2)', tag: 'gcse', tagLabel: 'GCSE',
+          topics: [
+            { label: 'Biology — Cells & Organisms', available: false, content: null },
+            { label: 'Biology — Ecosystems', available: false, content: null },
+            { label: 'Chemistry — Atomic Structure', available: false, content: null },
+            { label: 'Chemistry — Bonding', available: false, content: null },
+            { label: 'Physics — Forces & Motion', available: false, content: null },
+            { label: 'Physics — Electricity', available: false, content: null },
+          ]
+        },
+        {
+          id: 'hsc', label: 'Health & Social Care', icon: '🩺',
+          iconBg: 'rgba(233,30,140,0.15)', tag: 'btec', tagLabel: 'BTEC',
+          topics: [
+            { label: 'Human Growth & Development',  available: true, content: { type: 'flashcards', file: 'aruna_hsc_flashcards.html', quizFile: 'aruna_hsc_quizzes.html', section: '0' } },
+            { label: 'Factors Affecting Development', available: true, content: { type: 'flashcards', file: 'aruna_hsc_flashcards.html', quizFile: 'aruna_hsc_quizzes.html', section: '1' } },
+            { label: 'Health & Care Services',       available: true, content: { type: 'flashcards', file: 'aruna_hsc_flashcards.html', quizFile: 'aruna_hsc_quizzes.html', section: '2' } },
+            { label: 'Communication',                available: true, content: { type: 'flashcards', file: 'aruna_hsc_flashcards.html', quizFile: 'aruna_hsc_quizzes.html', section: '3' } },
+            { label: 'Care Values & Ethics',         available: true, content: { type: 'flashcards', file: 'aruna_hsc_flashcards.html', quizFile: 'aruna_hsc_quizzes.html', section: '4' } },
+            { label: 'Health & Wellbeing',           available: true, content: { type: 'flashcards', file: 'aruna_hsc_flashcards.html', quizFile: 'aruna_hsc_quizzes.html', section: '5' } },
+          ]
+        },
+        {
+          id: 'history', label: 'History', icon: '🏛️',
+          iconBg: 'rgba(121,85,72,0.25)', tag: 'gcse', tagLabel: 'GCSE',
+          topics: [
+            { label: 'Medicine Through Time', available: false, content: null },
+            { label: 'The American West', available: false, content: null },
+            { label: 'Germany 1919–1945', available: false, content: null },
+            { label: 'Elizabethan England', available: false, content: null },
+          ]
+        },
+        {
+          id: 'french', label: 'French', icon: '🇫🇷',
+          iconBg: 'rgba(25,118,210,0.2)', tag: 'gcse', tagLabel: 'GCSE',
+          topics: [
+            { label: 'Identity & Culture', available: false, content: null },
+            { label: 'Local Area & Travel', available: false, content: null },
+            { label: 'School & Future Plans', available: false, content: null },
+            { label: 'Grammar Foundations', available: false, content: null },
+          ]
+        },
+        {
+          id: 'business', label: 'Business Studies', icon: '📊',
+          iconBg: 'rgba(255,152,0,0.2)', tag: 'gcse', tagLabel: 'GCSE',
+          topics: [
+            { label: 'Enterprise & Entrepreneurs', available: false, content: null },
+            { label: 'Marketing', available: false, content: null },
+            { label: 'Finance', available: false, content: null },
+            { label: 'Operations', available: false, content: null },
+          ]
+        },
+      ]
+    },
+
+    arjun: {
+      name: 'Arjun',
+      photo: 'Arjun.jpeg',
+      grad: 'linear-gradient(135deg, #1565c0, #0097a7)',
+      accent: '#0097a7',
+      subjects: [
+        {
+          id: 'maths', label: 'Mathematics', icon: '📐',
+          iconBg: 'rgba(21,101,192,0.25)', tag: 'ks3', tagLabel: 'KS3',
+          topics: [
+            { label: 'Number', available: true, content: { type: 'flashcards', file: 'arjun_maths_flashcards.html', quizFile: 'arjun_maths_quizzes.html', section: 'Number' } },
+            { label: 'Algebra', available: true, content: { type: 'flashcards', file: 'arjun_maths_flashcards.html', quizFile: 'arjun_maths_quizzes.html', section: 'Algebra' } },
+            { label: 'Geometry & Measures', available: true, content: { type: 'flashcards', file: 'arjun_maths_flashcards.html', quizFile: 'arjun_maths_quizzes.html', section: 'Geometry' } },
+            { label: 'Ratio & Proportion', available: true, content: { type: 'flashcards', file: 'arjun_maths_flashcards.html', quizFile: 'arjun_maths_quizzes.html', section: 'Ratio' } },
+            { label: 'Statistics & Probability', available: true, content: { type: 'flashcards', file: 'arjun_maths_flashcards.html', quizFile: 'arjun_maths_quizzes.html', section: 'Stats' } },
+          ]
+        },
+        {
+          id: 'english', label: 'English', icon: '✏️',
+          iconBg: 'rgba(121,85,72,0.2)', tag: 'ks3', tagLabel: 'KS3',
+          topics: [
+            { label: 'Creative Writing', available: false, content: null },
+            { label: 'Reading & Analysis', available: false, content: null },
+            { label: 'Grammar & Punctuation', available: false, content: null },
+          ]
+        },
+        {
+          id: 'science', label: 'Science', icon: '🔬',
+          iconBg: 'rgba(0,150,136,0.2)', tag: 'ks3', tagLabel: 'KS3',
+          topics: [
+            { label: 'Biology — Cells & Life', available: false, content: null },
+            { label: 'Chemistry — Particles', available: false, content: null },
+            { label: 'Physics — Forces', available: false, content: null },
+          ]
+        },
+        {
+          id: 'french', label: 'French', icon: '🇫🇷',
+          iconBg: 'rgba(25,118,210,0.2)', tag: 'ks3', tagLabel: 'KS3',
+          topics: [
+            { label: 'Present Tense Verbs', available: false, content: null },
+            { label: 'Family & Descriptions', available: false, content: null },
+            { label: 'School & Hobbies', available: false, content: null },
+          ]
+        },
+        {
+          id: 'spanish', label: 'Spanish', icon: '🇪🇸',
+          iconBg: 'rgba(255,152,0,0.2)', tag: 'ks3', tagLabel: 'KS3',
+          topics: [
+            { label: 'Introductions & Greetings', available: false, content: null },
+            { label: 'Numbers & Time', available: false, content: null },
+            { label: 'Food & Daily Routine', available: false, content: null },
+          ]
+        },
+        {
+          id: 'history', label: 'History', icon: '🏛️',
+          iconBg: 'rgba(121,85,72,0.25)', tag: 'ks3', tagLabel: 'KS3',
+          topics: [
+            { label: 'Medieval England', available: true, content: { type: 'flashcards', file: 'arjun_history_flashcards.html', quizFile: 'arjun_history_quizzes.html', section: 'Medieval' } },
+            { label: 'Industrial Revolution', available: true, content: { type: 'flashcards', file: 'arjun_history_flashcards.html', quizFile: 'arjun_history_quizzes.html', section: 'Industrial' } },
+            { label: 'World War I & II', available: true, content: { type: 'flashcards', file: 'arjun_history_flashcards.html', quizFile: 'arjun_history_quizzes.html', section: 'WW' } },
+            { label: 'British Reformation', available: true, content: { type: 'flashcards', file: 'arjun_history_flashcards.html', quizFile: 'arjun_history_quizzes.html', section: 'Reformation' } },
+            { label: 'French Revolution', available: true, content: { type: 'flashcards', file: 'arjun_history_flashcards.html', quizFile: 'arjun_history_quizzes.html', section: 'French' } },
+            { label: 'English Civil War', available: true, content: { type: 'flashcards', file: 'arjun_history_flashcards.html', quizFile: 'arjun_history_quizzes.html', section: 'CivilWar' } },
+            { label: 'Empire & Slave Trade', available: true, content: { type: 'flashcards', file: 'arjun_history_flashcards.html', quizFile: 'arjun_history_quizzes.html', section: 'Empire' } },
+          ]
+        },
+        {
+          id: 'geography', label: 'Geography', icon: '🌍',
+          iconBg: 'rgba(76,175,80,0.2)', tag: 'ks3', tagLabel: 'KS3',
+          topics: [
+            { label: 'Rivers & Coasts', available: false, content: null },
+            { label: 'Population & Migration', available: false, content: null },
+            { label: 'Climate & Ecosystems', available: false, content: null },
+          ]
+        },
+        {
+          id: 'cs', label: 'Computer Science', icon: '💻',
+          iconBg: 'rgba(33,150,243,0.2)', tag: 'ks3', tagLabel: 'KS3',
+          topics: [
+            { label: 'Algorithms & Flowcharts', available: false, content: null },
+            { label: 'Programming in Python', available: false, content: null },
+            { label: 'Networks & the Internet', available: false, content: null },
+          ]
+        },
+        {
+          id: 'dt', label: 'Design & Technology', icon: '🔧',
+          iconBg: 'rgba(255,87,34,0.2)', tag: 'ks3', tagLabel: 'KS3',
+          topics: [
+            { label: 'Materials & Properties', available: false, content: null },
+            { label: 'Design Process', available: false, content: null },
+          ]
+        },
+        {
+          id: 'rs', label: 'Religious Studies', icon: '☮️',
+          iconBg: 'rgba(156,39,176,0.2)', tag: 'ks3', tagLabel: 'KS3',
+          topics: [
+            { label: 'Christianity', available: false, content: null },
+            { label: 'Islam', available: false, content: null },
+            { label: 'Ethics & Philosophy', available: false, content: null },
+          ]
+        },
+        {
+          id: 'music', label: 'Music', icon: '🎵',
+          iconBg: 'rgba(233,30,140,0.15)', tag: 'ks3', tagLabel: 'KS3',
+          topics: [
+            { label: 'Musical Elements', available: false, content: null },
+            { label: 'Music Theory Basics', available: false, content: null },
+          ]
+        },
+        {
+          id: 'art', label: 'Art', icon: '🎨',
+          iconBg: 'rgba(255,193,7,0.2)', tag: 'ks3', tagLabel: 'KS3',
+          topics: [
+            { label: 'Colour Theory', available: false, content: null },
+            { label: 'Drawing Techniques', available: false, content: null },
+          ]
+        },
+        {
+          id: 'business', label: 'Business Studies', icon: '📊',
+          iconBg: 'rgba(255,152,0,0.2)', tag: 'ks3', tagLabel: 'KS3',
+          topics: [
+            { label: 'Enterprise & Entrepreneurs', available: false, content: null },
+            { label: 'Marketing', available: false, content: null },
+            { label: 'Finance & Budgeting', available: false, content: null },
+            { label: 'Business Ownership', available: false, content: null },
+          ]
+        },
+      ]
+    }
+  };
+
+  // ───────────────────────────────────────────────
+  // STATE
+  // ───────────────────────────────────────────────
+  let state = { student: null, subject: null, topic: null };
+
+  // ───────────────────────────────────────────────
+  // NAVIGATION
+  // ───────────────────────────────────────────────
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  function updateBreadcrumb() {
+    const bc = document.getElementById('breadcrumb');
+    const isDeep = state.student !== null;
+    const parts = [`<span class="${isDeep ? 'bc-link' : ''}" ${isDeep ? 'onclick="goHome()" title="Go home"' : ''}>🏠 Home</span>`];
+    if (state.student) {
+      const s = STUDENTS[state.student];
+      const isDeeper = state.subject !== null;
+      parts.push('<span class="sep">›</span>');
+      parts.push(`<span class="${isDeeper ? 'bc-link' : ''}" ${isDeeper ? 'onclick="goSubjects()" title="Back to subjects"' : ''}>${s.name}</span>`);
+    }
+    if (state.subject) {
+      const sub = STUDENTS[state.student].subjects.find(s => s.id === state.subject);
+      const isDeeper = state.topic !== null;
+      parts.push('<span class="sep">›</span>');
+      parts.push(`<span class="${isDeeper ? 'bc-link' : ''}" ${isDeeper ? 'onclick="goTopics()" title="Back to topics"' : ''}>${sub.label}</span>`);
+    }
+    if (state.topic !== null) {
+      const top = STUDENTS[state.student].subjects.find(s => s.id === state.subject).topics[state.topic];
+      parts.push('<span class="sep">›</span>');
+      parts.push(`<span>${top.label}</span>`);
+    }
+    bc.innerHTML = parts.join(' ');
+  }
+
+  function setUserTheme(studentId) {
+    const s = STUDENTS[studentId];
+    document.documentElement.style.setProperty('--user-grad', s.grad);
+    document.documentElement.style.setProperty('--user-accent', s.accent);
+  }
+
+  // ───────────────────────────────────────────────
+  // STUDENT SELECT
+  // ───────────────────────────────────────────────
+
+  function goHome() {
+    state = { student: null, subject: null, topic: null };
+    document.documentElement.style.removeProperty('--user-grad');
+    document.documentElement.style.removeProperty('--user-accent');
+    updateBreadcrumb();
+    showScreen('screen-home');
+  }
+
+  function selectStudent(studentId) {
+    state.student = studentId;
+    state.subject = null;
+    state.topic = null;
+    setUserTheme(studentId);
+    updateBreadcrumb();
+    renderSubjects();
+    showScreen('screen-subjects');
+  }
+
+  // ───────────────────────────────────────────────
+  // SUBJECT SELECT
+  // ───────────────────────────────────────────────
+
+  function goSubjects() {
+    state.subject = null;
+    state.topic = null;
+    updateBreadcrumb();
+    renderSubjects();
+    showScreen('screen-subjects');
+  }
+
+  function renderSubjects() {
+    const student = STUDENTS[state.student];
+    document.getElementById('greeting-name').textContent = student.name;
+    const avatar = document.getElementById('subject-avatar');
+    if (avatar) avatar.src = student.photo;
+    const grid = document.getElementById('subject-grid');
+    grid.innerHTML = student.subjects.map((sub, i) => {
+      const hasContent = sub.topics.some(t => t.available);
+      const tagClass = sub.tag || 'core';
+      const tagLabel = sub.tagLabel || '';
+      return `
+        <div class="subject-card ${hasContent ? 'has-content' : ''}" onclick="selectSubject(${i})">
+          <div class="subject-icon" style="background:${sub.iconBg || 'rgba(255,255,255,0.08)'}">${sub.icon}</div>
+          <div class="subject-info">
+            <h4>${sub.label}</h4>
+            ${tagLabel ? `<span class="sub-tag ${tagClass}">${tagLabel}</span>` : ''}
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  function selectSubject(index) {
+    state.subject = STUDENTS[state.student].subjects[index].id;
+    state.topic = null;
+    updateBreadcrumb();
+    renderTopics();
+    showScreen('screen-topics');
+  }
+
+  // ───────────────────────────────────────────────
+  // TOPIC SELECT
+  // ───────────────────────────────────────────────
+
+  function goTopics() {
+    state.topic = null;
+    updateBreadcrumb();
+    renderTopics();
+    showScreen('screen-topics');
+  }
+
+  function renderTopics() {
+    const sub = STUDENTS[state.student].subjects.find(s => s.id === state.subject);
+    document.getElementById('topic-heading-title').textContent = sub.label;
+    document.getElementById('topic-heading-sub').textContent = 'Select a topic to start studying';
+    const grid = document.getElementById('topic-grid');
+    grid.innerHTML = sub.topics.map((top, i) => {
+      const locked = !top.available;
+      return `
+        <div class="topic-card ${locked ? 'locked' : ''}" ${locked ? '' : `onclick="selectTopic(${i})"`}>
+          <div class="topic-left">
+            <div class="topic-num">${i + 1}</div>
+            <div class="topic-title">${top.label}</div>
+          </div>
+          <div class="topic-right">${locked ? '🔒' : '›'}</div>
+        </div>`;
+    }).join('');
+  }
+
+  function selectTopic(index) {
+    state.topic = index;
+    updateBreadcrumb();
+    renderContent();
+    showScreen('screen-content');
+  }
+
+  // ───────────────────────────────────────────────
+  // CONTENT LAUNCHER
+  // ───────────────────────────────────────────────
+
+  function renderContent() {
+    const sub = STUDENTS[state.student].subjects.find(s => s.id === state.subject);
+    const top = sub.topics[state.topic];
+    const content = top.content;
+    const launcher = document.getElementById('content-launcher');
+    if (!content) {
+      launcher.innerHTML = `
+        <span class="big-icon">🔒</span>
+        <h2>${top.label}</h2>
+        <p>This topic isn't available yet.</p>`;
+      return;
+    }
+    let actions = `<a class="btn btn-primary" href="${content.file}" target="_blank" rel="noopener">📇 Flashcards & Notes</a>`;
+    if (content.quizFile) {
+      actions += `<a class="btn btn-secondary" href="${content.quizFile}" target="_blank" rel="noopener">📝 Quizzes & Test</a>`;
+    }
+    launcher.innerHTML = `
+      <span class="big-icon">${sub.icon}</span>
+      <h2>${top.label}</h2>
+      <p>Choose how you'd like to study this topic. Each topic has flashcards with notes, three short quizzes, and one longer test covering everything.</p>
+      <div class="content-actions">${actions}</div>`;
+  }
+
+  // ───────────────────────────────────────────────
+  // INIT
+  // ───────────────────────────────────────────────
+
+  goHome();
+
+})();
+</script>
+</body>
+</html>
