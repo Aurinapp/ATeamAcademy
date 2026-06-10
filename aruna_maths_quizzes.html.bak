@@ -243,37 +243,31 @@
       </div>
       <div class="topic-cards">
         <div class="topic-card" onclick="startQuiz(0)">
-          <div class="prog-badge" id="progBadge0" style="margin-top:6px;font-size:.78rem;font-weight:700;color:#2e7d32;"></div>
           <div class="topic-card-icon">🔢</div>
           <div class="topic-card-title">Number &amp; Algebra</div>
           <div class="topic-card-meta"><span>20 questions</span> · Indices, surds, equations, expanding &amp; factorising</div>
         </div>
         <div class="topic-card" onclick="startQuiz(1)">
-          <div class="prog-badge" id="progBadge1" style="margin-top:6px;font-size:.78rem;font-weight:700;color:#2e7d32;"></div>
           <div class="topic-card-icon">⚖️</div>
           <div class="topic-card-title">Ratio, Proportion &amp; Rates</div>
           <div class="topic-card-meta"><span>20 questions</span> · Ratio, percentages, compound measures, growth &amp; decay</div>
         </div>
         <div class="topic-card" onclick="startQuiz(2)">
-          <div class="prog-badge" id="progBadge2" style="margin-top:6px;font-size:.78rem;font-weight:700;color:#2e7d32;"></div>
           <div class="topic-card-icon">📐</div>
           <div class="topic-card-title">Geometry &amp; Measures</div>
           <div class="topic-card-meta"><span>20 questions</span> · Angles, circle theorems, Pythagoras, trigonometry</div>
         </div>
         <div class="topic-card" onclick="startQuiz(3)">
-          <div class="prog-badge" id="progBadge3" style="margin-top:6px;font-size:.78rem;font-weight:700;color:#2e7d32;"></div>
           <div class="topic-card-icon">📊</div>
           <div class="topic-card-title">Statistics &amp; Probability</div>
           <div class="topic-card-meta"><span>20 questions</span> · Averages, cumulative frequency, probability trees</div>
         </div>
         <div class="topic-card" onclick="startQuiz(4)">
-          <div class="prog-badge" id="progBadge4" style="margin-top:6px;font-size:.78rem;font-weight:700;color:#2e7d32;"></div>
           <div class="topic-card-icon">📈</div>
           <div class="topic-card-title">Graphs &amp; Functions</div>
           <div class="topic-card-meta"><span>20 questions</span> · Linear, quadratic graphs, gradients &amp; transformations</div>
         </div>
         <div class="test-card" onclick="startTest()">
-          <div class="prog-badge" id="progBadgeTest" style="margin-top:6px;font-size:.78rem;font-weight:700;color:#2e7d32;"></div>
           <div class="test-card-icon">🏆</div>
           <div class="test-card-title">Full Maths Test</div>
           <div class="test-card-meta"><span>50 questions</span> · All topics · 80% to pass</div>
@@ -604,26 +598,6 @@ const testData = [
   { q:"y=2ˣ is an exponential graph showing growth.", type:"tf", answer:true, explain:"Exponential graphs grow increasingly fast ✓" }
 ];
 
-
-// ---- Progress persistence (test/quiz completion + scores) ----
-const PROG_KEY = 'ateam_progress_aruna_maths';
-function loadProg(){ try{ return JSON.parse(localStorage.getItem(PROG_KEY)||'{}'); }catch(e){ return {}; } }
-function saveProg(p){ try{ localStorage.setItem(PROG_KEY, JSON.stringify(p)); }catch(e){} }
-function renderBadges(){
-  const p = loadProg();
-  for (let i=0;i<5;i++) {
-    const b = document.getElementById('progBadge'+i);
-    if (!b) continue;
-    const r = p['quiz'+i];
-    b.textContent = r ? (r.pct + '% — ' + (r.pct>=80?'✅ Completed':'Last attempt') + ' (' + r.date + ')') : '';
-  }
-  const tb = document.getElementById('progBadgeTest');
-  if (tb) {
-    const r = p['test'];
-    tb.textContent = r ? (r.pct + '% — ' + (r.pct>=80?'✅ Passed':'Last attempt') + ' (' + r.date + ')') : '';
-  }
-}
-
 // ============================================================
 // STATE
 // ============================================================
@@ -654,7 +628,6 @@ function showScreen(id) {
 function showHome() {
   showScreen('screenHome');
   document.querySelectorAll('.topic-btn').forEach(b=>b.classList.remove('active'));
-  renderBadges();
 }
 
 // ============================================================
@@ -774,11 +747,6 @@ function showQuizResult() {
   document.getElementById('resultEmoji').textContent = pct>=80?'🎉':pct>=60?'😊':'😬';
   document.getElementById('resultMessage').textContent = pct>=80?'Brilliant work, Aruna!':pct>=60?'Good effort — keep at it!':'More revision needed!';
 
-  const _pr = loadProg();
-  _pr['quiz'+currentTopicIdx] = { pct:pct, correct:correct, total:total, date:new Date().toLocaleDateString('en-GB') };
-  saveProg(_pr);
-  renderBadges();
-
   document.getElementById('quiz-retry-nudge').style.display = pct<80?'':'none';
   document.getElementById('quiz-pass-actions').style.display = pct>=80?'':'none';
   document.getElementById('reviewSection').style.display = 'none';
@@ -896,11 +864,6 @@ function submitTest() {
   document.getElementById('tcPercent').textContent = pct+'%';
   document.getElementById('testResultEmoji').textContent = pct>=80?'🏆':pct>=60?'📚':'😬';
   document.getElementById('testResultMsg').textContent = pct>=80?'Brilliant — you passed the test, Aruna!':pct>=60?'Good effort — nearly there!':'More revision needed!';
-  const _prt = loadProg();
-  _prt['test'] = { pct:pct, correct:correct, total:50, date:new Date().toLocaleDateString('en-GB') };
-  saveProg(_prt);
-  renderBadges();
-
   document.getElementById('test-retry-nudge').style.display = pct<80?'':'none';
   showScreen('screenTestResult');
 }
@@ -929,4 +892,3 @@ function showTestReview() {
 }
 </script></body>
 </html>
-renderBadges();

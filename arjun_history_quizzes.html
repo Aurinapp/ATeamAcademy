@@ -384,7 +384,7 @@
   #a11y-fab{width:50px;height:50px;border-radius:50%;background:#1565c0;border:none;color:#fff;font-size:1.3rem;cursor:pointer;box-shadow:0 4px 18px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;transition:transform .2s,background .2s;}
   #a11y-fab:hover{background:#0d47a1;transform:scale(1.07);}
   #a11y-fab.open{background:#0d47a1;}
-  #a11y-panel{position:absolute;bottom:62px;right:0;background:#fff;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.2);padding:16px;width:230px;border:1px solid rgba(0,0,0,.07);}
+  #a11y-panel{position:absolute;bottom:62px;right:0;background:#fff;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.2);padding:16px;width:260px;border:1px solid rgba(0,0,0,.07);}
   #a11y-panel[hidden]{display:none!important;}
   .a11y-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#888;margin-bottom:12px;}
   .a11y-action-btn{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border-radius:10px;background:#f0f7ff;border:1.5px solid #cde4f5;color:#1565c0;font-size:.9rem;font-weight:600;cursor:pointer;font-family:inherit;}
@@ -400,11 +400,17 @@
   .a11y-col-chip.sel{border-color:#1565c0;border-width:3px;}
   #a11y-overlay{position:fixed!important;inset:0;pointer-events:none;z-index:2147483646!important;transition:background .35s;}
   b.bionic-b{font-weight:800;}
+  .a11y-stepper{display:flex;gap:4px;}
+  .a11y-step-btn{width:32px;height:28px;border-radius:8px;border:2px solid #d1d5db;background:#f3f4f6;color:#6b7280;font-size:.82rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;transition:background .15s,border-color .15s;}
+  .a11y-step-btn.on{background:#1565c0;border-color:#1565c0;color:#fff;}
+  #a11y-ruler-line{position:fixed!important;left:0;right:0;height:34px;pointer-events:none;z-index:2147483645!important;background:rgba(21,101,192,.1);border-top:2px solid rgba(21,101,192,.35);border-bottom:2px solid rgba(21,101,192,.35);display:none;top:0;}
+  body.ruler-on #a11y-ruler-line{display:block;}
+  body.opendyslexic,body.opendyslexic *{font-family:'OpenDyslexic','Lexend','Segoe UI',sans-serif!important;}
 
 </style>
 </head>
 <body>
-<div id="a11y-toolbar"><button id="a11y-fab" title="Accessibility tools" aria-label="Accessibility tools">&#9681;</button><div id="a11y-panel" hidden><div class="a11y-title">Accessibility</div><button id="a11y-tts" class="a11y-action-btn"><span id="a11y-tts-icon">&#128266;</span><span id="a11y-tts-label"> Read aloud</span></button><div class="a11y-divider"></div><div class="a11y-row"><span class="a11y-label">Bionic reading</span><button id="a11y-bionic" class="a11y-pill">Off</button></div><div class="a11y-row a11y-col-row"><span class="a11y-label">Colour overlay</span><div id="a11y-colours"><button class="a11y-col-chip sel" data-col="none" title="None">&#x2715;</button><button class="a11y-col-chip" data-col="cream" style="background:#fdf6e3" title="Cream"></button><button class="a11y-col-chip" data-col="yellow" style="background:#fff9c4" title="Yellow"></button><button class="a11y-col-chip" data-col="blue" style="background:#dbeafe" title="Blue"></button><button class="a11y-col-chip" data-col="green" style="background:#dcfce7" title="Green"></button><button class="a11y-col-chip" data-col="peach" style="background:#fce7f3" title="Peach"></button></div></div></div></div><div id="a11y-overlay"></div>
+<div id="a11y-toolbar"><button id="a11y-fab" title="Accessibility tools" aria-label="Accessibility tools">&#9681;</button><div id="a11y-panel" hidden><div class="a11y-title">Accessibility</div><button id="a11y-tts" class="a11y-action-btn"><span id="a11y-tts-icon">&#128266;</span><span id="a11y-tts-label"> Read aloud</span></button><div class="a11y-divider"></div><div class="a11y-row"><span class="a11y-label">Bionic reading</span><button id="a11y-bionic" class="a11y-pill">Off</button></div><div class="a11y-row"><span class="a11y-label">OpenDyslexic font</span><button id="a11y-od" class="a11y-pill">Off</button></div><div class="a11y-row"><span class="a11y-label">Reading ruler</span><button id="a11y-ruler-btn" class="a11y-pill">Off</button></div><div class="a11y-divider"></div><div class="a11y-row"><span class="a11y-label">Text size</span><div class="a11y-stepper"><button class="a11y-step-btn on" id="a11y-sz1" title="Normal">A</button><button class="a11y-step-btn" id="a11y-sz2" title="Large">A+</button><button class="a11y-step-btn" id="a11y-sz3" title="XL">A++</button></div></div><div class="a11y-row"><span class="a11y-label">Line spacing</span><div class="a11y-stepper"><button class="a11y-step-btn on" id="a11y-ls1" title="Normal">1&#215;</button><button class="a11y-step-btn" id="a11y-ls2" title="Relaxed">1.5&#215;</button><button class="a11y-step-btn" id="a11y-ls3" title="Wide">2&#215;</button></div></div><div class="a11y-divider"></div><div class="a11y-row a11y-col-row"><span class="a11y-label">Colour overlay</span><div id="a11y-colours"><button class="a11y-col-chip sel" data-col="none" title="None">&#x2715;</button><button class="a11y-col-chip" data-col="cream" style="background:#fdf6e3" title="Cream"></button><button class="a11y-col-chip" data-col="yellow" style="background:#fff9c4" title="Yellow"></button><button class="a11y-col-chip" data-col="blue" style="background:#dbeafe" title="Blue"></button><button class="a11y-col-chip" data-col="green" style="background:#dcfce7" title="Green"></button><button class="a11y-col-chip" data-col="peach" style="background:#fce7f3" title="Peach"></button></div></div></div></div><div id="a11y-overlay"></div><div id="a11y-ruler-line"></div>
 
 
 <header>
@@ -726,7 +732,7 @@
 
 <script>
 (function(){
-var S='ateam_a11y',st={bionic:false,overlay:'none'};
+var S='ateam_a11y',st={bionic:false,overlay:'none',od:false,ruler:false,sz:1,ls:1};
 try{Object.assign(st,JSON.parse(localStorage.getItem(S)||'{}'));}catch(e){}
 var fab,panel,ttsBtn,ttsIcon,ttsLbl,bioBtn,ovl,ttsOn=false;
 function init(){
@@ -758,8 +764,26 @@ function init(){
   bioBtn.addEventListener('click',function(){setBio(!st.bionic);});
   function setOvl(col){st.overlay=col;ovl.style.background=OV[col]||'transparent';document.querySelectorAll('.a11y-col-chip').forEach(function(c){c.classList.toggle('sel',c.dataset.col===col);});save();}
   document.querySelectorAll('.a11y-col-chip').forEach(function(btn){btn.addEventListener('click',function(){setOvl(btn.dataset.col);});});
-  function save(){try{localStorage.setItem(S,JSON.stringify({bionic:st.bionic,overlay:st.overlay}));}catch(e){}}
-  setOvl(st.overlay);if(st.bionic)setBio(true);
+  // OpenDyslexic font
+  var odBtn=document.getElementById('a11y-od');
+  function setOD(on){st.od=on;document.body.classList.toggle('opendyslexic',on);if(on&&!document.getElementById('od-font')){var l=document.createElement('link');l.id='od-font';l.rel='stylesheet';l.href='https://fonts.cdnfonts.com/css/opendyslexic';document.head.appendChild(l);}if(odBtn){odBtn.textContent=on?'On':'Off';odBtn.classList.toggle('on',on);}save();}
+  if(odBtn)odBtn.addEventListener('click',function(){setOD(!st.od);});
+  // Reading ruler
+  var rulerEl=document.getElementById('a11y-ruler-line'),rulerBtn=document.getElementById('a11y-ruler-btn');
+  function setRuler(on){st.ruler=on;document.body.classList.toggle('ruler-on',on);if(rulerBtn){rulerBtn.textContent=on?'On':'Off';rulerBtn.classList.toggle('on',on);}save();}
+  document.addEventListener('mousemove',function(e){if(st.ruler&&rulerEl)rulerEl.style.top=(e.clientY-17)+'px';});
+  if(rulerBtn)rulerBtn.addEventListener('click',function(){setRuler(!st.ruler);});
+  // Text size (3 steps: 100% / 118% / 136%)
+  var SZ=[1,1.18,1.36],szBtns=[document.getElementById('a11y-sz1'),document.getElementById('a11y-sz2'),document.getElementById('a11y-sz3')];
+  function setSz(i){st.sz=i;document.documentElement.style.fontSize=(SZ[i-1]*16)+'px';szBtns.forEach(function(b,idx){if(b)b.classList.toggle('on',idx+1===i);});save();}
+  szBtns.forEach(function(b,i){if(b)b.addEventListener('click',function(){setSz(i+1);});});
+  // Line spacing (3 steps: 1.7 / 2.1 / 2.6)
+  var LS=[1.7,2.1,2.6],lsBtns=[document.getElementById('a11y-ls1'),document.getElementById('a11y-ls2'),document.getElementById('a11y-ls3')];
+  function setLs(i){st.ls=i;document.body.style.lineHeight=LS[i-1];lsBtns.forEach(function(b,idx){if(b)b.classList.toggle('on',idx+1===i);});save();}
+  lsBtns.forEach(function(b,i){if(b)b.addEventListener('click',function(){setLs(i+1);});});
+  // Save & restore all settings
+  function save(){try{localStorage.setItem(S,JSON.stringify({bionic:st.bionic,overlay:st.overlay,od:st.od,ruler:st.ruler,sz:st.sz,ls:st.ls}));}catch(e){}}
+  setOvl(st.overlay);if(st.bionic)setBio(true);setOD(!!st.od);setRuler(!!st.ruler);setSz(st.sz||1);setLs(st.ls||1);
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
@@ -1409,6 +1433,7 @@ function showQuizResult() {
   quizCompleted[qid] = true;
   const qs = document.getElementById(`qs-${qid}`);
   if (qs) { qs.textContent = `${correct}/10`; qs.className = 'quiz-status done'; }
+  persistProgress();
 
   const list = document.getElementById('review-list');
   list.innerHTML = '';
@@ -1573,6 +1598,9 @@ function submitTest() {
   document.getElementById('tr-written').textContent = writtenCount + ' (self-mark)';
 
   quizScores['test'] = correct + '/' + total;
+  const qsTest = document.getElementById('qs-test');
+  if (qsTest) { qsTest.textContent = correct + '/' + total; qsTest.className = 'quiz-status done'; }
+  persistProgress();
   updateScoreSummary();
 
   document.getElementById('test-retry-nudge').style.display = pct < 80 ? 'block' : 'none';
@@ -1622,186 +1650,35 @@ function retryTest() {
   showScreen('screen-test');
 }
 
+
+// ---- Progress persistence (test/quiz completion + scores) ----
+const PROG_KEY = 'ateam_progress_arjun_history';
+function loadProg(){ try{ return JSON.parse(localStorage.getItem(PROG_KEY)||'{}'); }catch(e){ return {}; } }
+function saveProg(p){ try{ localStorage.setItem(PROG_KEY, JSON.stringify(p)); }catch(e){} }
+function persistProgress(){
+  const p = { quizScores: quizScores };
+  if (typeof quizCompleted !== 'undefined') p.quizCompleted = quizCompleted;
+  saveProg(p);
+}
+function restoreProgress(){
+  const p = loadProg();
+  if (p.quizScores) Object.assign(quizScores, p.quizScores);
+  if (p.quizCompleted) Object.assign(quizCompleted, p.quizCompleted);
+  Object.keys(quizScores).forEach(qid => {
+    const qs = document.getElementById('qs-' + qid);
+    if (qs) { qs.textContent = quizScores[qid]; qs.className = 'quiz-status done'; }
+  });
+  updateScoreSummary();
+}
+
 // ============================================================
 // INIT
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
+  restoreProgress();
   document.getElementById('tg0').classList.add('open');
   loadQuiz(0, 0);
 });
-</script>
-
-<!-- Accessibility Toolbar -->
-
-
-
-<script>
-(function() {
-  var STORE = 'ateam_a11y';
-  var state = { bionic: false, overlay: 'none' };
-  try { Object.assign(state, JSON.parse(localStorage.getItem(STORE) || '{}')); } catch(e) {}
-
-  var fab    = document.getElementById('a11y-fab');
-  var panel  = document.getElementById('a11y-panel');
-  var ttsBtn = document.getElementById('a11y-tts');
-  var ttsIcon= document.getElementById('a11y-tts-icon');
-  var ttsLbl = document.getElementById('a11y-tts-label');
-  var bioBtn = document.getElementById('a11y-bionic');
-  var overlay= document.getElementById('a11y-overlay');
-
-  var OVERLAY_COLOURS = {
-    none:'transparent', cream:'rgba(253,246,227,0.5)',
-    yellow:'rgba(255,249,196,0.5)', blue:'rgba(219,234,254,0.5)',
-    green:'rgba(220,252,231,0.5)', peach:'rgba(252,231,243,0.5)'
-  };
-
-  /* ── PANEL ──────────────────────────────────────────────────────── */
-  fab.addEventListener('click', function(e) {
-    e.stopPropagation();
-    var open = panel.hasAttribute('hidden');
-    if (open) panel.removeAttribute('hidden'); else panel.setAttribute('hidden','');
-    fab.classList.toggle('open', open);
-  });
-  document.addEventListener('click', function(e) {
-    if (!document.getElementById('a11y-toolbar').contains(e.target))
-      panel.setAttribute('hidden','');
-  });
-
-  /* ── TTS ────────────────────────────────────────────────────────── */
-  var ttsOn = false;
-  function getReadableText() {
-    // 1. Flashcard face currently showing
-    var fc = document.getElementById('flashcard');
-    if (fc) {
-      var id = fc.classList.contains('flipped') ? 'cardAnswer' : 'cardQuestion';
-      var el = document.getElementById(id);
-      if (el) return el.innerText.trim();
-    }
-    // 2. Active quiz question
-    var qActive = document.querySelector('.screen.active .q-text');
-    if (qActive) return qActive.innerText.trim();
-    // 3. Open notes sections
-    var noteSections = document.querySelectorAll('.notes-section.open .notes-section-body');
-    if (noteSections.length) return Array.from(noteSections).map(function(n){return n.innerText.trim();}).join('\n\n');
-    // 4. Fallback: main content
-    var main = document.querySelector('main') || document.querySelector('.screen.active') || document.querySelector('.content');
-    return main ? main.innerText.trim().slice(0,2500) : '';
-  }
-
-  function startTTS() {
-    window.speechSynthesis.cancel();
-    var text = getReadableText();
-    if (!text) return;
-    var utt = new SpeechSynthesisUtterance(text);
-    utt.rate = 0.88; utt.pitch = 1.0;
-    utt.onend = utt.onerror = function() { setTTSState(false); };
-    window.speechSynthesis.speak(utt);
-    setTTSState(true);
-  }
-  function stopTTS() { window.speechSynthesis.cancel(); setTTSState(false); }
-  function setTTSState(on) {
-    ttsOn = on;
-    ttsBtn.classList.toggle('a11y-stop', on);
-    ttsIcon.textContent = on ? '⏹' : '\uD83D\uDD0A';
-    ttsLbl.textContent  = on ? 'Stop reading' : 'Read aloud';
-  }
-  ttsBtn.addEventListener('click', function() { ttsOn ? stopTTS() : startTTS(); });
-
-  /* ── BIONIC ─────────────────────────────────────────────────────── */
-  var TARGETS = '#cardQuestion,#cardAnswer,.q-text,.option-btn,.notes-section-body,.card-text,.home-hero p,.question-card p';
-  var bionicApplied = false;
-
-  function bionicWord(word) {
-    if (word.length <= 2) return word;
-    var h = Math.ceil(word.length / 2);
-    return '<b class="bionic-b">' + word.slice(0,h) + '</b>' + word.slice(h);
-  }
-  function walkBold(node) {
-    if (node.nodeType === 3) {
-      var t = node.textContent;
-      if (!t.trim()) return;
-      var html = t.replace(/([A-Za-z\u00C0-\u024F]{2,})/g, function(w){ return bionicWord(w); });
-      if (html === t) return;
-      var s = document.createElement('span');
-      s.innerHTML = html;
-      node.parentNode.replaceChild(s, node);
-    } else if (node.nodeType === 1 && !/^(SCRIPT|STYLE|B|BUTTON)$/.test(node.tagName)) {
-      Array.from(node.childNodes).forEach(walkBold);
-    }
-  }
-
-  function applyBionic() {
-    document.querySelectorAll(TARGETS).forEach(function(el) {
-      if (el.dataset.bionicDone) return;
-      el.dataset.bionicDone = '1';
-      el.dataset.bionicOrig = el.innerHTML;
-      walkBold(el);
-    });
-  }
-  function removeBionic() {
-    document.querySelectorAll('[data-bionic-done]').forEach(function(el) {
-      el.innerHTML = el.dataset.bionicOrig || el.innerHTML;
-      delete el.dataset.bionicDone;
-      delete el.dataset.bionicOrig;
-    });
-  }
-
-  // Hook into card flip & question rendering if those functions exist
-  ['flipCard','loadQuestion','showQuestion','nextCard','prevCard'].forEach(function(fn) {
-    if (typeof window[fn] === 'function') {
-      var orig = window[fn];
-      window[fn] = function() {
-        var r = orig.apply(this, arguments);
-        if (state.bionic) setTimeout(applyBionic, 60);
-        return r;
-      };
-    }
-  });
-
-  // MutationObserver for dynamic question rendering (with debounce)
-  var bionicTimer;
-  new MutationObserver(function() {
-    if (!state.bionic) return;
-    clearTimeout(bionicTimer);
-    bionicTimer = setTimeout(applyBionic, 80);
-  }).observe(document.body, { childList: true, subtree: true });
-
-  function setBionic(on) {
-    state.bionic = on;
-    bioBtn.textContent = on ? 'On' : 'Off';
-    bioBtn.setAttribute('aria-pressed', on);
-    bioBtn.classList.toggle('on', on);
-    on ? applyBionic() : removeBionic();
-    save();
-  }
-  bioBtn.addEventListener('click', function() { setBionic(!state.bionic); });
-
-  /* ── COLOUR OVERLAY ─────────────────────────────────────────────── */
-  function setOverlay(col) {
-    state.overlay = col;
-    overlay.style.background = OVERLAY_COLOURS[col] || 'transparent';
-    document.querySelectorAll('.a11y-col-chip').forEach(function(c) {
-      c.classList.toggle('sel', c.dataset.col === col);
-    });
-    save();
-  }
-  document.querySelectorAll('.a11y-col-chip').forEach(function(btn) {
-    btn.addEventListener('click', function() { setOverlay(btn.dataset.col); });
-  });
-
-  /* ── PERSIST & INIT ─────────────────────────────────────────────── */
-  function save() {
-    try { localStorage.setItem(STORE, JSON.stringify({bionic:state.bionic, overlay:state.overlay})); } catch(e) {}
-  }
-
-  function init() {
-    setOverlay(state.overlay);
-    if (state.bionic) setBionic(true);
-  }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-  else init();
-})();
-</script>
-
-</body>
+</script></body>
 </html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                

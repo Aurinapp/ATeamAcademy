@@ -443,6 +443,15 @@
   .hdr-red    { background: linear-gradient(90deg, #c62828, #ef5350); color: white; }
 
 
+  @media (max-width: 720px) {
+    main { padding: 20px 16px; }
+    .sidebar { width: 220px; min-width: 220px; }
+  }
+  @media (max-width: 540px) {
+    .app { flex-direction: column; height: auto; }
+    .sidebar { width: 100%; min-width: unset; max-height: 200px; }
+  }
+
   /* ── A11Y TOOLBAR ── */
   #a11y-toolbar{position:fixed!important;bottom:24px!important;right:24px!important;z-index:2147483647!important;font-family:'Lexend','Segoe UI',sans-serif;}
   #a11y-fab{width:50px;height:50px;border-radius:50%;background:#1565c0;border:none;color:#fff;font-size:1.3rem;cursor:pointer;box-shadow:0 4px 18px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;transition:transform .2s,background .2s;}
