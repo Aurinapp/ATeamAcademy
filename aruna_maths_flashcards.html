@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aruna's Maths Flashcards</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --blue: #1565c0;
+    --cyan: #0097a7;
+    --orange: #f57c00;
+    --light: #f0f4ff;
+    --dark: #0d1b3e;
+    --correct: #2e7d32;
+    --incorrect: #c62828;
+  }
+
+  body {
+    font-family: 'Lexend', 'Segoe UI', sans-serif;
+    background: var(--light);
+    color: var(--dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  
+  line-height: 1.7;
+
+  word-spacing: 0.05em;
+
+  font-size: 1rem;
+}
+
+  header {
+    background: linear-gradient(135deg, #1565c0, #0097a7);
+    color: white;
+    padding: 18px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 3px 12px rgba(21,101,192,0.35);
+  }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .back-btn {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .back-btn:hover { background: rgba(255,255,255,0.3); }
+  header h1 { font-size: 1.4rem; font-weight: 700; }
+  header h1 span { opacity: 0.8; font-weight: 400; font-size: 1rem; margin-left: 8px; }
+  .header-badge {
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .app { display: flex; flex: 1; }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 260px;
+    min-width: 260px;
+    background: var(--dark);
+    color: white;
+    padding: 20px 0;
+    overflow-y: auto;
+  }
+  .sidebar-title {
+    padding: 0 20px 14px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: rgba(255,255,255,0.4);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 8px;
+  }
+  .topic-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px 20px;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.7);
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    border-left: 3px solid transparent;
+  }
+  .topic-btn:hover { background: rgba(255,255,255,0.06); color: white; }
+  .topic-btn.active {
+    background: rgba(0,151,167,0.2);
+    color: white;
+    border-left-color: var(--cyan);
+    font-weight: 600;
+  }
+  .topic-icon { font-size: 1.1rem; width: 24px; text-align: center; }
+  .topic-count {
+    margin-left: auto;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 2px 8px;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.5);
+  }
+  .topic-btn.active .topic-count { background: var(--cyan); color: white; }
+
+  /* MAIN */
+  main {
+    flex: 1;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+  }
+
+  .topic-header { width: 100%; max-width: 700px; margin-bottom: 22px; }
+  .topic-header h2 { font-size: 1.5rem; color: var(--blue); font-weight: 700; }
+  .topic-header p { color: #666; font-size: 0.9rem; margin-top: 4px; }
+
+  .progress-row {
+    width: 100%; max-width: 700px; margin-bottom: 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .progress-bar-wrap {
+    flex: 1; height: 8px; background: #dde4f0; border-radius: 4px; overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue), var(--cyan));
+    border-radius: 4px;
+    transition: width 0.4s ease;
+  }
+  .progress-label { font-size: 0.82rem; color: #888; white-space: nowrap; }
+
+  .stats-row { width: 100%; max-width: 700px; display: flex; gap: 10px; margin-bottom: 24px; }
+  .stat-chip {
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 600;
+  }
+  .stat-chip.correct { background: #e8f5e9; color: #2e7d32; }
+  .stat-chip.incorrect { background: #fce4ec; color: #c62828; }
+  .stat-chip.unseen { background: #f5f5f5; color: #9e9e9e; }
+  .stat-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+
+  /* FLASHCARD */
+  .card-area {
+    width: 100%; max-width: 700px;
+    perspective: 1200px; margin-bottom: 24px;
+  }
+  .flashcard {
+    width: 100%; height: 260px; cursor: pointer;
+    position: relative; transform-style: preserve-3d;
+    transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .flashcard.flipped { transform: rotateY(180deg); }
+
+  .card-face {
+    position: absolute; inset: 0; backface-visibility: hidden;
+    border-radius: 18px; padding: 36px 40px;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(21,101,192,0.12);
+  }
+  .card-front {
+    background: linear-gradient(145deg, #1565c0, #0d47a1);
+    color: white;
+  }
+  .card-back {
+    background: white; color: var(--dark);
+    transform: rotateY(180deg);
+    border: 2px solid #c5d8f8;
+  }
+  .card-label {
+    font-size: 0.72rem; text-transform: uppercase;
+    letter-spacing: 2px; opacity: 0.6; margin-bottom: 16px;
+  }
+  .card-text { font-size: 1.2rem; font-weight: 600; line-height: 1.5; }
+  .card-back .card-text { font-size: 1.05rem; font-weight: 500; }
+  .card-hint {
+    position: absolute; bottom: 18px; font-size: 0.75rem;
+    opacity: 0.4; display: flex; align-items: center; gap: 6px;
+  }
+  .card-number {
+    position: absolute; top: 18px; right: 20px;
+    font-size: 0.78rem; opacity: 0.5; font-weight: 600;
+  }
+
+  /* FORMULA HIGHLIGHT */
+  .formula {
+    background: rgba(255,255,255,0.15);
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-family: 'Courier New', monospace;
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+  }
+  .card-back .formula {
+    background: #e3f0ff;
+    color: var(--blue);
+  }
+
+  /* CONTROLS */
+  .rating-row {
+    width: 100%; max-width: 700px;
+    display: flex; gap: 10px; justify-content: center;
+    margin-bottom: 20px;
+  }
+  .rating-label { font-size: 0.82rem; color: #999; align-self: center; margin-right: 4px; }
+
+  .controls {
+    width: 100%; max-width: 700px;
+    display: flex; gap: 12px; justify-content: center;
+    margin-bottom: 20px; flex-wrap: wrap;
+  }
+  .btn {
+    padding: 11px 22px; border-radius: 50px; border: none;
+    font-size: 0.9rem; font-weight: 600; cursor: pointer;
+    display: flex; align-items: center; gap: 7px; transition: all 0.2s;
+  }
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(0,0,0,0.15); }
+  .btn:active { transform: translateY(0); }
+  .btn-prev { background: #dde8ff; color: var(--blue); }
+  .btn-next { background: linear-gradient(135deg, var(--blue), var(--cyan)); color: white; }
+  .btn-correct { background: #e8f5e9; color: #2e7d32; }
+  .btn-incorrect { background: #fce4ec; color: #c62828; }
+  .btn-shuffle { background: #e0f7fa; color: var(--cyan); }
+  .btn-reset { background: #f5f5f5; color: #888; }
+  .btn-grid { background: #dde8ff; color: var(--blue); font-size: 0.82rem; padding: 7px 14px; }
+
+  .card-grid-toggle { width: 100%; max-width: 700px; text-align: right; margin-bottom: 10px; }
+  .card-grid {
+    display: none; width: 100%; max-width: 700px;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 10px; margin-bottom: 24px;
+  }
+  .card-grid.visible { display: grid; }
+  .mini-card {
+    padding: 12px; border-radius: 10px; font-size: 0.78rem;
+    cursor: pointer; border: 2px solid transparent; transition: all 0.2s; line-height: 1.4;
+  }
+  .mini-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+  .mini-card.unseen { background: #f5f5f5; color: #555; border-color: #e0e0e0; }
+  .mini-card.correct { background: #e8f5e9; color: #2e7d32; border-color: #a5d6a7; }
+  .mini-card.incorrect { background: #fce4ec; color: #c62828; border-color: #f48fb1; }
+  .mini-card.current { border-color: var(--blue) !important; box-shadow: 0 0 0 3px rgba(21,101,192,0.2); }
+
+  .complete-banner {
+    display: none; width: 100%; max-width: 700px;
+    background: linear-gradient(135deg, #e3f2fd, #e8f5e9);
+    border: 2px solid #90caf9; border-radius: 16px;
+    padding: 24px; text-align: center; margin-bottom: 20px;
+  }
+  .complete-banner.visible { display: block; }
+  .complete-banner h3 { font-size: 1.3rem; color: var(--blue); margin-bottom: 8px; }
+  .complete-banner p { color: #555; font-size: 0.9rem; }
+  .score-big { font-size: 2.5rem; font-weight: 800; color: var(--blue); }
+
+  @media (max-width: 700px) {
+    .sidebar { display: none; }
+    main { padding: 16px; }
+    .flashcard { height: 220px; }
+    .card-text { font-size: 1rem; }
+  }
+
+  /* MODE TOGGLE */
+  .mode-toggle {
+    display: flex; gap: 8px; margin-bottom: 24px;
+    width: 100%; max-width: 700px;
+  }
+  .mode-btn {
+    padding: 9px 20px; border-radius: 50px; border: 2px solid #c5d8f8;
+    background: white; color: #555; font-size: 0.88rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .mode-btn:hover { border-color: var(--blue); color: var(--blue); }
+  .mode-btn.active { background: var(--blue); color: white; border-color: var(--blue); }
+
+  /* REVISION NOTES */
+  .notes-view { display: none; width: 100%; max-width: 700px; flex-direction: column; gap: 12px; }
+  .notes-view.visible { display: flex; }
+  .flashcard-view.hidden { display: none; }
+  .notes-intro {
+    background: #e3f2fd; border-left: 4px solid var(--blue);
+    border-radius: 8px; padding: 14px 16px;
+    font-size: 0.9rem; line-height: 1.6; color: #1a3050;
+  }
+  .notes-section { border-radius: 10px; overflow: hidden; border: 1px solid #e0e8f8; }
+  .notes-section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 13px 16px; cursor: pointer; user-select: none;
+    font-weight: 600; font-size: 0.92rem;
+  }
+  .notes-section-header .section-title { display: flex; align-items: center; gap: 10px; }
+  .notes-section-header .chevron { font-size: 0.7rem; transition: transform 0.2s; }
+  .notes-section.open .chevron { transform: rotate(180deg); }
+  .notes-section-body { display: none; padding: 16px; background: white; font-size: 0.88rem; line-height: 1.7; }
+  .notes-section.open .notes-section-body { display: block; }
+  .notes-section-body h4 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.8px; color: #777; margin: 14px 0 6px; }
+  .notes-section-body h4:first-child { margin-top: 0; }
+  .notes-section-body ul { margin: 0 0 8px 0; padding-left: 18px; }
+  .notes-section-body ul li { margin-bottom: 5px; }
+  .notes-section-body ul li strong { color: #1565c0; }
+  .notes-table { width: 100%; border-collapse: collapse; font-size: 0.86rem; margin: 8px 0; }
+  .notes-table th { background: #1565c0; color: white; padding: 8px 12px; text-align: left; font-size: 0.82rem; }
+  .notes-table td { padding: 8px 12px; border-bottom: 1px solid #e8eef8; vertical-align: top; }
+  .notes-table tr:last-child td { border-bottom: none; }
+  .notes-table tr:nth-child(even) td { background: #f5f8ff; }
+  .callout {
+    background: #e8f0fe; border-left: 3px solid var(--blue);
+    border-radius: 6px; padding: 10px 14px; margin: 10px 0;
+    font-size: 0.85rem; line-height: 1.6;
+  }
+  .callout strong { display: block; color: var(--blue); margin-bottom: 3px; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.5px; }
+  /* header colours */
+  .hdr-blue { background: #e3f0ff; color: #1565c0; }
+  .hdr-teal { background: #e0f7fa; color: #00838f; }
+  .hdr-orange { background: #fff3e0; color: #e65100; }
+  .hdr-purple { background: #f3e5f5; color: #6a1b9a; }
+  .hdr-pink { background: #fce4ec; color: #880e4f; }
+  .hdr-green { background: #e8f5e9; color: #2e7d32; }
+
+
+  /* ── A11Y TOOLBAR ── */
+  #a11y-toolbar{position:fixed!important;bottom:24px!important;right:24px!important;z-index:2147483647!important;font-family:'Lexend','Segoe UI',sans-serif;}
+  #a11y-fab{width:50px;height:50px;border-radius:50%;background:#1565c0;border:none;color:#fff;font-size:1.3rem;cursor:pointer;box-shadow:0 4px 18px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;transition:transform .2s,background .2s;}
+  #a11y-fab:hover{background:#0d47a1;transform:scale(1.07);}
+  #a11y-fab.open{background:#0d47a1;}
+  #a11y-panel{position:absolute;bottom:62px;right:0;background:#fff;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.2);padding:16px;width:260px;border:1px solid rgba(0,0,0,.07);}
+  #a11y-panel[hidden]{display:none!important;}
+  .a11y-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#888;margin-bottom:12px;}
+  .a11y-action-btn{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border-radius:10px;background:#f0f7ff;border:1.5px solid #cde4f5;color:#1565c0;font-size:.9rem;font-weight:600;cursor:pointer;font-family:inherit;}
+  .a11y-action-btn.a11y-stop{background:#fee2e2;border-color:#fca5a5;color:#dc2626;}
+  .a11y-divider{height:1px;background:#e5e7eb;margin:12px 0;}
+  .a11y-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+  .a11y-col-row{flex-direction:column;align-items:flex-start;gap:8px;margin-bottom:4px;}
+  .a11y-label{font-size:.85rem;color:#222;font-weight:500;}
+  .a11y-pill{padding:4px 14px;border-radius:20px;border:2px solid #d1d5db;background:#f3f4f6;color:#6b7280;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;}
+  .a11y-pill.on{background:#1565c0;border-color:#1565c0;color:#fff;}
+  #a11y-colours{display:flex;gap:7px;flex-wrap:wrap;}
+  .a11y-col-chip{width:28px;height:28px;border-radius:50%;border:2.5px solid #d1d5db;cursor:pointer;font-size:.65rem;display:flex;align-items:center;justify-content:center;background:#e5e7eb;}
+  .a11y-col-chip.sel{border-color:#1565c0;border-width:3px;}
+  #a11y-overlay{position:fixed!important;inset:0;pointer-events:none;z-index:2147483646!important;transition:background .35s;}
+  b.bionic-b{font-weight:800;}
+  .a11y-stepper{display:flex;gap:4px;}
+  .a11y-step-btn{width:32px;height:28px;border-radius:8px;border:2px solid #d1d5db;background:#f3f4f6;color:#6b7280;font-size:.82rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;transition:background .15s,border-color .15s;}
+  .a11y-step-btn.on{background:#1565c0;border-color:#1565c0;color:#fff;}
+  #a11y-ruler-line{position:fixed!important;left:0;right:0;height:34px;pointer-events:none;z-index:2147483645!important;background:rgba(21,101,192,.1);border-top:2px solid rgba(21,101,192,.35);border-bottom:2px solid rgba(21,101,192,.35);display:none;top:0;}
+  body.ruler-on #a11y-ruler-line{display:block;}
+  body.opendyslexic,body.opendyslexic *{font-family:'OpenDyslexic','Lexend','Segoe UI',sans-serif!important;}
+
+</style>
+</head>
+<body>
+<div id="a11y-toolbar"><button id="a11y-fab" title="Accessibility tools" aria-label="Accessibility tools">&#9681;</button><div id="a11y-panel" hidden><div class="a11y-title">Accessibility</div><button id="a11y-tts" class="a11y-action-btn"><span id="a11y-tts-icon">&#128266;</span><span id="a11y-tts-label"> Read aloud</span></button><div class="a11y-divider"></div><div class="a11y-row"><span class="a11y-label">Bionic reading</span><button id="a11y-bionic" class="a11y-pill">Off</button></div><div class="a11y-row"><span class="a11y-label">OpenDyslexic font</span><button id="a11y-od" class="a11y-pill">Off</button></div><div class="a11y-row"><span class="a11y-label">Reading ruler</span><button id="a11y-ruler-btn" class="a11y-pill">Off</button></div><div class="a11y-divider"></div><div class="a11y-row"><span class="a11y-label">Text size</span><div class="a11y-stepper"><button class="a11y-step-btn on" id="a11y-sz1" title="Normal">A</button><button class="a11y-step-btn" id="a11y-sz2" title="Large">A+</button><button class="a11y-step-btn" id="a11y-sz3" title="XL">A++</button></div></div><div class="a11y-row"><span class="a11y-label">Line spacing</span><div class="a11y-stepper"><button class="a11y-step-btn on" id="a11y-ls1" title="Normal">1&#215;</button><button class="a11y-step-btn" id="a11y-ls2" title="Relaxed">1.5&#215;</button><button class="a11y-step-btn" id="a11y-ls3" title="Wide">2&#215;</button></div></div><div class="a11y-divider"></div><div class="a11y-row a11y-col-row"><span class="a11y-label">Colour overlay</span><div id="a11y-colours"><button class="a11y-col-chip sel" data-col="none" title="None">&#x2715;</button><button class="a11y-col-chip" data-col="cream" style="background:#fdf6e3" title="Cream"></button><button class="a11y-col-chip" data-col="yellow" style="background:#fff9c4" title="Yellow"></button><button class="a11y-col-chip" data-col="blue" style="background:#dbeafe" title="Blue"></button><button class="a11y-col-chip" data-col="green" style="background:#dcfce7" title="Green"></button><button class="a11y-col-chip" data-col="peach" style="background:#fce7f3" title="Peach"></button></div></div></div></div><div id="a11y-overlay"></div><div id="a11y-ruler-line"></div>
+
+
+<header>
+  <div class="header-left">
+    <a class="back-btn" href="index.html">← Back</a>
+    <h1>📐 Aruna's Flashcards <span>Mathematics · AQA GCSE Year 10</span></h1>
+  </div>
+  <div class="header-badge">Year 10</div>
+</header>
+
+<div class="app">
+  <nav class="sidebar">
+    <div class="sidebar-title">Topics</div>
+    <button class="topic-btn active" onclick="selectTopic(0)" id="topicBtn0">
+      <span class="topic-icon">🔢</span> Number
+      <span class="topic-count" id="count0">20</span>
+    </button>
+    <button class="topic-btn" onclick="selectTopic(1)" id="topicBtn1">
+      <span class="topic-icon">🔣</span> Algebra
+      <span class="topic-count" id="count1">20</span>
+    </button>
+    <button class="topic-btn" onclick="selectTopic(2)" id="topicBtn2">
+      <span class="topic-icon">📈</span> Graphs
+      <span class="topic-count" id="count2">18</span>
+    </button>
+    <button class="topic-btn" onclick="selectTopic(3)" id="topicBtn3">
+      <span class="topic-icon">⚖️</span> Ratio &amp; Proportion
+      <span class="topic-count" id="count3">18</span>
+    </button>
+    <button class="topic-btn" onclick="selectTopic(4)" id="topicBtn4">
+      <span class="topic-icon">📐</span> Geometry &amp; Measures
+      <span class="topic-count" id="count4">22</span>
+    </button>
+    <button class="topic-btn" onclick="selectTopic(5)" id="topicBtn5">
+      <span class="topic-icon">📊</span> Statistics
+      <span class="topic-count" id="count5">18</span>
+    </button>
+    <button class="topic-btn" onclick="selectTopic(6)" id="topicBtn6">
+      <span class="topic-icon">🎲</span> Probability
+      <span class="topic-count" id="count6">16</span>
+    </button>
+  </nav>
+
+  <main>
+    <div class="topic-header">
+      <h2 id="topicTitle">🔢 Number</h2>
+      <p id="topicDesc">Fractions, decimals, percentages, indices, surds and standard form</p>
+    </div>
+
+    <!-- MODE TOGGLE -->
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="modeFlashcards" onclick="setMode('flashcards')">🃏 Flashcards</button>
+      <button class="mode-btn" id="modeNotes" onclick="setMode('notes')">📖 Revision Notes</button>
+    </div>
+
+    <!-- REVISION NOTES VIEW -->
+    <div class="notes-view" id="notesView"></div>
+
+    <!-- FLASHCARD VIEW -->
+    <div class="flashcard-view" id="flashcardView">
+    <div class="progress-row">
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+      </div>
+      <div class="progress-label" id="progressLabel">0 / 20 seen</div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-chip correct"><span class="stat-dot"></span> <span id="correctCount">0</span> Got it</div>
+      <div class="stat-chip incorrect"><span class="stat-dot"></span> <span id="incorrectCount">0</span> Review</div>
+      <div class="stat-chip unseen"><span class="stat-dot"></span> <span id="unseenCount">20</span> Not seen</div>
+    </div>
+
+    <div class="card-area">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="card-face card-front">
+          <div class="card-label">Question</div>
+          <div class="card-text" id="cardQuestion">Loading...</div>
+          <div class="card-hint">👆 Tap to reveal answer</div>
+          <div class="card-number" id="cardNum">1 / 20</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-label">Answer</div>
+          <div class="card-text" id="cardAnswer">Loading...</div>
+          <div class="card-hint">✓ Rate yourself below</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rating-row">
+      <span class="rating-label">How did you do?</span>
+      <button class="btn btn-incorrect" onclick="rateCard('incorrect')">❌ Need to review</button>
+      <button class="btn btn-correct" onclick="rateCard('correct')">✅ Got it!</button>
+    </div>
+
+    <div class="controls">
+      <button class="btn btn-prev" onclick="prevCard()">◀ Previous</button>
+      <button class="btn btn-shuffle" onclick="shuffleCards()">🔀 Shuffle</button>
+      <button class="btn btn-reset" onclick="resetTopic()">↺ Reset</button>
+      <button class="btn btn-next" onclick="nextCard()">Next ▶</button>
+    </div>
+
+    <div class="card-grid-toggle">
+      <button class="btn btn-grid" onclick="toggleGrid()">⊞ Card overview</button>
+    </div>
+    <div class="card-grid" id="cardGrid"></div>
+
+    <div class="complete-banner" id="completeBanner">
+      <div class="score-big" id="scoreBig">0%</div>
+      <h3 id="completeTitleEl">🎉 Topic complete!</h3>
+      <p id="completeMsg">Well done Aruna!</p>
+    </div>
+    </div><!-- end flashcard-view -->
+  </main>
+</div>
+
+<script>
+(function(){
+var S='ateam_a11y',st={bionic:false,overlay:'none',od:false,ruler:false,sz:1,ls:1};
+try{Object.assign(st,JSON.parse(localStorage.getItem(S)||'{}'));}catch(e){}
+var fab,panel,ttsBtn,ttsIcon,ttsLbl,bioBtn,ovl,ttsOn=false;
+function init(){
+  fab=document.getElementById('a11y-fab');
+  panel=document.getElementById('a11y-panel');
+  ttsBtn=document.getElementById('a11y-tts');
+  ttsIcon=document.getElementById('a11y-tts-icon');
+  ttsLbl=document.getElementById('a11y-tts-label');
+  bioBtn=document.getElementById('a11y-bionic');
+  ovl=document.getElementById('a11y-overlay');
+  if(!fab)return;
+  var OV={none:'transparent',cream:'rgba(253,246,227,.5)',yellow:'rgba(255,249,196,.5)',blue:'rgba(219,234,254,.5)',green:'rgba(220,252,231,.5)',peach:'rgba(252,231,243,.5)'};
+  fab.addEventListener('click',function(e){e.stopPropagation();var o=panel.hasAttribute('hidden');if(o)panel.removeAttribute('hidden');else panel.setAttribute('hidden','');fab.classList.toggle('open',o);});
+  document.addEventListener('click',function(e){var tb=document.getElementById('a11y-toolbar');if(tb&&!tb.contains(e.target))panel.setAttribute('hidden','');});
+  var ttsOn=false;
+  function getText(){var fc=document.getElementById('flashcard');if(fc){var id=fc.classList.contains('flipped')?'cardAnswer':'cardQuestion';var el=document.getElementById(id);if(el&&el.innerText.trim())return el.innerText.trim();}var q=document.querySelector('.screen.active .q-text');if(q)return q.innerText.trim();var ns=document.querySelectorAll('.notes-section.open .notes-section-body');if(ns.length)return Array.from(ns).map(function(n){return n.innerText.trim();}).join('\n\n');var m=document.querySelector('main')||document.querySelector('.screen.active');return m?m.innerText.trim().slice(0,2500):'';}
+  function startTTS(){window.speechSynthesis.cancel();var t=getText();if(!t)return;var u=new SpeechSynthesisUtterance(t);u.rate=0.88;u.onend=u.onerror=function(){setTS(false);};window.speechSynthesis.speak(u);setTS(true);}
+  function stopTTS(){window.speechSynthesis.cancel();setTS(false);}
+  function setTS(on){ttsOn=on;ttsBtn.classList.toggle('a11y-stop',on);ttsIcon.innerHTML=on?'&#9209;':'&#128266;';ttsLbl.textContent=on?' Stop':' Read aloud';}
+  ttsBtn.addEventListener('click',function(){ttsOn?stopTTS():startTTS();});
+  function bioW(w){if(w.length<=2)return w;var h=Math.ceil(w.length/2);return '<b class="bionic-b">'+w.slice(0,h)+'</b>'+w.slice(h);}
+  function walkBold(node){if(node.nodeType===3){var t=node.textContent;if(!t.trim())return;var html=t.replace(/([A-Za-zÀ-ɏ]{2,})/g,function(w){return bioW(w);});if(html===t)return;var s=document.createElement('span');s.innerHTML=html;node.parentNode.replaceChild(s,node);}else if(node.nodeType===1&&!/^(SCRIPT|STYLE|B|BUTTON|INPUT)$/.test(node.tagName))Array.from(node.childNodes).forEach(walkBold);}
+  var TG='#cardQuestion,#cardAnswer,.q-text,.option-btn,.notes-section-body,.card-text,.home-hero p';
+  function applyBio(){document.querySelectorAll(TG).forEach(function(el){if(el.dataset.bd)return;el.dataset.bd='1';el.dataset.bo=el.innerHTML;walkBold(el);});}
+  function removeBio(){document.querySelectorAll('[data-bd]').forEach(function(el){el.innerHTML=el.dataset.bo||el.innerHTML;delete el.dataset.bd;delete el.dataset.bo;});}
+  ['flipCard','loadQuestion','showQuestion','nextCard','prevCard'].forEach(function(fn){if(typeof window[fn]==='function'){var o=window[fn];window[fn]=function(){var r=o.apply(this,arguments);if(st.bionic)setTimeout(applyBio,80);return r;};}});
+  var bt;new MutationObserver(function(){if(!st.bionic)return;clearTimeout(bt);bt=setTimeout(applyBio,80);}).observe(document.body,{childList:true,subtree:true});
+  function setBio(on){st.bionic=on;bioBtn.textContent=on?'On':'Off';bioBtn.classList.toggle('on',on);if(on)applyBio();else removeBio();save();}
+  bioBtn.addEventListener('click',function(){setBio(!st.bionic);});
+  function setOvl(col){st.overlay=col;ovl.style.background=OV[col]||'transparent';document.querySelectorAll('.a11y-col-chip').forEach(function(c){c.classList.toggle('sel',c.dataset.col===col);});save();}
+  document.querySelectorAll('.a11y-col-chip').forEach(function(btn){btn.addEventListener('click',function(){setOvl(btn.dataset.col);});});
+  // OpenDyslexic font
+  var odBtn=document.getElementById('a11y-od');
+  function setOD(on){st.od=on;document.body.classList.toggle('opendyslexic',on);if(on&&!document.getElementById('od-font')){var l=document.createElement('link');l.id='od-font';l.rel='stylesheet';l.href='https://fonts.cdnfonts.com/css/opendyslexic';document.head.appendChild(l);}if(odBtn){odBtn.textContent=on?'On':'Off';odBtn.classList.toggle('on',on);}save();}
+  if(odBtn)odBtn.addEventListener('click',function(){setOD(!st.od);});
+  // Reading ruler
+  var rulerEl=document.getElementById('a11y-ruler-line'),rulerBtn=document.getElementById('a11y-ruler-btn');
+  function setRuler(on){st.ruler=on;document.body.classList.toggle('ruler-on',on);if(rulerBtn){rulerBtn.textContent=on?'On':'Off';rulerBtn.classList.toggle('on',on);}save();}
+  document.addEventListener('mousemove',function(e){if(st.ruler&&rulerEl)rulerEl.style.top=(e.clientY-17)+'px';});
+  if(rulerBtn)rulerBtn.addEventListener('click',function(){setRuler(!st.ruler);});
+  // Text size (3 steps: 100% / 118% / 136%)
+  var SZ=[1,1.18,1.36],szBtns=[document.getElementById('a11y-sz1'),document.getElementById('a11y-sz2'),document.getElementById('a11y-sz3')];
+  function setSz(i){st.sz=i;document.documentElement.style.fontSize=(SZ[i-1]*16)+'px';szBtns.forEach(function(b,idx){if(b)b.classList.toggle('on',idx+1===i);});save();}
+  szBtns.forEach(function(b,i){if(b)b.addEventListener('click',function(){setSz(i+1);});});
+  // Line spacing (3 steps: 1.7 / 2.1 / 2.6)
+  var LS=[1.7,2.1,2.6],lsBtns=[document.getElementById('a11y-ls1'),document.getElementById('a11y-ls2'),document.getElementById('a11y-ls3')];
+  function setLs(i){st.ls=i;document.body.style.lineHeight=LS[i-1];lsBtns.forEach(function(b,idx){if(b)b.classList.toggle('on',idx+1===i);});save();}
+  lsBtns.forEach(function(b,i){if(b)b.addEventListener('click',function(){setLs(i+1);});});
+  // Save & restore all settings
+  function save(){try{localStorage.setItem(S,JSON.stringify({bionic:st.bionic,overlay:st.overlay,od:st.od,ruler:st.ruler,sz:st.sz,ls:st.ls}));}catch(e){}}
+  setOvl(st.overlay);if(st.bionic)setBio(true);setOD(!!st.od);setRuler(!!st.ruler);setSz(st.sz||1);setLs(st.ls||1);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+<script>
+const topics = [
+
+  // ── TOPIC 0: NUMBER ──────────────────────────────────────
+  {
+    title: "🔢 Number",
+    desc: "Fractions, decimals, percentages, indices, surds and standard form",
+    cards: [
+      { q: "How do you add fractions with different denominators?", a: "Find the LCM of the denominators, convert both fractions, then add the numerators. Example: 1/3 + 1/4 = 4/12 + 3/12 = 7/12." },
+      { q: "How do you multiply two fractions?", a: "Multiply numerators together and denominators together. Example: 2/3 × 3/5 = 6/15 = 2/5. Always simplify." },
+      { q: "How do you divide fractions?", a: "Keep the first fraction, flip the second (find reciprocal), then multiply. Example: 2/3 ÷ 4/5 = 2/3 × 5/4 = 10/12 = 5/6." },
+      { q: "What is a reciprocal?", a: "Flipping a fraction — the reciprocal of 3/4 is 4/3. The reciprocal of 5 is 1/5. Multiplying a number by its reciprocal always gives 1." },
+      { q: "How do you convert a fraction to a percentage?", a: "Divide the numerator by the denominator, then multiply by 100. Example: 3/8 = 0.375 × 100 = 37.5%." },
+      { q: "What is the rule for multiplying indices with the same base?", a: "Add the powers: aᵐ × aⁿ = aᵐ⁺ⁿ. Example: x³ × x⁴ = x⁷." },
+      { q: "What is the rule for dividing indices with the same base?", a: "Subtract the powers: aᵐ ÷ aⁿ = aᵐ⁻ⁿ. Example: x⁵ ÷ x² = x³." },
+      { q: "What does a negative index mean?", a: "It means the reciprocal. a⁻ⁿ = 1/aⁿ. Example: 2⁻³ = 1/2³ = 1/8." },
+      { q: "What does a fractional index mean? E.g. x^(1/2)", a: "A fractional index means a root. x^(1/2) = √x. x^(1/3) = ∛x. x^(2/3) = (∛x)²." },
+      { q: "What is standard form?", a: "A number written as A × 10ⁿ where 1 ≤ A < 10 and n is an integer. Example: 45,000 = 4.5 × 10⁴." },
+      { q: "What is a surd?", a: "An irrational square root that cannot be simplified to a whole number. Example: √2, √5, √7 are surds. √4 = 2 is NOT a surd." },
+      { q: "How do you simplify √48?", a: "Find the largest square factor: 48 = 16 × 3, so √48 = √16 × √3 = 4√3." },
+      { q: "What is the rule for (aᵐ)ⁿ?", a: "Multiply the powers: (aᵐ)ⁿ = aᵐⁿ. Example: (x³)⁴ = x¹²." },
+      { q: "How do you find a percentage increase/decrease?", a: "Percentage change = (change ÷ original) × 100. Increase: multiply original by (1 + %/100). Example: 20% increase → × 1.2." },
+      { q: "What is the difference between simple and compound interest?", a: "Simple: interest on original only. Compound: interest on the total (original + previous interest). Formula: A = P(1 + r/100)ⁿ." },
+      { q: "How do you round to significant figures?", a: "Count from the first non-zero digit. Round as normal — if the next digit is ≥5 round up. Example: 0.004678 to 2 s.f. = 0.0047." },
+      { q: "What is an HCF and how do you find it?", a: "Highest Common Factor — the largest number that divides into both. Use prime factorisation and find common prime factors." },
+      { q: "What is an LCM and how do you find it?", a: "Lowest Common Multiple — smallest number both divide into. Use prime factorisation and take each prime to its highest power." },
+      { q: "How do you write a number as a product of its prime factors?", a: "Use a factor tree, keep dividing by primes until you reach 1. Example: 60 = 2² × 3 × 5." },
+      { q: "How do you calculate reverse percentage? (e.g. a price after 20% VAT is £60 — find original)", a: "Divide by the multiplier: £60 ÷ 1.2 = £50. If after a 20% decrease, divide by 0.8." }
+    ]
+  },
+
+  // ── TOPIC 1: ALGEBRA ─────────────────────────────────────
+  {
+    title: "🔣 Algebra",
+    desc: "Expressions, equations, inequalities, sequences and quadratics",
+    cards: [
+      { q: "How do you expand double brackets? E.g. (x + 3)(x + 5)", a: "Use FOIL: First, Outer, Inner, Last. (x+3)(x+5) = x² + 5x + 3x + 15 = x² + 8x + 15." },
+      { q: "How do you factorise x² + 7x + 12?", a: "Find two numbers that multiply to 12 and add to 7: 3 and 4. Answer: (x + 3)(x + 4)." },
+      { q: "How do you factorise a difference of two squares? E.g. x² – 25", a: "Use the rule a² – b² = (a + b)(a – b). So x² – 25 = (x + 5)(x – 5)." },
+      { q: "What is the quadratic formula?", a: "x = (–b ± √(b² – 4ac)) / 2a — used to solve ax² + bx + c = 0 when factorising is not possible." },
+      { q: "What does the discriminant (b² – 4ac) tell you?", a: "> 0: two real solutions. = 0: one repeated solution. < 0: no real solutions." },
+      { q: "How do you complete the square for x² + 6x + 7?", a: "Write (x + 3)² – 9 + 7 = (x + 3)² – 2. Half the coefficient of x, square it, then adjust." },
+      { q: "What is an arithmetic sequence?", a: "A sequence with a constant difference between terms. E.g. 3, 7, 11, 15… (common difference = 4)." },
+      { q: "What is the nth term formula for an arithmetic sequence?", a: "nth term = a + (n – 1)d, where a = first term and d = common difference." },
+      { q: "How do you solve simultaneous equations by elimination?", a: "Make coefficients of one variable equal, then add or subtract equations to eliminate it, then solve for the remaining variable." },
+      { q: "How do you solve simultaneous equations by substitution?", a: "Rearrange one equation for one variable, substitute into the other equation, then solve." },
+      { q: "How do you solve a linear inequality? E.g. 3x – 4 > 8", a: "Solve like an equation: 3x > 12, so x > 4. Reverse the inequality sign if you multiply or divide by a negative." },
+      { q: "What does a² – b² factorise to?", a: "(a + b)(a – b) — this is the difference of two squares." },
+      { q: "How do you simplify algebraic fractions? E.g. (x² + 3x) / x", a: "Factorise numerator and denominator, then cancel common factors. (x² + 3x)/x = x(x+3)/x = x + 3." },
+      { q: "What is the formula for the nth term of a quadratic sequence?", a: "For a quadratic sequence, the second difference is constant. Use the form an² + bn + c and solve for a, b, c." },
+      { q: "How do you rearrange y = mx + c to make x the subject?", a: "y – c = mx → x = (y – c)/m." },
+      { q: "What does it mean to 'solve' an equation?", a: "Find the value(s) of the unknown variable that make the equation true." },
+      { q: "How do you expand (2x – 3)²?", a: "(2x – 3)(2x – 3) = 4x² – 6x – 6x + 9 = 4x² – 12x + 9." },
+      { q: "What is a geometric sequence?", a: "A sequence where each term is multiplied by a constant ratio. E.g. 2, 6, 18, 54… (common ratio = 3)." },
+      { q: "How do you factorise 6x² + 9x?", a: "Find the HCF of 6x² and 9x, which is 3x. Answer: 3x(2x + 3)." },
+      { q: "What is an expression vs an equation?", a: "An expression has no equals sign (e.g. 3x + 4). An equation has an equals sign and can be solved (e.g. 3x + 4 = 10)." }
+    ]
+  },
+
+  // ── TOPIC 2: GRAPHS ──────────────────────────────────────
+  {
+    title: "📈 Graphs",
+    desc: "Linear, quadratic and other graphs — gradient, intercept and transformations",
+    cards: [
+      { q: "What does y = mx + c represent?", a: "A straight-line graph. m = gradient (steepness), c = y-intercept (where the line crosses the y-axis)." },
+      { q: "How do you calculate gradient from two points?", a: "Gradient = (change in y) / (change in x) = (y₂ – y₁) / (x₂ – x₁)." },
+      { q: "What does a negative gradient look like?", a: "The line slopes downward from left to right." },
+      { q: "What is the equation of a horizontal line passing through y = 4?", a: "y = 4 (gradient = 0, so it is completely flat)." },
+      { q: "What is the equation of a vertical line passing through x = 3?", a: "x = 3 (vertical lines have undefined gradient)." },
+      { q: "What shape does y = x² make?", a: "A parabola (U-shaped curve). It is the graph of a quadratic function." },
+      { q: "How do you find where a quadratic graph crosses the x-axis?", a: "Set y = 0 and solve the quadratic equation (factorise or use the quadratic formula)." },
+      { q: "What is the turning point (vertex) of y = (x + 3)² – 2?", a: "(–3, –2) — read directly from completed square form. Minimum point because coefficient of x² is positive." },
+      { q: "What does y = x³ look like?", a: "An S-shaped curve (cubic graph) passing through the origin, going up to the right and down to the left." },
+      { q: "What is the graph of y = 1/x called, and what are its features?", a: "Reciprocal graph. It has two curves in opposite quadrants, never touches the axes (asymptotes at x=0 and y=0)." },
+      { q: "What is a y-intercept?", a: "Where the graph crosses the y-axis — found by substituting x = 0 into the equation." },
+      { q: "What is an x-intercept (root)?", a: "Where the graph crosses the x-axis — found by substituting y = 0 and solving." },
+      { q: "What does the transformation y = f(x) + 3 do to a graph?", a: "Translates the graph 3 units upward (vertical shift)." },
+      { q: "What does the transformation y = f(x – 2) do to a graph?", a: "Translates the graph 2 units to the right (horizontal shift — note: opposite direction to the sign)." },
+      { q: "How do you find the gradient of a curve at a point?", a: "Draw a tangent to the curve at that point, then calculate the gradient of the tangent line." },
+      { q: "What does a distance-time graph's gradient represent?", a: "Speed (or velocity). A steeper gradient means faster speed." },
+      { q: "What does a velocity-time graph's gradient represent?", a: "Acceleration. The area under the graph represents distance travelled." },
+      { q: "How do you find where two graphs intersect?", a: "Set the two equations equal to each other and solve — these are the simultaneous equations." }
+    ]
+  },
+
+  // ── TOPIC 3: RATIO & PROPORTION ──────────────────────────
+  {
+    title: "⚖️ Ratio & Proportion",
+    desc: "Ratios, direct and inverse proportion, percentage change and best value",
+    cards: [
+      { q: "How do you simplify the ratio 24 : 36?", a: "Divide both by the HCF (12): 24:36 = 2:3." },
+      { q: "How do you share £80 in the ratio 3:5?", a: "Total parts = 8. One part = £80 ÷ 8 = £10. So: 3 × £10 = £30, 5 × £10 = £50." },
+      { q: "What is direct proportion?", a: "When two quantities increase/decrease at the same rate. If y is directly proportional to x: y = kx (k is the constant)." },
+      { q: "What is inverse proportion?", a: "When one quantity increases as the other decreases at the same rate. y = k/x." },
+      { q: "If y ∝ x and y = 12 when x = 4, find y when x = 7.", a: "k = y/x = 12/4 = 3. So y = 3x. When x = 7: y = 21." },
+      { q: "If y ∝ 1/x and y = 5 when x = 2, find y when x = 10.", a: "k = xy = 5 × 2 = 10. So y = 10/x. When x = 10: y = 1." },
+      { q: "How do you calculate a percentage increase?", a: "New value = Original × (1 + %/100). Or: increase ÷ original × 100 to find the % change." },
+      { q: "How do you calculate a percentage decrease?", a: "New value = Original × (1 – %/100). Example: 15% decrease on £200 = £200 × 0.85 = £170." },
+      { q: "What is a multiplier?", a: "The decimal you multiply by for a percentage change. 20% increase → ×1.2. 20% decrease → ×0.8." },
+      { q: "A coat costs £120 after a 25% reduction. What was the original price?", a: "Original = £120 ÷ 0.75 = £160." },
+      { q: "How do you compare best value?", a: "Find the cost per unit (price ÷ quantity) for each option — the lowest cost per unit is best value." },
+      { q: "What does the symbol ∝ mean?", a: "Is proportional to. y ∝ x means y is directly proportional to x." },
+      { q: "How do you convert between currencies using an exchange rate?", a: "Multiply or divide by the exchange rate. Always check the direction: £ × rate = foreign currency." },
+      { q: "A recipe for 6 people needs 450g flour. How much for 10 people?", a: "Unitary method: 450 ÷ 6 = 75g per person. 75 × 10 = 750g." },
+      { q: "What is compound interest and what is its formula?", a: "Interest calculated on the growing total. A = P(1 + r/100)ⁿ where P = principal, r = rate, n = years." },
+      { q: "How do you solve proportion problems with y ∝ x²?", a: "y = kx². Find k using given values, then substitute to find the unknown." },
+      { q: "Speed = Distance ÷ Time. If distance = 150 km and time = 2.5 hours, find speed.", a: "Speed = 150 ÷ 2.5 = 60 km/h." },
+      { q: "What is the difference between ratio and fraction?", a: "A ratio compares two or more parts (e.g. 2:3). A fraction shows part of a whole (e.g. 2/5 is 2 parts out of 5 total)." }
+    ]
+  },
+
+  // ── TOPIC 4: GEOMETRY & MEASURES ─────────────────────────
+  {
+    title: "📐 Geometry & Measures",
+    desc: "Angles, shapes, area, volume, Pythagoras and trigonometry",
+    cards: [
+      { q: "What is Pythagoras' theorem?", a: "a² + b² = c², where c is the hypotenuse (the longest side, opposite the right angle)." },
+      { q: "What are the three trigonometric ratios?", a: "sin θ = Opposite/Hypotenuse, cos θ = Adjacent/Hypotenuse, tan θ = Opposite/Adjacent. Remember: SOH CAH TOA." },
+      { q: "How do you find a missing angle using trigonometry?", a: "Use the inverse function: θ = sin⁻¹(O/H), θ = cos⁻¹(A/H), or θ = tan⁻¹(O/A)." },
+      { q: "What is the area of a triangle?", a: "Area = ½ × base × height. Also: Area = ½ab sin C (when two sides and included angle are known)." },
+      { q: "What is the formula for the area of a circle?", a: "Area = πr², where r is the radius." },
+      { q: "What is the formula for the circumference of a circle?", a: "Circumference = 2πr or πd, where d is the diameter." },
+      { q: "What is the volume of a cylinder?", a: "V = πr²h, where r = radius and h = height." },
+      { q: "What is the volume of a cone?", a: "V = ⅓πr²h." },
+      { q: "What is the volume of a sphere?", a: "V = (4/3)πr³." },
+      { q: "What are the angle properties of parallel lines?", a: "Alternate angles are equal (Z-angles). Co-interior angles add to 180°. Corresponding angles are equal (F-angles)." },
+      { q: "What is the sum of interior angles of a polygon with n sides?", a: "(n – 2) × 180°. Triangle: 180°. Quadrilateral: 360°. Pentagon: 540°. Hexagon: 720°." },
+      { q: "What is the exterior angle of a regular hexagon?", a: "360° ÷ 6 = 60°. The sum of exterior angles of any polygon is always 360°." },
+      { q: "What are the circle theorems? (name 3)", a: "1) Angle in a semicircle = 90°. 2) Angles in the same segment are equal. 3) Opposite angles in a cyclic quadrilateral add to 180°." },
+      { q: "What is a vector?", a: "A quantity with both magnitude (size) and direction. Written as a column vector e.g. (3 above 2)." },
+      { q: "How do you add vectors?", a: "Add the corresponding components. (3, 2) + (1, –4) = (4, –2)." },
+      { q: "What is the sine rule?", a: "a/sin A = b/sin B = c/sin C. Used when you know an angle and its opposite side plus one other pair." },
+      { q: "What is the cosine rule?", a: "a² = b² + c² – 2bc cos A. Used when you know two sides and the included angle, or all three sides." },
+      { q: "What is a bearing?", a: "An angle measured clockwise from North, always written as 3 digits. E.g. 090° = East, 270° = West." },
+      { q: "What is the surface area of a cylinder?", a: "SA = 2πr² + 2πrh (two circular ends plus the curved surface)." },
+      { q: "What is an arc length and how do you calculate it?", a: "Arc length = (θ/360) × 2πr, where θ is the central angle in degrees." },
+      { q: "What is a sector area and how do you calculate it?", a: "Sector area = (θ/360) × πr²." },
+      { q: "How do you find the hypotenuse using Pythagoras? E.g. legs of 6 and 8.", a: "c² = 6² + 8² = 36 + 64 = 100 → c = √100 = 10." }
+    ]
+  },
+
+  // ── TOPIC 5: STATISTICS ──────────────────────────────────
+  {
+    title: "📊 Statistics",
+    desc: "Averages, range, charts, scatter graphs and frequency tables",
+    cards: [
+      { q: "What are the three averages and how do you find them?", a: "Mean = sum ÷ count. Median = middle value when ordered. Mode = most frequent value." },
+      { q: "When is the median better than the mean?", a: "When there are extreme values (outliers) — the median is not affected by them." },
+      { q: "What is the range?", a: "Range = largest value – smallest value. It measures spread, not average." },
+      { q: "What is the interquartile range (IQR)?", a: "IQR = Upper Quartile – Lower Quartile. It measures the spread of the middle 50% of data." },
+      { q: "How do you find the median from a frequency table?", a: "Find the cumulative frequency, then locate the (n+1)/2 th value." },
+      { q: "What is a scatter graph used for?", a: "To show the relationship (correlation) between two variables." },
+      { q: "What is positive correlation?", a: "As one variable increases, the other also increases. The points slope upward left to right." },
+      { q: "What is negative correlation?", a: "As one variable increases, the other decreases. The points slope downward left to right." },
+      { q: "What is a line of best fit?", a: "A straight line drawn through the middle of scatter graph data, used to make predictions." },
+      { q: "What is interpolation vs extrapolation?", a: "Interpolation = predicting within the data range (more reliable). Extrapolation = predicting outside it (less reliable)." },
+      { q: "How do you calculate the mean from a frequency table?", a: "Mean = Σ(fx) ÷ Σf. Multiply each value by its frequency, sum them, then divide by total frequency." },
+      { q: "What is a cumulative frequency graph used for?", a: "To estimate medians, quartiles and percentiles for grouped data." },
+      { q: "What is a box plot (box-and-whisker)?", a: "A diagram showing minimum, lower quartile, median, upper quartile, and maximum. Useful for comparing distributions." },
+      { q: "What does a histogram show?", a: "Frequency density for grouped continuous data. Frequency density = Frequency ÷ Class width." },
+      { q: "What is sampling bias?", a: "When the sample doesn't fairly represent the population — leads to unreliable conclusions." },
+      { q: "What is the difference between discrete and continuous data?", a: "Discrete = countable whole numbers (e.g. shoe size). Continuous = any value in a range (e.g. height, weight)." },
+      { q: "What is a stratified sample?", a: "A sample where each group in the population is represented in the same proportion as the whole population." },
+      { q: "How do you estimate the mean from grouped data?", a: "Use the midpoint of each class interval as the value, then apply Σ(fx) ÷ Σf." }
+    ]
+  },
+
+  // ── TOPIC 6: PROBABILITY ─────────────────────────────────
+  {
+    title: "🎲 Probability",
+    desc: "Theoretical and experimental probability, tree diagrams and Venn diagrams",
+    cards: [
+      { q: "What is the probability scale?", a: "Probabilities range from 0 (impossible) to 1 (certain). P = 0.5 means equally likely." },
+      { q: "What is theoretical probability?", a: "P(event) = number of favourable outcomes ÷ total number of equally likely outcomes." },
+      { q: "What is experimental (relative frequency) probability?", a: "P(event) = number of times event occurred ÷ total number of trials." },
+      { q: "What is the rule for complementary probability?", a: "P(event) + P(not event) = 1. So P(not A) = 1 – P(A)." },
+      { q: "What is the addition rule for mutually exclusive events?", a: "P(A or B) = P(A) + P(B). Mutually exclusive means they cannot both happen at the same time." },
+      { q: "What is the multiplication rule for independent events?", a: "P(A and B) = P(A) × P(B). Independent means one event doesn't affect the other." },
+      { q: "What is a tree diagram used for?", a: "To calculate the probability of two or more combined events, listing all possible outcomes." },
+      { q: "How do you use a tree diagram?", a: "Multiply along branches (AND), add between branches (OR). Always check probabilities on each pair of branches sum to 1." },
+      { q: "What is conditional probability?", a: "The probability of an event given that another has already occurred. P(B|A) = P(A and B) ÷ P(A)." },
+      { q: "What is a sample space diagram?", a: "A table listing all possible outcomes of two events (e.g. rolling two dice). Useful for finding probabilities." },
+      { q: "What is a Venn diagram used for in probability?", a: "To show how sets overlap — used to find probabilities of combined events (union, intersection)." },
+      { q: "What does P(A ∩ B) mean?", a: "The probability of both A AND B occurring — the intersection (overlap) of the two sets." },
+      { q: "What does P(A ∪ B) mean?", a: "The probability of A OR B (or both) occurring — the union of the two sets. P(A∪B) = P(A) + P(B) – P(A∩B)." },
+      { q: "What is sampling without replacement?", a: "Once an item is chosen, it is not put back. This changes the probability for the next selection — use tree diagrams carefully." },
+      { q: "A bag has 3 red and 2 blue balls. Two are drawn without replacement. Find P(both red).", a: "P(R) = 3/5. P(second R | first R) = 2/4. P(both red) = 3/5 × 2/4 = 6/20 = 3/10." },
+      { q: "What is the expected number of outcomes in n trials?", a: "Expected frequency = probability × number of trials. E.g. P(6) = 1/6, in 120 rolls: 1/6 × 120 = 20 times." }
+    ]
+  }
+
+];
+
+// ── STATE ────────────────────────────────────────────────────
+let currentTopic = 0;
+let currentMode = 'flashcards';
+let currentIndex = 0;
+let cardOrder = [];
+let ratings = {};
+let isFlipped = false;
+let gridVisible = false;
+
+// ── INIT ─────────────────────────────────────────────────────
+function loadTopic(topicIndex) {
+  currentTopic = topicIndex;
+  currentIndex = 0;
+  isFlipped = false;
+  ratings = {};
+
+  document.querySelectorAll('.topic-btn').forEach((b, i) => b.classList.toggle('active', i === topicIndex));
+
+  topics.forEach((t, i) => {
+    const el = document.getElementById(`count${i}`);
+    if (el) el.textContent = t.cards.length;
+  });
+
+  const t = topics[topicIndex];
+  cardOrder = t.cards.map((_, i) => i);
+  document.getElementById('topicTitle').textContent = t.title;
+  document.getElementById('topicDesc').textContent = t.desc;
+  document.getElementById('completeBanner').classList.remove('visible');
+
+  renderCard();
+  updateStats();
+  buildGrid();
+}
+
+function renderCard() {
+  const t = topics[currentTopic];
+  const idx = cardOrder[currentIndex];
+  const card = t.cards[idx];
+
+  document.getElementById('cardQuestion').textContent = card.q;
+  document.getElementById('cardAnswer').textContent = card.a;
+  document.getElementById('cardNum').textContent = `${currentIndex + 1} / ${cardOrder.length}`;
+
+  const fc = document.getElemen

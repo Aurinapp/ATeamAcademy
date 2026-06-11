@@ -1,0 +1,1750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aruna's Health & Social Care Flashcards</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --pink: #e91e8c;
+    --purple: #6c3fc5;
+    --teal: #00bcd4;
+    --light: #f8f4ff;
+    --dark: #1a1135;
+    --card-bg: #ffffff;
+    --correct: #4caf50;
+    --incorrect: #f44336;
+    --unseen: #9e9e9e;
+  }
+
+  body {
+    font-family: 'Lexend', 'Segoe UI', sans-serif;
+    background: var(--light);
+    color: var(--dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  
+  line-height: 1.7;
+
+  word-spacing: 0.05em;
+
+  font-size: 1rem;
+}
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    color: white;
+    padding: 18px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 3px 12px rgba(108,63,197,0.3);
+  }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .back-btn {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .back-btn:hover { background: rgba(255,255,255,0.3); }
+  header h1 { font-size: 1.4rem; font-weight: 700; letter-spacing: 0.5px; }
+  header h1 span { opacity: 0.8; font-weight: 400; font-size: 1rem; margin-left: 8px; }
+  .header-badge {
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  /* LAYOUT */
+  .app { display: flex; flex: 1; }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 260px;
+    min-width: 260px;
+    background: var(--dark);
+    color: white;
+    padding: 20px 0;
+    overflow-y: auto;
+  }
+  .sidebar-title {
+    padding: 0 20px 14px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: rgba(255,255,255,0.4);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 8px;
+  }
+  .topic-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px 20px;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.7);
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    border-left: 3px solid transparent;
+  }
+  .topic-btn:hover { background: rgba(255,255,255,0.06); color: white; }
+  .topic-btn.active {
+    background: rgba(233,30,140,0.15);
+    color: white;
+    border-left-color: var(--pink);
+    font-weight: 600;
+  }
+  .topic-icon { font-size: 1.1rem; width: 24px; text-align: center; }
+  .topic-count {
+    margin-left: auto;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 2px 8px;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.5);
+  }
+  .topic-btn.active .topic-count { background: var(--pink); color: white; }
+
+  /* PROGRESS DOTS in sidebar */
+  .topic-progress {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    flex-shrink: 0;
+  }
+  .topic-progress.done { background: var(--correct); }
+
+  /* MAIN */
+  main {
+    flex: 1;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+  }
+
+  /* TOPIC HEADER */
+  .topic-header {
+    width: 100%;
+    max-width: 700px;
+    margin-bottom: 22px;
+  }
+  .topic-header h2 { font-size: 1.5rem; color: var(--purple); font-weight: 700; }
+  .topic-header p { color: #666; font-size: 0.9rem; margin-top: 4px; }
+
+  /* PROGRESS BAR */
+  .progress-row {
+    width: 100%;
+    max-width: 700px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .progress-bar-wrap {
+    flex: 1;
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--purple), var(--pink));
+    border-radius: 4px;
+    transition: width 0.4s ease;
+  }
+  .progress-label { font-size: 0.82rem; color: #888; white-space: nowrap; }
+
+  /* STATS ROW */
+  .stats-row {
+    width: 100%;
+    max-width: 700px;
+    display: flex;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .stat-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+  .stat-chip.correct { background: #e8f5e9; color: var(--correct); }
+  .stat-chip.incorrect { background: #fce4ec; color: var(--incorrect); }
+  .stat-chip.unseen { background: #f5f5f5; color: var(--unseen); }
+  .stat-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+
+  /* FLASHCARD */
+  .card-area {
+    width: 100%;
+    max-width: 700px;
+    perspective: 1200px;
+    margin-bottom: 24px;
+  }
+  .flashcard {
+    width: 100%;
+    height: 260px;
+    cursor: pointer;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .flashcard.flipped { transform: rotateY(180deg); }
+
+  .card-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    border-radius: 18px;
+    padding: 36px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(108,63,197,0.12);
+  }
+  .card-front {
+    background: linear-gradient(145deg, var(--purple), #4a2a9c);
+    color: white;
+  }
+  .card-back {
+    background: white;
+    color: var(--dark);
+    transform: rotateY(180deg);
+    border: 2px solid #e8e0f8;
+  }
+  .card-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    opacity: 0.6;
+    margin-bottom: 16px;
+  }
+  .card-text {
+    font-size: 1.2rem;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+  .card-back .card-text { font-size: 1.05rem; font-weight: 500; }
+  .card-hint {
+    position: absolute;
+    bottom: 18px;
+    font-size: 0.75rem;
+    opacity: 0.4;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .card-number {
+    position: absolute;
+    top: 18px;
+    right: 20px;
+    font-size: 0.78rem;
+    opacity: 0.5;
+    font-weight: 600;
+  }
+
+  /* CONTROLS */
+  .controls {
+    width: 100%;
+    max-width: 700px;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    padding: 11px 22px;
+    border-radius: 50px;
+    border: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: all 0.2s;
+  }
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(0,0,0,0.15); }
+  .btn:active { transform: translateY(0); }
+  .btn-prev { background: #ede8f8; color: var(--purple); }
+  .btn-next { background: linear-gradient(135deg, var(--purple), var(--pink)); color: white; }
+  .btn-correct { background: #e8f5e9; color: var(--correct); }
+  .btn-incorrect { background: #fce4ec; color: var(--incorrect); }
+  .btn-shuffle { background: #e3f6fb; color: var(--teal); }
+  .btn-reset { background: #f5f5f5; color: #888; }
+
+  /* RATING BUTTONS */
+  .rating-row {
+    width: 100%;
+    max-width: 700px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 28px;
+  }
+  .rating-label { font-size: 0.82rem; color: #999; align-self: center; margin-right: 4px; }
+
+  /* CARD GRID (overview) */
+  .card-grid-toggle {
+    width: 100%;
+    max-width: 700px;
+    text-align: right;
+    margin-bottom: 10px;
+  }
+  .btn-grid { background: #f0ecff; color: var(--purple); font-size: 0.82rem; padding: 7px 14px; }
+
+  .card-grid {
+    display: none;
+    width: 100%;
+    max-width: 700px;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .card-grid.visible { display: grid; }
+  .mini-card {
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 0.78rem;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+    line-height: 1.4;
+  }
+  .mini-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+  .mini-card.unseen { background: #f5f5f5; color: #555; border-color: #e0e0e0; }
+  .mini-card.correct { background: #e8f5e9; color: #2e7d32; border-color: #a5d6a7; }
+  .mini-card.incorrect { background: #fce4ec; color: #c62828; border-color: #f48fb1; }
+  .mini-card.current { border-color: var(--purple) !important; box-shadow: 0 0 0 3px rgba(108,63,197,0.2); }
+
+  /* COMPLETION BANNER */
+  .complete-banner {
+    display: none;
+    width: 100%;
+    max-width: 700px;
+    background: linear-gradient(135deg, #e8f5e9, #e3f2fd);
+    border: 2px solid #a5d6a7;
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .complete-banner.visible { display: block; }
+  .complete-banner h3 { font-size: 1.3rem; color: #2e7d32; margin-bottom: 8px; }
+  .complete-banner p { color: #555; font-size: 0.9rem; }
+  .score-big { font-size: 2.5rem; font-weight: 800; color: var(--correct); }
+
+  /* RESPONSIVE */
+  @media (max-width: 700px) {
+    .sidebar { display: none; }
+    main { padding: 16px; }
+    .flashcard { height: 220px; }
+    .card-text { font-size: 1rem; }
+  }
+
+  /* ── MODE TOGGLE ─────────────────────────────────────────── */
+  .mode-toggle {
+    display: flex;
+    gap: 0;
+    background: #ede9fa;
+    border-radius: 10px;
+    padding: 3px;
+    margin-bottom: 22px;
+    width: 100%;
+    max-width: 700px;
+  }
+  .mode-btn {
+    flex: 1;
+    padding: 9px 0;
+    border: none;
+    background: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: #888;
+    transition: all 0.2s;
+  }
+  .mode-btn.active {
+    background: white;
+    color: var(--purple);
+    box-shadow: 0 2px 8px rgba(108,63,197,0.15);
+  }
+
+  /* ── REVISION NOTES ────────────────────────────────────────── */
+  .notes-view {
+    display: none;
+    width: 100%;
+    max-width: 700px;
+    flex-direction: column;
+    gap: 0;
+  }
+  .notes-view.visible { display: flex; }
+
+  .flashcard-view {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  .flashcard-view.hidden { display: none; }
+
+  .notes-section {
+    border-radius: 14px;
+    margin-bottom: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    border: 1px solid rgba(0,0,0,0.06);
+  }
+  .notes-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    cursor: pointer;
+    user-select: none;
+    font-weight: 700;
+    font-size: 0.97rem;
+    transition: background 0.15s;
+  }
+  .notes-section-header:hover { filter: brightness(0.96); }
+  .notes-section-header .section-title { display: flex; align-items: center; gap: 10px; }
+  .notes-section-header .chevron {
+    font-size: 0.8rem;
+    transition: transform 0.2s;
+    opacity: 0.6;
+  }
+  .notes-section.open .chevron { transform: rotate(180deg); }
+
+  .notes-section-body {
+    display: none;
+    padding: 16px 18px 18px;
+    background: white;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: #2d2d2d;
+  }
+  .notes-section.open .notes-section-body { display: block; }
+
+  .notes-section-body h4 {
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--purple);
+    margin: 16px 0 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #ede9fa;
+  }
+  .notes-section-body h4:first-child { margin-top: 0; }
+
+  .notes-section-body ul {
+    margin: 0 0 8px 0;
+    padding-left: 18px;
+  }
+  .notes-section-body ul li { margin-bottom: 5px; }
+  .notes-section-body ul li strong { color: #1a1135; }
+
+  .callout {
+    background: #f0ecff;
+    border-left: 4px solid var(--purple);
+    border-radius: 0 8px 8px 0;
+    padding: 10px 14px;
+    margin: 12px 0;
+    font-size: 0.88rem;
+    color: #3a2575;
+  }
+  .callout strong { display: block; margin-bottom: 3px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--purple); }
+
+  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+  .tag {
+    background: #f0ecff;
+    color: var(--purple);
+    border-radius: 20px;
+    padding: 3px 11px;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+  .tag.pink { background: #fce4ec; color: #c2185b; }
+  .tag.teal { background: #e0f7fa; color: #00838f; }
+  .tag.green { background: #e8f5e9; color: #2e7d32; }
+  .tag.orange { background: #fff3e0; color: #e65100; }
+
+  .notes-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.86rem;
+    margin: 8px 0 12px;
+  }
+  .notes-table th {
+    background: #f0ecff;
+    color: var(--purple);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 8px 10px;
+    text-align: left;
+    border-bottom: 2px solid #ede9fa;
+  }
+  .notes-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #f5f5f5;
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .notes-table tr:last-child td { border-bottom: none; }
+  .notes-table tr:nth-child(even) td { background: #fafafa; }
+
+  .notes-intro {
+    background: linear-gradient(135deg, #f0ecff, #fce4ec22);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    font-size: 0.92rem;
+    color: #3a2575;
+    line-height: 1.6;
+    border: 1px solid #ede9fa;
+  }
+
+  /* Colour-coded section headers per topic */
+  .hdr-purple { background: linear-gradient(90deg, #6c3fc5, #9c6ef5); color: white; }
+  .hdr-pink   { background: linear-gradient(90deg, #e91e8c, #f06292); color: white; }
+  .hdr-teal   { background: linear-gradient(90deg, #00838f, #26c6da); color: white; }
+  .hdr-blue   { background: linear-gradient(90deg, #1565c0, #42a5f5); color: white; }
+  .hdr-red    { background: linear-gradient(90deg, #c62828, #ef5350); color: white; }
+  .hdr-green  { background: linear-gradient(90deg, #2e7d32, #66bb6a); color: white; }
+  .hdr-orange { background: linear-gradient(90deg, #e65100, #ffa726); color: white; }
+  .hdr-indigo { background: linear-gradient(90deg, #283593, #5c6bc0); color: white; }
+
+
+  /* ── A11Y TOOLBAR ── */
+  #a11y-toolbar{position:fixed!important;bottom:24px!important;right:24px!important;z-index:2147483647!important;font-family:'Lexend','Segoe UI',sans-serif;}
+  #a11y-fab{width:50px;height:50px;border-radius:50%;background:#1565c0;border:none;color:#fff;font-size:1.3rem;cursor:pointer;box-shadow:0 4px 18px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;transition:transform .2s,background .2s;}
+  #a11y-fab:hover{background:#0d47a1;transform:scale(1.07);}
+  #a11y-fab.open{background:#0d47a1;}
+  #a11y-panel{position:absolute;bottom:62px;right:0;background:#fff;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.2);padding:16px;width:260px;border:1px solid rgba(0,0,0,.07);}
+  #a11y-panel[hidden]{display:none!important;}
+  .a11y-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#888;margin-bottom:12px;}
+  .a11y-action-btn{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border-radius:10px;background:#f0f7ff;border:1.5px solid #cde4f5;color:#1565c0;font-size:.9rem;font-weight:600;cursor:pointer;font-family:inherit;}
+  .a11y-action-btn.a11y-stop{background:#fee2e2;border-color:#fca5a5;color:#dc2626;}
+  .a11y-divider{height:1px;background:#e5e7eb;margin:12px 0;}
+  .a11y-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+  .a11y-col-row{flex-direction:column;align-items:flex-start;gap:8px;margin-bottom:4px;}
+  .a11y-label{font-size:.85rem;color:#222;font-weight:500;}
+  .a11y-pill{padding:4px 14px;border-radius:20px;border:2px solid #d1d5db;background:#f3f4f6;color:#6b7280;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;}
+  .a11y-pill.on{background:#1565c0;border-color:#1565c0;color:#fff;}
+  #a11y-colours{display:flex;gap:7px;flex-wrap:wrap;}
+  .a11y-col-chip{width:28px;height:28px;border-radius:50%;border:2.5px solid #d1d5db;cursor:pointer;font-size:.65rem;display:flex;align-items:center;justify-content:center;background:#e5e7eb;}
+  .a11y-col-chip.sel{border-color:#1565c0;border-width:3px;}
+  #a11y-overlay{position:fixed!important;inset:0;pointer-events:none;z-index:2147483646!important;transition:background .35s;}
+  b.bionic-b{font-weight:800;}
+  .a11y-stepper{display:flex;gap:4px;}
+  .a11y-step-btn{width:32px;height:28px;border-radius:8px;border:2px solid #d1d5db;background:#f3f4f6;color:#6b7280;font-size:.82rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;transition:background .15s,border-color .15s;}
+  .a11y-step-btn.on{background:#1565c0;border-color:#1565c0;color:#fff;}
+  #a11y-ruler-line{position:fixed!important;left:0;right:0;height:34px;pointer-events:none;z-index:2147483645!important;background:rgba(21,101,192,.1);border-top:2px solid rgba(21,101,192,.35);border-bottom:2px solid rgba(21,101,192,.35);display:none;top:0;}
+  body.ruler-on #a11y-ruler-line{display:block;}
+  body.opendyslexic,body.opendyslexic *{font-family:'OpenDyslexic','Lexend','Segoe UI',sans-serif!important;}
+
+</style>
+</head>
+<body>
+<div id="a11y-toolbar"><button id="a11y-fab" title="Accessibility tools" aria-label="Accessibility tools">&#9681;</button><div id="a11y-panel" hidden><div class="a11y-title">Accessibility</div><button id="a11y-tts" class="a11y-action-btn"><span id="a11y-tts-icon">&#128266;</span><span id="a11y-tts-label"> Read aloud</span></button><div class="a11y-divider"></div><div class="a11y-row"><span class="a11y-label">Bionic reading</span><button id="a11y-bionic" class="a11y-pill">Off</button></div><div class="a11y-row"><span class="a11y-label">OpenDyslexic font</span><button id="a11y-od" class="a11y-pill">Off</button></div><div class="a11y-row"><span class="a11y-label">Reading ruler</span><button id="a11y-ruler-btn" class="a11y-pill">Off</button></div><div class="a11y-divider"></div><div class="a11y-row"><span class="a11y-label">Text size</span><div class="a11y-stepper"><button class="a11y-step-btn on" id="a11y-sz1" title="Normal">A</button><button class="a11y-step-btn" id="a11y-sz2" title="Large">A+</button><button class="a11y-step-btn" id="a11y-sz3" title="XL">A++</button></div></div><div class="a11y-row"><span class="a11y-label">Line spacing</span><div class="a11y-stepper"><button class="a11y-step-btn on" id="a11y-ls1" title="Normal">1&#215;</button><button class="a11y-step-btn" id="a11y-ls2" title="Relaxed">1.5&#215;</button><button class="a11y-step-btn" id="a11y-ls3" title="Wide">2&#215;</button></div></div><div class="a11y-divider"></div><div class="a11y-row a11y-col-row"><span class="a11y-label">Colour overlay</span><div id="a11y-colours"><button class="a11y-col-chip sel" data-col="none" title="None">&#x2715;</button><button class="a11y-col-chip" data-col="cream" style="background:#fdf6e3" title="Cream"></button><button class="a11y-col-chip" data-col="yellow" style="background:#fff9c4" title="Yellow"></button><button class="a11y-col-chip" data-col="blue" style="background:#dbeafe" title="Blue"></button><button class="a11y-col-chip" data-col="green" style="background:#dcfce7" title="Green"></button><button class="a11y-col-chip" data-col="peach" style="background:#fce7f3" title="Peach"></button></div></div></div></div><div id="a11y-overlay"></div><div id="a11y-ruler-line"></div>
+
+
+<header>
+  <div class="header-left">
+    <a class="back-btn" href="index.html">← Back</a>
+    <h1>📚 Aruna's Flashcards <span>Health &amp; Social Care · AQA GCSE Year 10</span></h1>
+  </div>
+  <div class="header-badge">Year 10</div>
+</header>
+
+<div class="app">
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-title">Topics</div>
+    <button class="topic-btn active" onclick="selectTopic(0)" id="topicBtn0">
+      <span class="topic-icon">🧬</span> Human Growth &amp; Dev
+      <span class="topic-count" id="count0">20</span>
+    </button>
+    <button class="topic-btn" onclick="selectTopic(1)" id="topicBtn1">
+      <span class="topic-icon">🌍</span> Factors Affecting Dev
+      <span class="topic-count" id="count1">18</span>
+    </button>
+    <button class="topic-btn" onclick="selectTopic(2)" id="topicBtn2">
+      <span class="topic-icon">🏥</span> Health &amp; Care Services
+      <span class="topic-count" id="count2">18</span>
+    </button>
+    <button class="topic-btn" onclick="selectTopic(3)" id="topicBtn3">
+      <span class="topic-icon">💬</span> Communication
+      <span class="topic-count" id="count3">16</span>
+    </button>
+    <button class="topic-btn" onclick="selectTopic(4)" id="topicBtn4">
+      <span class="topic-icon">❤️</span> Care Values &amp; Ethics
+      <span class="topic-count" id="count4">16</span>
+    </button>
+    <button class="topic-btn" onclick="selectTopic(5)" id="topicBtn5">
+      <span class="topic-icon">💪</span> Health &amp; Wellbeing
+      <span class="topic-count" id="count5">18</span>
+    </button>
+  </nav>
+
+  <!-- MAIN -->
+  <main>
+    <div class="topic-header">
+      <h2 id="topicTitle">🧬 Human Growth &amp; Development</h2>
+      <p id="topicDesc">Life stages, PIES development and key milestones across the lifespan</p>
+    </div>
+
+    <!-- MODE TOGGLE -->
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="modeFlashcards" onclick="setMode('flashcards')">🃏 Flashcards</button>
+      <button class="mode-btn" id="modeNotes" onclick="setMode('notes')">📖 Revision Notes</button>
+    </div>
+
+    <!-- REVISION NOTES VIEW -->
+    <div class="notes-view" id="notesView"></div>
+
+    <!-- FLASHCARD VIEW -->
+    <div class="flashcard-view" id="flashcardView">
+
+    <!-- PROGRESS BAR -->
+    <div class="progress-row">
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+      </div>
+      <div class="progress-label" id="progressLabel">0 / 20 seen</div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-chip correct"><span class="stat-dot"></span> <span id="correctCount">0</span> Got it</div>
+      <div class="stat-chip incorrect"><span class="stat-dot"></span> <span id="incorrectCount">0</span> Review</div>
+      <div class="stat-chip unseen"><span class="stat-dot"></span> <span id="unseenCount">20</span> Not seen</div>
+    </div>
+
+    <!-- FLASHCARD -->
+    <div class="card-area">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="card-face card-front">
+          <div class="card-label">Question</div>
+          <div class="card-text" id="cardQuestion">Loading...</div>
+          <div class="card-hint">👆 Tap to reveal answer</div>
+          <div class="card-number" id="cardNum">1 / 20</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-label">Answer</div>
+          <div class="card-text" id="cardAnswer">Loading...</div>
+          <div class="card-hint">✓ Rate yourself below</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RATING -->
+    <div class="rating-row">
+      <span class="rating-label">How did you do?</span>
+      <button class="btn btn-incorrect" onclick="rateCard('incorrect')">❌ Need to review</button>
+      <button class="btn btn-correct" onclick="rateCard('correct')">✅ Got it!</button>
+    </div>
+
+    <!-- NAV CONTROLS -->
+    <div class="controls">
+      <button class="btn btn-prev" onclick="prevCard()">◀ Previous</button>
+      <button class="btn btn-shuffle" onclick="shuffleCards()">🔀 Shuffle</button>
+      <button class="btn btn-reset" onclick="resetTopic()">↺ Reset</button>
+      <button class="btn btn-next" onclick="nextCard()">Next ▶</button>
+    </div>
+
+    <!-- GRID TOGGLE -->
+    <div class="card-grid-toggle">
+      <button class="btn btn-grid" onclick="toggleGrid()">⊞ Card overview</button>
+    </div>
+
+    <!-- MINI GRID -->
+    <div class="card-grid" id="cardGrid"></div>
+
+    <!-- COMPLETION BANNER -->
+    <div class="complete-banner" id="completeBanner">
+      <div class="score-big" id="scoreBig">0%</div>
+      <h3>🎉 Topic complete!</h3>
+      <p id="completeMsg">Well done Aruna! Keep going — tap shuffle to review again.</p>
+    </div>
+
+    </div><!-- /flashcard-view -->
+  </main>
+</div>
+
+<script>
+(function(){
+var S='ateam_a11y',st={bionic:false,overlay:'none',od:false,ruler:false,sz:1,ls:1};
+try{Object.assign(st,JSON.parse(localStorage.getItem(S)||'{}'));}catch(e){}
+var fab,panel,ttsBtn,ttsIcon,ttsLbl,bioBtn,ovl,ttsOn=false;
+function init(){
+  fab=document.getElementById('a11y-fab');
+  panel=document.getElementById('a11y-panel');
+  ttsBtn=document.getElementById('a11y-tts');
+  ttsIcon=document.getElementById('a11y-tts-icon');
+  ttsLbl=document.getElementById('a11y-tts-label');
+  bioBtn=document.getElementById('a11y-bionic');
+  ovl=document.getElementById('a11y-overlay');
+  if(!fab)return;
+  var OV={none:'transparent',cream:'rgba(253,246,227,.5)',yellow:'rgba(255,249,196,.5)',blue:'rgba(219,234,254,.5)',green:'rgba(220,252,231,.5)',peach:'rgba(252,231,243,.5)'};
+  fab.addEventListener('click',function(e){e.stopPropagation();var o=panel.hasAttribute('hidden');if(o)panel.removeAttribute('hidden');else panel.setAttribute('hidden','');fab.classList.toggle('open',o);});
+  document.addEventListener('click',function(e){var tb=document.getElementById('a11y-toolbar');if(tb&&!tb.contains(e.target))panel.setAttribute('hidden','');});
+  var ttsOn=false;
+  function getText(){var fc=document.getElementById('flashcard');if(fc){var id=fc.classList.contains('flipped')?'cardAnswer':'cardQuestion';var el=document.getElementById(id);if(el&&el.innerText.trim())return el.innerText.trim();}var q=document.querySelector('.screen.active .q-text');if(q)return q.innerText.trim();var ns=document.querySelectorAll('.notes-section.open .notes-section-body');if(ns.length)return Array.from(ns).map(function(n){return n.innerText.trim();}).join('\n\n');var m=document.querySelector('main')||document.querySelector('.screen.active');return m?m.innerText.trim().slice(0,2500):'';}
+  function startTTS(){window.speechSynthesis.cancel();var t=getText();if(!t)return;var u=new SpeechSynthesisUtterance(t);u.rate=0.88;u.onend=u.onerror=function(){setTS(false);};window.speechSynthesis.speak(u);setTS(true);}
+  function stopTTS(){window.speechSynthesis.cancel();setTS(false);}
+  function setTS(on){ttsOn=on;ttsBtn.classList.toggle('a11y-stop',on);ttsIcon.innerHTML=on?'&#9209;':'&#128266;';ttsLbl.textContent=on?' Stop':' Read aloud';}
+  ttsBtn.addEventListener('click',function(){ttsOn?stopTTS():startTTS();});
+  function bioW(w){if(w.length<=2)return w;var h=Math.ceil(w.length/2);return '<b class="bionic-b">'+w.slice(0,h)+'</b>'+w.slice(h);}
+  function walkBold(node){if(node.nodeType===3){var t=node.textContent;if(!t.trim())return;var html=t.replace(/([A-Za-zÀ-ɏ]{2,})/g,function(w){return bioW(w);});if(html===t)return;var s=document.createElement('span');s.innerHTML=html;node.parentNode.replaceChild(s,node);}else if(node.nodeType===1&&!/^(SCRIPT|STYLE|B|BUTTON|INPUT)$/.test(node.tagName))Array.from(node.childNodes).forEach(walkBold);}
+  var TG='#cardQuestion,#cardAnswer,.q-text,.option-btn,.notes-section-body,.card-text,.home-hero p';
+  function applyBio(){document.querySelectorAll(TG).forEach(function(el){if(el.dataset.bd)return;el.dataset.bd='1';el.dataset.bo=el.innerHTML;walkBold(el);});}
+  function removeBio(){document.querySelectorAll('[data-bd]').forEach(function(el){el.innerHTML=el.dataset.bo||el.innerHTML;delete el.dataset.bd;delete el.dataset.bo;});}
+  ['flipCard','loadQuestion','showQuestion','nextCard','prevCard'].forEach(function(fn){if(typeof window[fn]==='function'){var o=window[fn];window[fn]=function(){var r=o.apply(this,arguments);if(st.bionic)setTimeout(applyBio,80);return r;};}});
+  var bt;new MutationObserver(function(){if(!st.bionic)return;clearTimeout(bt);bt=setTimeout(applyBio,80);}).observe(document.body,{childList:true,subtree:true});
+  function setBio(on){st.bionic=on;bioBtn.textContent=on?'On':'Off';bioBtn.classList.toggle('on',on);if(on)applyBio();else removeBio();save();}
+  bioBtn.addEventListener('click',function(){setBio(!st.bionic);});
+  function setOvl(col){st.overlay=col;ovl.style.background=OV[col]||'transparent';document.querySelectorAll('.a11y-col-chip').forEach(function(c){c.classList.toggle('sel',c.dataset.col===col);});save();}
+  document.querySelectorAll('.a11y-col-chip').forEach(function(btn){btn.addEventListener('click',function(){setOvl(btn.dataset.col);});});
+  // OpenDyslexic font
+  var odBtn=document.getElementById('a11y-od');
+  function setOD(on){st.od=on;document.body.classList.toggle('opendyslexic',on);if(on&&!document.getElementById('od-font')){var l=document.createElement('link');l.id='od-font';l.rel='stylesheet';l.href='https://fonts.cdnfonts.com/css/opendyslexic';document.head.appendChild(l);}if(odBtn){odBtn.textContent=on?'On':'Off';odBtn.classList.toggle('on',on);}save();}
+  if(odBtn)odBtn.addEventListener('click',function(){setOD(!st.od);});
+  // Reading ruler
+  var rulerEl=document.getElementById('a11y-ruler-line'),rulerBtn=document.getElementById('a11y-ruler-btn');
+  function setRuler(on){st.ruler=on;document.body.classList.toggle('ruler-on',on);if(rulerBtn){rulerBtn.textContent=on?'On':'Off';rulerBtn.classList.toggle('on',on);}save();}
+  document.addEventListener('mousemove',function(e){if(st.ruler&&rulerEl)rulerEl.style.top=(e.clientY-17)+'px';});
+  if(rulerBtn)rulerBtn.addEventListener('click',function(){setRuler(!st.ruler);});
+  // Text size (3 steps: 100% / 118% / 136%)
+  var SZ=[1,1.18,1.36],szBtns=[document.getElementById('a11y-sz1'),document.getElementById('a11y-sz2'),document.getElementById('a11y-sz3')];
+  function setSz(i){st.sz=i;document.documentElement.style.fontSize=(SZ[i-1]*16)+'px';szBtns.forEach(function(b,idx){if(b)b.classList.toggle('on',idx+1===i);});save();}
+  szBtns.forEach(function(b,i){if(b)b.addEventListener('click',function(){setSz(i+1);});});
+  // Line spacing (3 steps: 1.7 / 2.1 / 2.6)
+  var LS=[1.7,2.1,2.6],lsBtns=[document.getElementById('a11y-ls1'),document.getElementById('a11y-ls2'),document.getElementById('a11y-ls3')];
+  function setLs(i){st.ls=i;document.body.style.lineHeight=LS[i-1];lsBtns.forEach(function(b,idx){if(b)b.classList.toggle('on',idx+1===i);});save();}
+  lsBtns.forEach(function(b,i){if(b)b.addEventListener('click',function(){setLs(i+1);});});
+  // Save & restore all settings
+  function save(){try{localStorage.setItem(S,JSON.stringify({bionic:st.bionic,overlay:st.overlay,od:st.od,ruler:st.ruler,sz:st.sz,ls:st.ls}));}catch(e){}}
+  setOvl(st.overlay);if(st.bionic)setBio(true);setOD(!!st.od);setRuler(!!st.ruler);setSz(st.sz||1);setLs(st.ls||1);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+<script>
+// ============================================================
+// FLASHCARD DATA — All 6 Topics
+// ============================================================
+const topics = [
+
+  // ── TOPIC 0: HUMAN GROWTH & DEVELOPMENT ──────────────────
+  {
+    title: "🧬 Human Growth & Development",
+    desc: "Life stages, PIES development and key milestones across the lifespan",
+    cards: [
+      { q: "What does PIES stand for?", a: "Physical, Intellectual, Emotional, Social — the four areas of human development." },
+      { q: "What are the 6 life stages in order?", a: "Infancy (0–2), Early Childhood (3–8), Adolescence (9–18), Early Adulthood (19–45), Middle Adulthood (46–65), Later Adulthood (65+)." },
+      { q: "What is physical development?", a: "Changes to the body, including growth, motor skills, puberty, and physical health." },
+      { q: "What is intellectual development?", a: "Development of thinking, language, problem-solving, memory and learning." },
+      { q: "What is emotional development?", a: "Development of feelings, self-esteem, identity and the ability to manage emotions." },
+      { q: "What is social development?", a: "Forming relationships, learning social skills, and building connections with others." },
+      { q: "Name 2 gross motor skills developed in infancy.", a: "Sitting unaided (around 6 months) and walking (around 12–15 months)." },
+      { q: "Name 2 fine motor skills developed in infancy.", a: "Pincer grip (picking up small objects) and holding a spoon." },
+      { q: "What is a key intellectual milestone in early childhood?", a: "Language development — most children can speak in sentences by age 3." },
+      { q: "What physical changes happen during adolescence?", a: "Puberty: growth spurts, development of secondary sex characteristics, hormonal changes." },
+      { q: "What is the main emotional challenge of adolescence?", a: "Forming a personal identity — figuring out who you are (Erikson: Identity vs Role Confusion)." },
+      { q: "What does 'holistic development' mean?", a: "Viewing all four areas (PIES) together — development in one area affects all others." },
+      { q: "Give an example of how physical development affects emotional development.", a: "A teenager going through puberty may feel self-conscious or anxious about their changing body." },
+      { q: "What typically happens to physical development in later adulthood?", a: "Decline in physical abilities — reduced mobility, weaker muscles, slower reactions, sensory loss." },
+      { q: "What is the 'empty nest syndrome'?", a: "Emotional adjustment experienced by adults when their children leave home — can cause loneliness." },
+      { q: "What is a life event? Give one expected and one unexpected example.", a: "A significant event that changes your life. Expected: starting school. Unexpected: bereavement." },
+      { q: "How can bereavement affect PIES development?", a: "Physical: poor sleep/appetite. Intellectual: difficulty concentrating. Emotional: grief, depression. Social: withdrawal." },
+      { q: "What is the difference between growth and development?", a: "Growth = measurable physical increase (e.g. height/weight). Development = gaining new skills and abilities." },
+      { q: "At what life stage does the brain reach full maturity?", a: "Mid-to-late adulthood — the prefrontal cortex (decision-making) isn't fully developed until around age 25." },
+      { q: "Name one social development milestone in childhood.", a: "Learning to share, making friends, or understanding social rules and turn-taking." }
+    ]
+  },
+
+  // ── TOPIC 1: FACTORS AFFECTING DEVELOPMENT ───────────────
+  {
+    title: "🌍 Factors Affecting Development",
+    desc: "Genetic, environmental, social, economic and lifestyle factors",
+    cards: [
+      { q: "Name the five main factors affecting development.", a: "Genetic/biological, environmental, socio-economic, lifestyle, and culture/religion." },
+      { q: "What is a genetic factor? Give an example.", a: "An inherited characteristic passed from parent to child. Example: cystic fibrosis, eye colour, Down's syndrome." },
+      { q: "How can poverty affect a child's development?", a: "Poor nutrition, less access to education/activities, unstable housing — impacting all PIES areas." },
+      { q: "What is the 'nature vs nurture' debate?", a: "Whether development is determined by genetics (nature) or by environment and experiences (nurture)." },
+      { q: "How does diet affect physical development?", a: "A poor diet can lead to malnutrition, stunted growth, obesity and increased risk of disease." },
+      { q: "Name two lifestyle choices that negatively affect health.", a: "Smoking (cancer, heart disease) and excessive alcohol consumption (liver damage, cognitive decline)." },
+      { q: "How can education level affect development?", a: "Higher education increases employment opportunities, income, and confidence (intellectual & social development)." },
+      { q: "What is the effect of a positive relationship on emotional development?", a: "It builds self-esteem, confidence and emotional security — promotes positive mental health." },
+      { q: "How does housing quality affect development?", a: "Damp, overcrowded housing can cause respiratory illness, stress and impact sleep and learning." },
+      { q: "What is the impact of culture on health choices?", a: "Cultural beliefs can shape diet, access to healthcare, attitudes to mental health and gender roles." },
+      { q: "How does exercise benefit PIES development?", a: "Physical: fitness. Intellectual: better concentration. Emotional: reduced stress. Social: teamwork." },
+      { q: "What is 'socio-economic status'?", a: "A person's position in society based on factors like income, education and occupation." },
+      { q: "Give one example of how the media can negatively affect development.", a: "Unrealistic body image in social media can damage self-esteem in adolescents." },
+      { q: "What is a protective factor?", a: "Something that reduces risk and supports positive development — e.g. a supportive family, good schooling." },
+      { q: "How can discrimination affect development?", a: "Can lower self-esteem, limit opportunities and cause stress — negatively affecting all PIES areas." },
+      { q: "What effect can stress have on physical health?", a: "High stress raises blood pressure, weakens the immune system, and disrupts sleep." },
+      { q: "How does access to healthcare affect development?", a: "Early intervention and treatment supports physical health and reduces long-term disability." },
+      { q: "Why is breastfeeding considered beneficial to infant development?", a: "It provides essential antibodies, nutrients, and promotes bonding between mother and baby." }
+    ]
+  },
+
+  // ── TOPIC 2: HEALTH & CARE SERVICES ─────────────────────
+  {
+    title: "🏥 Health & Care Services",
+    desc: "NHS structure, types of care, formal vs informal, barriers to access",
+    cards: [
+      { q: "What are the three types of health care services?", a: "Primary (first point of contact), Secondary (specialist referral), Tertiary (highly specialist/long-term)." },
+      { q: "Give an example of a primary care service.", a: "GP (General Practitioner), dentist, pharmacist or district nurse." },
+      { q: "Give an example of a secondary care service.", a: "Hospital outpatients, a consultant or surgeon — referred by a GP." },
+      { q: "Give an example of a tertiary care service.", a: "Specialist cancer centre, neurology unit or specialist mental health unit." },
+      { q: "What is the difference between formal and informal care?", a: "Formal = paid, trained professionals (nurses, social workers). Informal = unpaid carers (family/friends)." },
+      { q: "What is social care?", a: "Support for people who need help with daily activities due to age, disability or illness (e.g. home care, residential care)." },
+      { q: "What does the NHS stand for?", a: "National Health Service — provides healthcare funded through taxation, free at point of use." },
+      { q: "Name two barriers to accessing health services.", a: "Language barriers, cost of travel, long waiting times, lack of awareness, disability/physical access." },
+      { q: "What is multi-agency working?", a: "Different services (health, social care, education) working together to support an individual." },
+      { q: "Why is multi-agency working important?", a: "It ensures a holistic approach — addressing all needs, reducing gaps in care and improving outcomes." },
+      { q: "What is a 'care pathway'?", a: "A planned route of care that sets out the steps of treatment or support a person will receive." },
+      { q: "What is the role of a social worker?", a: "To assess individuals' needs and arrange appropriate services, particularly for vulnerable people." },
+      { q: "What is early intervention?", a: "Identifying and addressing problems early before they become more serious — especially in children." },
+      { q: "What is a voluntary care organisation? Give an example.", a: "A charity providing care services. Example: Age UK, Barnardo's, Macmillan Cancer Support." },
+      { q: "What are early years services? Give an example.", a: "Services supporting children aged 0–5 and their families. Example: Sure Start centres, health visiting." },
+      { q: "What is a 'needs assessment'?", a: "An evaluation carried out by a professional to identify what support or care an individual requires." },
+      { q: "What does 'person-centred care' mean in a service context?", a: "Tailoring care to meet the individual's specific needs, wishes and preferences." },
+      { q: "What is the role of a GP in the NHS?", a: "First point of contact for non-emergency health issues, provides diagnoses, prescriptions and referrals." }
+    ]
+  },
+
+  // ── TOPIC 3: COMMUNICATION ──────────────────────────────
+  {
+    title: "💬 Communication in Health & Social Care",
+    desc: "Types of communication, Argyle's cycle, barriers and how to overcome them",
+    cards: [
+      { q: "Name the three main types of communication.", a: "Verbal (spoken words), Non-verbal (body language, gestures, facial expressions), Written (records, letters)." },
+      { q: "What is non-verbal communication? Give 3 examples.", a: "Communication without words. Examples: eye contact, facial expressions, posture, gestures, touch." },
+      { q: "What is Argyle's Communication Cycle?", a: "A 6-stage model: idea → encode → transmit → receive → decode → understand. Communication is a two-way process." },
+      { q: "What does 'encoding' mean in communication?", a: "Putting your message into words, signs or body language so the other person can understand it." },
+      { q: "What does 'decoding' mean in communication?", a: "Interpreting and making sense of the message received from another person." },
+      { q: "Name 4 barriers to effective communication.", a: "Language differences, sensory impairment (hearing/sight), jargon, emotional distress, cultural differences, environmental noise." },
+      { q: "How can language barriers be overcome in care settings?", a: "Use of interpreters, translated materials, picture boards, or speak slowly and clearly." },
+      { q: "What is active listening?", a: "Giving full attention: maintaining eye contact, nodding, not interrupting, reflecting back what was said." },
+      { q: "Why is confidentiality important in communication?", a: "It builds trust, protects personal information, and is required by law (Data Protection Act 2018)." },
+      { q: "What is meant by 'tone' in communication?", a: "The way something is said — the pitch, pace and volume — which affects how the message is received." },
+      { q: "How should a care worker use body language positively?", a: "Open posture, appropriate eye contact, facing the person, gentle expression — to show you are listening." },
+      { q: "What is Makaton?", a: "A language programme using signs and symbols to help people with communication difficulties." },
+      { q: "What is the purpose of written communication in care settings?", a: "To keep accurate records, share information with colleagues, maintain continuity of care." },
+      { q: "What is the effect of poor communication in a care setting?", a: "Misdiagnosis, patient distress, breach of confidentiality, reduced trust, safeguarding failures." },
+      { q: "What does 'empathy' mean in communication?", a: "Understanding and sharing the feelings of another person — seeing things from their perspective." },
+      { q: "Give one example of a communication aid used in care.", a: "Hearing loop, text relay phone, braille materials, speech-to-text software, communication board." }
+    ]
+  },
+
+  // ── TOPIC 4: CARE VALUES & ETHICS ───────────────────────
+  {
+    title: "❤️ Care Values & Ethics",
+    desc: "Person-centred care, dignity, confidentiality, anti-discriminatory practice",
+    cards: [
+      { q: "What are the main care values in Health & Social Care?", a: "Dignity, respect, confidentiality, privacy, safeguarding, person-centred care, promoting independence." },
+      { q: "What is 'person-centred care'?", a: "Putting the individual at the heart of all decisions — respecting their wishes, needs and preferences." },
+      { q: "What does 'dignity' mean in a care context?", a: "Treating people with respect, ensuring privacy, and upholding their sense of self-worth." },
+      { q: "What is 'anti-discriminatory practice'?", a: "Actively working to prevent and challenge discrimination based on age, gender, race, disability, etc." },
+      { q: "What does the Equality Act 2010 protect against?", a: "Discrimination based on 9 protected characteristics including age, disability, race, gender and religion." },
+      { q: "What is confidentiality, and when can it be broken?", a: "Keeping personal information private. Can be broken if there is a risk of serious harm to the individual or others." },
+      { q: "What is 'informed consent'?", a: "When an individual agrees to treatment or care after being fully informed of what it involves." },
+      { q: "What does 'promoting independence' mean?", a: "Encouraging individuals to do as much for themselves as possible, rather than creating dependency." },
+      { q: "What is safeguarding?", a: "Protecting vulnerable individuals from harm, abuse or neglect." },
+      { q: "Name the 6 types of abuse.", a: "Physical, emotional/psychological, sexual, financial, neglect, and discriminatory abuse." },
+      { q: "What is the duty of care?", a: "A legal and professional obligation to take reasonable care to avoid harm to those in your care." },
+      { q: "What does 'empowerment' mean in care?", a: "Giving individuals information and support so they can make their own informed decisions." },
+      { q: "Why is it important to respect cultural diversity in care?", a: "Different cultures have different values and beliefs — ignoring this can lead to discrimination and poor care." },
+      { q: "What is the difference between equality and equity in care?", a: "Equality = same treatment for all. Equity = adjusted support based on individual needs to achieve fair outcomes." },
+      { q: "What is a 'care plan'?", a: "A document that outlines an individual's needs, wishes and the care they will receive — reviewed regularly." },
+      { q: "What are the consequences for a care worker who breaches confidentiality unnecessarily?", a: "Disciplinary action, dismissal, legal action under GDPR/Data Protection Act, damage to trust." }
+    ]
+  },
+
+  // ── TOPIC 5: HEALTH & WELLBEING ─────────────────────────
+  {
+    title: "💪 Promoting Health & Wellbeing",
+    desc: "Holistic health, Maslow's hierarchy, health promotion and wellbeing models",
+    cards: [
+      { q: "What is the World Health Organisation's (WHO) definition of health?", a: "A state of complete physical, mental and social wellbeing — not merely the absence of disease." },
+      { q: "What is 'holistic health'?", a: "Considering all aspects of a person's wellbeing — physical, mental, social and spiritual." },
+      { q: "What is Maslow's Hierarchy of Needs?", a: "A 5-level pyramid: Physiological → Safety → Love/Belonging → Esteem → Self-actualisation." },
+      { q: "Give an example of a physiological need (Maslow).", a: "Food, water, warmth, sleep, shelter." },
+      { q: "What is 'self-actualisation' in Maslow's theory?", a: "Reaching your full potential — the highest level of the pyramid, achieved when all other needs are met." },
+      { q: "What is a health promotion campaign? Give an example.", a: "A campaign to improve public health behaviour. Example: Change4Life, NHS Stop Smoking, 5-a-day." },
+      { q: "What is primary prevention in health promotion?", a: "Stopping illness before it happens — e.g. vaccination programmes, healthy eating campaigns." },
+      { q: "What is secondary prevention?", a: "Early detection of illness to prevent it getting worse — e.g. cancer screening, blood pressure checks." },
+      { q: "Name 4 lifestyle factors that affect health.", a: "Diet, exercise, smoking, alcohol, sleep, stress management." },
+      { q: "What are the benefits of regular physical activity?", a: "Reduces risk of heart disease and obesity, improves mental health, strengthens muscles and bones." },
+      { q: "What is meant by 'mental health'?", a: "Emotional, psychological and social wellbeing — how we think, feel and behave under stress." },
+      { q: "Name two factors that promote positive mental health.", a: "Supportive relationships, regular exercise, sense of purpose, good sleep, mindfulness." },
+      { q: "What is the impact of obesity on health?", a: "Increases risk of type 2 diabetes, heart disease, joint problems, sleep apnoea and some cancers." },
+      { q: "What is the role of the government in promoting public health?", a: "Creating health policies, funding the NHS, running campaigns, regulating food and tobacco industries." },
+      { q: "What is 'social prescribing'?", a: "Connecting people to community activities and non-medical support to improve wellbeing." },
+      { q: "How can poverty affect health?", a: "Limits access to nutritious food, warm housing, exercise facilities and mental health services." },
+      { q: "What does SMART stand for in health goals?", a: "Specific, Measurable, Achievable, Realistic, Time-bound." },
+      { q: "What is the difference between 'illness' and 'disease'?", a: "Disease = medically diagnosed condition. Illness = subjective experience of feeling unwell." }
+    ]
+  }
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let currentTopic = 0;
+let currentIndex = 0;
+let cardOrder = [];
+let ratings = {};   // cardIndex → 'correct' | 'incorrect'
+let isFlipped = false;
+let gridVisible = false;
+
+// ============================================================
+// INIT
+// ============================================================
+function loadTopic(topicIndex) {
+  currentTopic = topicIndex;
+  currentIndex = 0;
+  isFlipped = false;
+  ratings = {};
+
+  // Update sidebar
+  document.querySelectorAll('.topic-btn').forEach((b, i) => {
+    b.classList.toggle('active', i === topicIndex);
+  });
+
+  // Update counts
+  const t = topics[topicIndex];
+  document.querySelectorAll('[id^="count"]').forEach((el, i) => {
+    el.textContent = topics[i].cards.length;
+  });
+
+  // Reset card order
+  cardOrder = t.cards.map((_, i) => i);
+
+  // Update heading
+  document.getElementById('topicTitle').textContent = t.title;
+  document.getElementById('topicDesc').textContent = t.desc;
+
+  // Hide complete banner
+  document.getElementById('completeBanner').classList.remove('visible');
+
+  renderCard();
+  updateStats();
+  buildGrid();
+}
+
+function renderCard() {
+  const t = topics[currentTopic];
+  const idx = cardOrder[currentIndex];
+  const card = t.cards[idx];
+
+  document.getElementById('cardQuestion').textContent = card.q;
+  document.getElementById('cardAnswer').textContent = card.a;
+  document.getElementById('cardNum').textContent = `${currentIndex + 1} / ${cardOrder.length}`;
+
+  // Reset flip
+  const fc = document.getElementById('flashcard');
+  fc.classList.remove('flipped');
+  isFlipped = false;
+
+  updateGrid();
+}
+
+function flipCard() {
+  const fc = document.getElementById('flashcard');
+  isFlipped = !isFlipped;
+  fc.classList.toggle('flipped', isFlipped);
+}
+
+function nextCard() {
+  if (currentIndex < cardOrder.length - 1) {
+    currentIndex++;
+    renderCard();
+  } else {
+    showCompletion();
+  }
+}
+
+function prevCard() {
+  if (currentIndex > 0) {
+    currentIndex--;
+    renderCard();
+  }
+}
+
+function rateCard(rating) {
+  const idx = cardOrder[currentIndex];
+  ratings[idx] = rating;
+  updateStats();
+  updateGrid();
+  nextCard();
+}
+
+function shuffleCards() {
+  const t = topics[currentTopic];
+  cardOrder = t.cards.map((_, i) => i);
+  for (let i = cardOrder.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [cardOrder[i], cardOrder[j]] = [cardOrder[j], cardOrder[i]];
+  }
+  currentIndex = 0;
+  document.getElementById('completeBanner').classList.remove('visible');
+  renderCard();
+  updateStats();
+}
+
+function resetTopic() {
+  ratings = {};
+  currentIndex = 0;
+  cardOrder = topics[currentTopic].cards.map((_, i) => i);
+  document.getElementById('completeBanner').classList.remove('visible');
+  renderCard();
+  updateStats();
+  buildGrid();
+}
+
+function updateStats() {
+  const total = cardOrder.length;
+  const seen = Object.keys(ratings).length;
+  const correct = Object.values(ratings).filter(r => r === 'correct').length;
+  const incorrect = Object.values(ratings).filter(r => r === 'incorrect').length;
+  const unseen = total - seen;
+
+  document.getElementById('correctCount').textContent = correct;
+  document.getElementById('incorrectCount').textContent = incorrect;
+  document.getElementById('unseenCount').textContent = unseen;
+  document.getElementById('progressLabel').textContent = `${seen} / ${total} seen`;
+  document.getElementById('progressFill').style.width = `${(seen / total) * 100}%`;
+}
+
+function showCompletion() {
+  const total = cardOrder.length;
+  const correct = Object.values(ratings).filter(r => r === 'correct').length;
+  const pct = Math.round((correct / total) * 100);
+
+  document.getElementById('scoreBig').textContent = `${pct}%`;
+  const msg = pct >= 80
+    ? "Excellent work, Aruna! 🌟 You really know this topic."
+    : pct >= 60
+    ? "Good effort! 👏 Review the ones you missed and try again."
+    : "Keep going! 💪 Shuffle and go through them again.";
+  document.getElementById('completeMsg').textContent = msg;
+  document.getElementById('completeBanner').classList.add('visible');
+}
+
+function buildGrid() {
+  const grid = document.getElementById('cardGrid');
+  const t = topics[currentTopic];
+  grid.innerHTML = '';
+  t.cards.forEach((card, i) => {
+    const div = document.createElement('div');
+    div.className = 'mini-card unseen';
+    div.id = `mini-${i}`;
+    div.textContent = card.q.length > 60 ? card.q.substring(0, 57) + '…' : card.q;
+    div.onclick = () => jumpToCard(i);
+    grid.appendChild(div);
+  });
+}
+
+function updateGrid() {
+  const t = topics[currentTopic];
+  const currentOriginalIdx = cardOrder[currentIndex];
+  t.cards.forEach((_, i) => {
+    const el = document.getElementById(`mini-${i}`);
+    if (!el) return;
+    const r = ratings[i];
+    el.className = 'mini-card ' + (r || 'unseen');
+    if (i === currentOriginalIdx) el.classList.add('current');
+  });
+}
+
+function jumpToCard(originalIdx) {
+  const pos = cardOrder.indexOf(originalIdx);
+  if (pos !== -1) {
+    currentIndex = pos;
+    renderCard();
+  }
+}
+
+function toggleGrid() {
+  gridVisible = !gridVisible;
+  const grid = document.getElementById('cardGrid');
+  grid.classList.toggle('visible', gridVisible);
+  document.querySelector('.btn-grid').textContent = gridVisible ? '✕ Hide overview' : '⊞ Card overview';
+  if (gridVisible) updateGrid();
+}
+
+// ── MODE TOGGLE ─────────────────────────────────────────────
+let currentMode = 'flashcards';
+
+function setMode(mode) {
+  currentMode = mode;
+  document.getElementById('modeFlashcards').classList.toggle('active', mode === 'flashcards');
+  document.getElementById('modeNotes').classList.toggle('active', mode === 'notes');
+  document.getElementById('flashcardView').classList.toggle('hidden', mode === 'notes');
+  document.getElementById('notesView').classList.toggle('visible', mode === 'notes');
+  if (mode === 'notes') renderNotes(currentTopic);
+}
+
+function selectTopic(idx) {
+  currentTopic = idx;
+  document.querySelectorAll('.topic-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+  if (currentMode === 'notes') {
+    renderNotes(idx);
+  } else {
+    loadTopic(idx);
+  }
+}
+
+// ── REVISION NOTES DATA ──────────────────────────────────────
+const notesData = [
+
+  // ── TOPIC 0: HUMAN GROWTH & DEVELOPMENT ───────────────────
+  {
+    title: "🧬 Human Growth & Development",
+    intro: "This topic is about how people develop across their entire lifespan. You need to know the five life stages, the four areas of PIES development, key milestones, and how significant life events can affect development.",
+    sections: [
+      {
+        title: "PIES — The Four Areas of Development",
+        colour: "hdr-purple",
+        html: `
+          <div class="callout"><strong>Remember this</strong>PIES = Physical · Intellectual · Emotional · Social. Every part of development fits into one of these four categories.</div>
+          <ul>
+            <li><strong>Physical</strong> — changes to the body: growth, motor skills, puberty, physical health and fitness.</li>
+            <li><strong>Intellectual</strong> — development of thinking, language, memory, problem-solving and learning ability.</li>
+            <li><strong>Emotional</strong> — development of feelings, self-esteem, emotional regulation and personal identity.</li>
+            <li><strong>Social</strong> — forming relationships, learning social rules, building friendships and family bonds.</li>
+          </ul>
+          <div class="callout"><strong>Holistic development</strong>All four PIES areas are linked — development in one area affects all the others. E.g. a child who is ill (physical) may fall behind at school (intellectual) and become withdrawn (social/emotional).</div>
+        `
+      },
+      {
+        title: "The Six Life Stages",
+        colour: "hdr-pink",
+        html: `
+          <table class="notes-table">
+            <tr><th>Life Stage</th><th>Age Range</th><th>Key Features</th></tr>
+            <tr><td><strong>Infancy</strong></td><td>0–2 years</td><td>Rapid physical growth, developing gross and fine motor skills, attachment to caregivers, language begins.</td></tr>
+            <tr><td><strong>Early Childhood</strong></td><td>3–8 years</td><td>Continued growth, learning to read/write, forming friendships, developing independence.</td></tr>
+            <tr><td><strong>Adolescence</strong></td><td>9–18 years</td><td>Puberty, identity formation (Erikson: Identity vs Role Confusion), peer relationships become very important.</td></tr>
+            <tr><td><strong>Early Adulthood</strong></td><td>19–45 years</td><td>Career, relationships, parenthood, peak physical fitness, emotional maturity developing.</td></tr>
+            <tr><td><strong>Middle Adulthood</strong></td><td>46–65 years</td><td>Menopause (women), gradual physical decline, career peak, children may leave home (empty nest).</td></tr>
+            <tr><td><strong>Later Adulthood</strong></td><td>65+ years</td><td>Physical decline, retirement, possible loss of independence, potential for wisdom and reflection.</td></tr>
+          </table>
+        `
+      },
+      {
+        title: "Key Milestones",
+        colour: "hdr-teal",
+        html: `
+          <h4>Gross Motor Skills (large body movements)</h4>
+          <ul>
+            <li>Sitting unaided — around <strong>6 months</strong></li>
+            <li>Walking — around <strong>12–15 months</strong></li>
+            <li>Running/jumping — around <strong>2–3 years</strong></li>
+          </ul>
+          <h4>Fine Motor Skills (small, precise movements)</h4>
+          <ul>
+            <li>Pincer grip (picking up small objects) — around <strong>9–10 months</strong></li>
+            <li>Holding a spoon/crayon — around <strong>18 months</strong></li>
+          </ul>
+          <h4>Intellectual Milestones</h4>
+          <ul>
+            <li>First words — around <strong>12 months</strong></li>
+            <li>Speaking in sentences — around <strong>3 years</strong></li>
+            <li>Reading and writing — <strong>4–7 years</strong></li>
+          </ul>
+        `
+      },
+      {
+        title: "Growth vs Development",
+        colour: "hdr-blue",
+        html: `
+          <ul>
+            <li><strong>Growth</strong> = a measurable, physical increase. For example: height, weight, head circumference.</li>
+            <li><strong>Development</strong> = gaining new skills, abilities and understanding. For example: learning to read, forming a stable identity.</li>
+          </ul>
+          <div class="callout"><strong>Key distinction</strong>Growth is quantitative (you can measure it). Development is qualitative (you can observe it but it's harder to measure).</div>
+        `
+      },
+      {
+        title: "Life Events & Their Impact",
+        colour: "hdr-orange",
+        html: `
+          <p>A <strong>life event</strong> is a significant event that brings about change and can affect development across all PIES areas.</p>
+          <table class="notes-table">
+            <tr><th>Type</th><th>Examples</th></tr>
+            <tr><td><strong>Expected</strong></td><td>Starting school, puberty, getting a job, marriage, retirement</td></tr>
+            <tr><td><strong>Unexpected</strong></td><td>Serious illness, bereavement, redundancy, divorce, accidents</td></tr>
+          </table>
+          <h4>How Bereavement Affects PIES</h4>
+          <ul>
+            <li><strong>Physical</strong> — disturbed sleep, loss of appetite, fatigue</li>
+            <li><strong>Intellectual</strong> — difficulty concentrating, forgetfulness</li>
+            <li><strong>Emotional</strong> — grief, depression, anxiety, anger</li>
+            <li><strong>Social</strong> — withdrawal from friends and activities</li>
+          </ul>
+          <div class="callout"><strong>Empty nest syndrome</strong>When children leave home, parents (especially in adulthood) may feel lonely or lose a sense of purpose — this is an expected but emotionally significant life event.</div>
+        `
+      }
+    ]
+  },
+
+  // ── TOPIC 1: FACTORS AFFECTING DEVELOPMENT ────────────────
+  {
+    title: "🌍 Factors Affecting Development",
+    intro: "Development is shaped by a wide range of factors — not just genes. You need to be able to identify the five main categories of factors and explain how each one can influence the PIES areas of development, including both positive (protective) and negative (risk) effects.",
+    sections: [
+      {
+        title: "The Five Main Factors",
+        colour: "hdr-purple",
+        html: `
+          <div class="tag-row">
+            <span class="tag">1. Genetic/Biological</span>
+            <span class="tag pink">2. Environmental</span>
+            <span class="tag teal">3. Socio-economic</span>
+            <span class="tag green">4. Lifestyle</span>
+            <span class="tag orange">5. Cultural/Religious</span>
+          </div>
+          <p style="margin-top:10px;font-size:0.88rem;color:#555;">Each factor can either <strong>support</strong> or <strong>hinder</strong> development — your exam answers should always link back to one or more PIES areas.</p>
+        `
+      },
+      {
+        title: "1. Genetic & Biological Factors",
+        colour: "hdr-pink",
+        html: `
+          <p>These are factors we are <strong>born with</strong> or that are passed down from parents through DNA.</p>
+          <ul>
+            <li>Inherited conditions: <strong>cystic fibrosis</strong>, <strong>Down's syndrome</strong>, <strong>sickle cell anaemia</strong></li>
+            <li>Eye colour, height potential, skin tone</li>
+            <li>Genetic predispositions: increased risk of heart disease, diabetes, some cancers</li>
+          </ul>
+          <div class="callout"><strong>Nature vs Nurture</strong>This is the debate about whether development is driven by <strong>nature</strong> (genes) or <strong>nurture</strong> (environment and experiences). Most experts now agree it's <em>both</em> — genes set potential, but environment determines how that potential develops.</div>
+        `
+      },
+      {
+        title: "2. Environmental Factors",
+        colour: "hdr-teal",
+        html: `
+          <p>The <strong>physical environment</strong> around us shapes our development from birth.</p>
+          <ul>
+            <li><strong>Housing quality</strong> — damp, cold or overcrowded housing can cause respiratory illness, stress, poor sleep</li>
+            <li><strong>Pollution</strong> — air and noise pollution can affect physical and cognitive development</li>
+            <li><strong>Access to green space</strong> — opportunities for exercise and play</li>
+            <li><strong>Rural vs urban</strong> — affects access to services, opportunities and social networks</li>
+          </ul>
+        `
+      },
+      {
+        title: "3. Socio-economic Factors",
+        colour: "hdr-blue",
+        html: `
+          <p><strong>Socio-economic status</strong> = a person's position in society based on income, education level and occupation.</p>
+          <ul>
+            <li><strong>Poverty</strong> → poor nutrition, less access to education, activities, healthcare → impacts all PIES areas</li>
+            <li><strong>Education</strong> → higher education = more employment opportunities, greater income, increased confidence</li>
+            <li><strong>Employment</strong> → job security affects mental health, financial stability and social connections</li>
+            <li><strong>Income inequality</strong> → children from low-income families are more likely to experience poor health outcomes</li>
+          </ul>
+          <div class="callout"><strong>Protective factor</strong>A supportive family, good schooling, and access to healthcare are all <em>protective factors</em> that reduce the negative impact of a disadvantaged background.</div>
+        `
+      },
+      {
+        title: "4. Lifestyle Factors",
+        colour: "hdr-green",
+        html: `
+          <p>Choices we make about how we live can significantly affect our health and development.</p>
+          <table class="notes-table">
+            <tr><th>Lifestyle Factor</th><th>Positive Effect</th><th>Negative Effect</th></tr>
+            <tr><td>Diet</td><td>Balanced diet → healthy growth, strong immune system</td><td>Poor diet → malnutrition, obesity, stunted growth</td></tr>
+            <tr><td>Exercise</td><td>Stronger muscles/bones, better mental health, improved concentration</td><td>Sedentary lifestyle → obesity, heart disease</td></tr>
+            <tr><td>Smoking</td><td>—</td><td>Cancer, heart disease, stroke; harms unborn babies</td></tr>
+            <tr><td>Alcohol</td><td>—</td><td>Liver damage, cognitive decline, poor decision-making</td></tr>
+            <tr><td>Sleep</td><td>Good sleep → cognitive function, emotional regulation</td><td>Poor sleep → irritability, poor school performance</td></tr>
+          </table>
+        `
+      },
+      {
+        title: "5. Cultural & Religious Factors",
+        colour: "hdr-orange",
+        html: `
+          <ul>
+            <li>Cultural beliefs shape <strong>diet</strong> (e.g. halal, kosher, vegetarianism)</li>
+            <li>Cultural attitudes to <strong>gender roles</strong> affect social and emotional development</li>
+            <li>Some cultures have <strong>stronger stigma around mental health</strong>, which can prevent people seeking help</li>
+            <li>Religion can provide <strong>community support</strong>, a sense of belonging, and moral framework</li>
+            <li><strong>Discrimination</strong> linked to culture/religion can lower self-esteem and limit opportunities</li>
+          </ul>
+          <div class="callout"><strong>Media influence</strong>Social media can negatively affect development — particularly in adolescence — by promoting unrealistic body image and social comparison, reducing self-esteem.</div>
+        `
+      }
+    ]
+  },
+
+  // ── TOPIC 2: HEALTH & CARE SERVICES ───────────────────────
+  {
+    title: "🏥 Health & Care Services",
+    intro: "You need to understand how health and social care services are organised in the UK, the different types and levels of care, and the barriers that prevent people from accessing the services they need.",
+    sections: [
+      {
+        title: "The Three Levels of Healthcare",
+        colour: "hdr-teal",
+        html: `
+          <table class="notes-table">
+            <tr><th>Level</th><th>What it is</th><th>Examples</th></tr>
+            <tr><td><strong>Primary Care</strong></td><td>First point of contact for non-emergency health issues</td><td>GP, dentist, pharmacist, district nurse, optician</td></tr>
+            <tr><td><strong>Secondary Care</strong></td><td>Specialist treatment — usually after GP referral</td><td>Hospital outpatients, consultant, surgeon, A&amp;E</td></tr>
+            <tr><td><strong>Tertiary Care</strong></td><td>Highly specialised, long-term or complex care</td><td>Specialist cancer centre, neurology unit, specialist mental health unit</td></tr>
+          </table>
+          <div class="callout"><strong>Key fact</strong>The NHS is funded through taxation and is <em>free at the point of use</em> — meaning you don't pay when you visit a GP or hospital.</div>
+        `
+      },
+      {
+        title: "Formal vs Informal Care",
+        colour: "hdr-purple",
+        html: `
+          <table class="notes-table">
+            <tr><th></th><th>Formal Care</th><th>Informal Care</th></tr>
+            <tr><td><strong>Who provides it?</strong></td><td>Paid, trained professionals</td><td>Unpaid family members or friends</td></tr>
+            <tr><td><strong>Examples</strong></td><td>Nurses, social workers, care home staff</td><td>A parent caring for a disabled child; a spouse caring for a partner with dementia</td></tr>
+            <tr><td><strong>Regulated?</strong></td><td>Yes — CQC oversees standards</td><td>No formal regulation</td></tr>
+          </table>
+          <p>Social care supports people who need help with daily activities due to <strong>age, disability or illness</strong> — e.g. home care visits, residential care homes, day centres.</p>
+        `
+      },
+      {
+        title: "Barriers to Accessing Services",
+        colour: "hdr-red",
+        html: `
+          <p>Many people who need care cannot access it. Barriers include:</p>
+          <div class="tag-row">
+            <span class="tag pink">Language barriers</span>
+            <span class="tag pink">Cost of travel</span>
+            <span class="tag pink">Long waiting times</span>
+            <span class="tag pink">Lack of awareness</span>
+            <span class="tag pink">Physical disability</span>
+            <span class="tag pink">Fear or stigma</span>
+            <span class="tag pink">Digital exclusion</span>
+            <span class="tag pink">Cultural beliefs</span>
+          </div>
+          <h4>How barriers are overcome</h4>
+          <ul>
+            <li>Interpreter services and translated materials</li>
+            <li>Outreach programmes in communities</li>
+            <li>Accessible buildings and transport</li>
+            <li>Mental health awareness campaigns to reduce stigma</li>
+          </ul>
+        `
+      },
+      {
+        title: "Multi-agency Working",
+        colour: "hdr-blue",
+        html: `
+          <p><strong>Multi-agency working</strong> means different services — health, social care, education, police — working <em>together</em> to support an individual.</p>
+          <ul>
+            <li>Ensures a <strong>holistic</strong> approach — all needs are addressed</li>
+            <li>Reduces gaps in care and avoids duplication</li>
+            <li>Critical in <strong>safeguarding</strong> — e.g. sharing concerns about a child's welfare between school, GP and social services</li>
+          </ul>
+          <div class="callout"><strong>Care pathway</strong>A planned route of care setting out the steps of treatment or support a person will receive — e.g. a cancer diagnosis pathway from GP referral to diagnosis to treatment to follow-up.</div>
+        `
+      },
+      {
+        title: "Key Roles & Voluntary Sector",
+        colour: "hdr-green",
+        html: `
+          <h4>Key Professional Roles</h4>
+          <ul>
+            <li><strong>GP</strong> — first point of contact; diagnoses, prescribes and refers</li>
+            <li><strong>Social worker</strong> — assesses needs, arranges services, especially for vulnerable people</li>
+            <li><strong>Health visitor</strong> — supports families with children aged 0–5</li>
+            <li><strong>District nurse</strong> — provides nursing care in people's homes</li>
+          </ul>
+          <h4>Voluntary Sector (Charities)</h4>
+          <ul>
+            <li><strong>Age UK</strong> — support for older people</li>
+            <li><strong>Barnardo's</strong> — children and young people</li>
+            <li><strong>Macmillan Cancer Support</strong> — cancer patients and families</li>
+            <li><strong>Mind</strong> — mental health support</li>
+          </ul>
+          <div class="callout"><strong>Early intervention</strong>Identifying and addressing problems early — especially in children — before they become more serious. E.g. Sure Start centres for families with young children.</div>
+        `
+      }
+    ]
+  },
+
+  // ── TOPIC 3: COMMUNICATION ──────────────────────────────────
+  {
+    title: "💬 Communication in Health & Social Care",
+    intro: "Communication is central to good care. You need to know the types of communication, Argyle's Communication Cycle, the barriers that can prevent effective communication, and how care workers can overcome them.",
+    sections: [
+      {
+        title: "Types of Communication",
+        colour: "hdr-purple",
+        html: `
+          <table class="notes-table">
+            <tr><th>Type</th><th>What it includes</th><th>Examples in care settings</th></tr>
+            <tr><td><strong>Verbal</strong></td><td>Spoken words, tone, pitch, pace, volume</td><td>Discussing a care plan, providing instructions, reassuring a patient</td></tr>
+            <tr><td><strong>Non-verbal</strong></td><td>Body language, facial expressions, gestures, posture, touch, eye contact, proximity</td><td>Nodding to show understanding; open posture to appear approachable</td></tr>
+            <tr><td><strong>Written</strong></td><td>Records, reports, letters, care plans, emails</td><td>Patient records, referral letters, prescription notes</td></tr>
+            <tr><td><strong>Augmentative</strong></td><td>Aids and tools that support communication</td><td>Makaton, Braille, hearing loops, picture boards, speech-to-text</td></tr>
+          </table>
+        `
+      },
+      {
+        title: "Argyle's Communication Cycle",
+        colour: "hdr-pink",
+        html: `
+          <p>Michael Argyle's model shows communication as a <strong>two-way process</strong> with 6 stages:</p>
+          <div class="callout"><strong>The 6 stages</strong>
+            1. <strong>Idea occurs</strong> — you have a thought you want to share<br>
+            2. <strong>Message coded</strong> — you choose words/language to express it<br>
+            3. <strong>Message sent</strong> — you speak, write or gesture<br>
+            4. <strong>Message received</strong> — the other person hears/sees it<br>
+            5. <strong>Message decoded</strong> — they interpret what you meant<br>
+            6. <strong>Message understood</strong> — they fully understand and respond
+          </div>
+          <p>Communication breaks down if any stage goes wrong — e.g. if the message is decoded incorrectly (misunderstood).</p>
+        `
+      },
+      {
+        title: "Barriers to Communication",
+        colour: "hdr-red",
+        html: `
+          <div class="tag-row">
+            <span class="tag pink">Language differences</span>
+            <span class="tag pink">Hearing/sight impairment</span>
+            <span class="tag pink">Use of jargon</span>
+            <span class="tag pink">Emotional distress</span>
+            <span class="tag pink">Cultural differences</span>
+            <span class="tag pink">Environmental noise</span>
+            <span class="tag pink">Learning disabilities</span>
+            <span class="tag pink">Lack of confidence</span>
+          </div>
+          <h4>How to Overcome Barriers</h4>
+          <table class="notes-table">
+            <tr><th>Barrier</th><th>How to overcome it</th></tr>
+            <tr><td>Language differences</td><td>Use an interpreter, translated materials, picture boards, speak slowly and clearly</td></tr>
+            <tr><td>Hearing impairment</td><td>Face the person, speak clearly, use Makaton, hearing loop, written notes</td></tr>
+            <tr><td>Jargon</td><td>Use plain language; explain medical terms in simple words</td></tr>
+            <tr><td>Noise</td><td>Move to a quieter room; close doors; reduce background distractions</td></tr>
+          </table>
+        `
+      },
+      {
+        title: "Active Listening & Non-verbal Skills",
+        colour: "hdr-teal",
+        html: `
+          <p><strong>Active listening</strong> means giving full, genuine attention to the person speaking:</p>
+          <ul>
+            <li>Maintain appropriate <strong>eye contact</strong></li>
+            <li>Use <strong>nodding</strong> and affirming sounds ("yes", "I see")</li>
+            <li>Don't interrupt — let them finish</li>
+            <li><strong>Reflect back</strong> what they've said to show understanding</li>
+            <li>Ask open questions to encourage them to elaborate</li>
+          </ul>
+          <h4>Positive Body Language in Care</h4>
+          <ul>
+            <li><strong>Open posture</strong> — arms uncrossed, facing the person</li>
+            <li>Appropriate <strong>proximity</strong> — not too close, not too far</li>
+            <li><strong>Facial expression</strong> — warm, attentive</li>
+            <li><strong>Empathy</strong> — understanding and sharing the other person's feelings</li>
+          </ul>
+        `
+      },
+      {
+        title: "Confidentiality & Written Communication",
+        colour: "hdr-blue",
+        html: `
+          <p><strong>Confidentiality</strong> means keeping personal information private. It builds trust and is required by law.</p>
+          <ul>
+            <li>Governed by the <strong>Data Protection Act 2018</strong> and <strong>GDPR</strong></li>
+            <li>Confidentiality <em>can</em> be broken if there is a risk of serious harm to the individual or others</li>
+            <li>Breaching confidentiality can lead to disciplinary action, dismissal, and legal proceedings</li>
+          </ul>
+          <h4>Purpose of Written Communication in Care</h4>
+          <ul>
+            <li>Keep <strong>accurate records</strong> that can be reviewed over time</li>
+            <li>Share information safely between professionals</li>
+            <li>Ensure <strong>continuity of care</strong> if staff change</li>
+            <li>Legal documentation in case of complaints</li>
+          </ul>
+          <div class="callout"><strong>Effect of poor communication</strong>Misdiagnosis, patient distress, safeguarding failures, reduced trust, and breaches of confidentiality. Clear, accurate communication literally saves lives.</div>
+        `
+      }
+    ]
+  },
+
+  // ── TOPIC 4: CARE VALUES & ETHICS ──────────────────────────
+  {
+    title: "❤️ Care Values & Ethics",
+    intro: "Care values are the principles that guide professional behaviour in health and social care. You need to know what they are, the key legislation that supports them, and how they are applied in practice — including safeguarding and anti-discriminatory practice.",
+    sections: [
+      {
+        title: "The Core Care Values",
+        colour: "hdr-red",
+        html: `
+          <div class="tag-row">
+            <span class="tag pink">Dignity & Respect</span>
+            <span class="tag pink">Privacy</span>
+            <span class="tag pink">Confidentiality</span>
+            <span class="tag pink">Person-centred care</span>
+            <span class="tag pink">Promoting independence</span>
+            <span class="tag pink">Safeguarding</span>
+            <span class="tag pink">Anti-discriminatory practice</span>
+            <span class="tag pink">Empowerment</span>
+          </div>
+          <div class="callout"><strong>Person-centred care</strong>Putting the individual at the centre of all decisions — respecting their wishes, needs, preferences and background. It means listening to the person rather than just telling them what will happen.</div>
+        `
+      },
+      {
+        title: "Key Legislation",
+        colour: "hdr-purple",
+        html: `
+          <table class="notes-table">
+            <tr><th>Law</th><th>What it does</th></tr>
+            <tr><td><strong>Equality Act 2010</strong></td><td>Protects individuals from discrimination based on 9 protected characteristics</td></tr>
+            <tr><td><strong>Data Protection Act 2018 / GDPR</strong></td><td>Controls how personal data is stored and shared</td></tr>
+            <tr><td><strong>Mental Capacity Act 2005</strong></td><td>Protects people who may lack capacity to make decisions</td></tr>
+            <tr><td><strong>Children Act 1989/2004</strong></td><td>Child welfare is the paramount concern</td></tr>
+          </table>
+          <h4>The 9 Protected Characteristics (Equality Act 2010)</h4>
+          <div class="tag-row">
+            <span class="tag">Age</span><span class="tag">Disability</span><span class="tag">Gender reassignment</span>
+            <span class="tag">Race</span><span class="tag">Religion/belief</span><span class="tag">Sex</span>
+            <span class="tag">Sexual orientation</span><span class="tag">Marriage/civil partnership</span><span class="tag">Pregnancy/maternity</span>
+          </div>
+        `
+      },
+      {
+        title: "Confidentiality — When Can It Be Broken?",
+        colour: "hdr-blue",
+        html: `
+          <p>Normally, personal information must be kept private. However, confidentiality <strong>can be broken</strong> when:</p>
+          <ul>
+            <li>There is a risk of <strong>serious harm</strong> to the individual (e.g. self-harm, suicide risk)</li>
+            <li>There is a risk of <strong>harm to others</strong> (e.g. a person threatens violence)</li>
+            <li>A <strong>court orders</strong> disclosure</li>
+            <li><strong>Safeguarding concerns</strong> — suspected abuse of a vulnerable person or child</li>
+          </ul>
+          <div class="callout"><strong>Informed consent</strong>Before any treatment or care, the individual must be told what it involves and agree to it. This respects their autonomy — their right to make decisions about their own life.</div>
+        `
+      },
+      {
+        title: "Safeguarding & Types of Abuse",
+        colour: "hdr-orange",
+        html: `
+          <p><strong>Safeguarding</strong> means protecting vulnerable individuals — including children and adults at risk — from harm, abuse and neglect.</p>
+          <h4>The 6 Types of Abuse</h4>
+          <table class="notes-table">
+            <tr><th>Type</th><th>Examples</th></tr>
+            <tr><td><strong>Physical</strong></td><td>Hitting, pushing, restraining inappropriately</td></tr>
+            <tr><td><strong>Emotional/Psychological</strong></td><td>Humiliation, threats, isolation, verbal abuse</td></tr>
+            <tr><td><strong>Sexual</strong></td><td>Any unwanted sexual contact or exploitation</td></tr>
+            <tr><td><strong>Financial</strong></td><td>Stealing money, misusing someone's funds</td></tr>
+            <tr><td><strong>Neglect</strong></td><td>Failing to provide food, warmth, medical care or supervision</td></tr>
+            <tr><td><strong>Discriminatory</strong></td><td>Abuse based on a protected characteristic (race, disability, etc.)</td></tr>
+          </table>
+          <div class="callout"><strong>Duty of care</strong>Care workers have a legal and professional obligation to take reasonable steps to avoid harm to those in their care. Ignoring signs of abuse violates this duty.</div>
+        `
+      },
+      {
+        title: "Empowerment, Equality & Equity",
+        colour: "hdr-green",
+        html: `
+          <ul>
+            <li><strong>Empowerment</strong> — giving individuals information and support so they can make their own informed decisions. Avoiding dependency.</li>
+            <li><strong>Promoting independence</strong> — encouraging people to do as much for themselves as possible.</li>
+            <li><strong>Equality</strong> — giving everyone the <em>same</em> treatment</li>
+            <li><strong>Equity</strong> — giving people <em>adjusted</em> support based on their individual needs, to achieve fair outcomes</li>
+          </ul>
+          <div class="callout"><strong>Anti-discriminatory practice</strong>Actively challenging and preventing discrimination in care — this includes challenging colleagues who behave in discriminatory ways, using inclusive language, and making reasonable adjustments for disabilities.</div>
+        `
+      }
+    ]
+  },
+
+  // ── TOPIC 5: HEALTH & WELLBEING ─────────────────────────────
+  {
+    title: "💪 Promoting Health & Wellbeing",
+    intro: "This topic covers how we define and measure health, Maslow's hierarchy of needs, the different levels of disease prevention, and how individuals and governments can promote better health and wellbeing.",
+    sections: [
+      {
+        title: "Defining Health",
+        colour: "hdr-green",
+        html: `
+          <div class="callout"><strong>WHO Definition (1948)</strong>"Health is a state of complete physical, mental and social wellbeing — and not merely the absence of disease or infirmity."</div>
+          <p><strong>Holistic health</strong> means considering all dimensions of a person's wellbeing:</p>
+          <div class="tag-row">
+            <span class="tag green">Physical</span>
+            <span class="tag teal">Mental/Emotional</span>
+            <span class="tag">Social</span>
+            <span class="tag orange">Spiritual</span>
+          </div>
+          <h4>Illness vs Disease</h4>
+          <ul>
+            <li><strong>Disease</strong> = a medically diagnosed condition with identifiable signs (e.g. diabetes, cancer)</li>
+            <li><strong>Illness</strong> = the subjective experience of feeling unwell — you can feel ill without a disease, or have a disease without feeling ill</li>
+          </ul>
+        `
+      },
+      {
+        title: "Maslow's Hierarchy of Needs",
+        colour: "hdr-purple",
+        html: `
+          <p>Abraham Maslow's model suggests people must fulfil lower-level needs before they can work towards higher ones.</p>
+          <table class="notes-table">
+            <tr><th>Level</th><th>Need</th><th>Examples</th></tr>
+            <tr><td>5 (top)</td><td><strong>Self-actualisation</strong></td><td>Reaching your full potential, creativity, purpose</td></tr>
+            <tr><td>4</td><td><strong>Esteem needs</strong></td><td>Self-esteem, respect from others, achievement, confidence</td></tr>
+            <tr><td>3</td><td><strong>Love & Belonging</strong></td><td>Friendships, family, intimate relationships, sense of community</td></tr>
+            <tr><td>2</td><td><strong>Safety needs</strong></td><td>Personal safety, job security, health, financial security</td></tr>
+            <tr><td>1 (base)</td><td><strong>Physiological needs</strong></td><td>Food, water, warmth, sleep, shelter, air</td></tr>
+          </table>
+          <div class="callout"><strong>Applying Maslow in care</strong>If a patient doesn't have their basic needs met (food, warmth, safety) they cannot engage with higher-level care goals like building confidence or reaching their potential.</div>
+        `
+      },
+      {
+        title: "Levels of Prevention",
+        colour: "hdr-teal",
+        html: `
+          <table class="notes-table">
+            <tr><th>Level</th><th>Aim</th><th>Examples</th></tr>
+            <tr><td><strong>Primary Prevention</strong></td><td>Stop illness before it happens</td><td>Vaccination, healthy eating campaigns, anti-smoking campaigns, condom distribution</td></tr>
+            <tr><td><strong>Secondary Prevention</strong></td><td>Early detection to prevent worsening</td><td>Cervical/breast/bowel cancer screening, blood pressure checks, NHS Health Check</td></tr>
+            <tr><td><strong>Tertiary Prevention</strong></td><td>Manage and minimise impact of existing illness</td><td>Physiotherapy after stroke, cardiac rehabilitation, diabetes management programmes</td></tr>
+          </table>
+        `
+      },
+      {
+        title: "Lifestyle Factors & Health",
+        colour: "hdr-orange",
+        html: `
+          <h4>Key Lifestyle Factors</h4>
+          <ul>
+            <li><strong>Diet</strong> — poor diet increases risk of obesity, type 2 diabetes, heart disease, some cancers</li>
+            <li><strong>Physical activity</strong> — reduces risk of heart disease, improves mental health, strengthens bones</li>
+            <li><strong>Smoking</strong> — causes lung cancer, heart disease, stroke; harms unborn babies</li>
+            <li><strong>Alcohol</strong> — liver damage, cognitive decline, increased cancer risk; social problems</li>
+            <li><strong>Sleep</strong> — poor sleep impairs concentration, emotional regulation and immune function</li>
+            <li><strong>Stress</strong> — chronic stress raises blood pressure, weakens immunity, disrupts sleep</li>
+          </ul>
+          <div class="callout"><strong>Obesity</strong>Increases risk of type 2 diabetes, heart disease, joint problems, sleep apnoea, some cancers, and reduced life expectancy. It is one of the UK's biggest preventable health problems.</div>
+        `
+      },
+      {
+        title: "Health Promotion & Government's Role",
+        colour: "hdr-blue",
+        html: `
+          <h4>Health Promotion Campaigns</h4>
+          <ul>
+            <li><strong>Change4Life</strong> — encouraging healthy eating and activity in families</li>
+            <li><strong>5-a-Day</strong> — fruit and vegetable consumption</li>
+            <li><strong>Stop Smoking campaigns</strong> — NHS support programmes</li>
+            <li><strong>Mental Health Awareness Week</strong> — reducing stigma</li>
+          </ul>
+          <h4>Government's Role in Public Health</h4>
+          <ul>
+            <li>Creating <strong>health policies</strong> and legislation (e.g. sugar tax, plain cigarette packaging)</li>
+            <li>Funding the NHS and public health services</li>
+            <li>Regulating food, tobacco and alcohol industries</li>
+            <li><strong>Social prescribing</strong> — connecting people to community activities and non-medical support to improve wellbeing</li>
+          </ul>
+          <div class="callout"><strong>SMART health goals</strong>Specific · Measurable · Achievable · Realistic · Time-bound. Used when supporting individuals to set personal health targets.</div>
+        `
+      },
+      {
+        title: "Mental Health & Wellbeing",
+        colour: "hdr-indigo",
+        html: `
+          <p><strong>Mental health</strong> = emotional, psychological and social wellbeing — how we think, feel and behave, especially under stress.</p>
+          <h4>Factors That Promote Positive Mental Health</h4>
+          <div class="tag-row">
+            <span class="tag">Supportive relationships</span>
+            <span class="tag">Regular exercise</span>
+            <span class="tag">Sense of purpose</span>
+            <span class="tag">Adequate sleep</span>
+            <span class="tag">Mindfulness</span>
+            <span class="tag">Financial security</span>
+          </div>
+          <h4>Impact of Poverty on Health</h4>
+          <ul>
+            <li>Limits access to nutritious food, warm housing, exercise facilities</li>
+            <li>Higher rates of stress, anxiety and depression in low-income households</li>
+            <li>Less likely to access mental health services due to cost or stigma</li>
+          </ul>
+        `
+      }
+    ]
+  }
+
+];
+
+// ── RENDER NOTES ─────────────────────────────────────────────
+function renderNotes(topicIdx) {
+  const data = notesData[topicIdx];
+  const container = document.getElementById('notesView');
+  if (!data) { container.innerHTML = '<p style="color:#888;padding:20px;">Notes not available for this topic yet.</p>'; return; }
+
+  let html = `<div class="notes-intro">${data.intro}</div>`;
+
+  data.sections.forEach((sec, i) => {
+    html += `
+      <div class="notes-section" id="nsec-${topicIdx}-${i}">
+        <div class="notes-section-header ${sec.colour}" onclick="toggleSection(${topicIdx},${i})">
+          <span class="section-title">${sec.title}</span>
+          <span class="chevron">&#9660;</span>
+        </div>
+        <div class="notes-section-body">${sec.html}</div>
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+
+  // Open first section by default
+  const first = document.getElementById(`nsec-${topicIdx}-0`);
+  if (first) first.classList.add('open');
+}
+
+function toggleSection(topicIdx, secIdx) {
+  const el = document.getElementById(`nsec-${topicIdx}-${secIdx}`);
+  if (el) el.classList.toggle('open');
+}
+
+// ── KEYBOARD NAVI

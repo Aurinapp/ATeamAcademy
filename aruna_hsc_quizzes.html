@@ -1,0 +1,2006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aruna's Health & Social Care — Quizzes & Test</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --pink: #e91e8c;
+    --purple: #6c3fc5;
+    --teal: #00bcd4;
+    --light: #f5f3ff;
+    --dark: #1a1135;
+    --dark2: #241850;
+    --surface: #ffffff;
+    --correct: #4caf50;
+    --incorrect: #f44336;
+    --warn: #ff9800;
+    --neutral: #9e9e9e;
+    --text-dark: #1a1135;
+    --text-muted: #666;
+    --border: #e0daf5;
+  }
+
+  body {
+    font-family: 'Lexend', 'Segoe UI', system-ui, sans-serif;
+    background: var(--light);
+    color: var(--text-dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  
+  line-height: 1.7;
+
+  word-spacing: 0.05em;
+
+  font-size: 1rem;
+}
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    color: white;
+    padding: 16px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 3px 12px rgba(108,63,197,0.3);
+    flex-shrink: 0;
+  }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .back-btn {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .back-btn:hover { background: rgba(255,255,255,0.3); }
+  header h1 { font-size: 1.35rem; font-weight: 700; }
+  header h1 span { opacity: 0.75; font-weight: 400; font-size: 1rem; margin-left: 8px; }
+  .header-badge {
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+
+  /* APP LAYOUT */
+  .app { display: flex; flex: 1; overflow: hidden; height: calc(100vh - 64px); }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 270px;
+    min-width: 270px;
+    background: var(--dark);
+    color: white;
+    overflow-y: auto;
+    padding: 16px 0 24px;
+    display: flex;
+    flex-direction: column;
+  }
+  .sidebar-section-label {
+    padding: 10px 18px 6px;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: rgba(255,255,255,0.35);
+  }
+  .topic-group { margin-bottom: 4px; }
+  .topic-header-btn {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+    padding: 10px 18px;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.85);
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    transition: background 0.15s;
+  }
+  .topic-header-btn:hover { background: rgba(255,255,255,0.06); }
+  .topic-icon { font-size: 1.05rem; width: 22px; text-align: center; flex-shrink: 0; }
+  .topic-chevron {
+    margin-left: auto;
+    font-size: 0.7rem;
+    opacity: 0.4;
+    transition: transform 0.2s;
+  }
+  .topic-group.open .topic-chevron { transform: rotate(90deg); }
+  .quiz-list { display: none; }
+  .topic-group.open .quiz-list { display: block; }
+  .quiz-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 8px 18px 8px 44px;
+    background: none;
+    border: none;
+    border-left: 3px solid transparent;
+    color: rgba(255,255,255,0.6);
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.84rem;
+    transition: all 0.15s;
+  }
+  .quiz-btn:hover { background: rgba(255,255,255,0.05); color: white; }
+  .quiz-btn.active {
+    background: rgba(233,30,140,0.15);
+    color: white;
+    border-left-color: var(--pink);
+    font-weight: 600;
+  }
+  .quiz-status {
+    margin-left: auto;
+    font-size: 0.72rem;
+    padding: 2px 7px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.4);
+    flex-shrink: 0;
+  }
+  .quiz-status.done { background: rgba(76,175,80,0.3); color: #81c784; }
+  .sidebar-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.08);
+    margin: 10px 18px;
+  }
+  .test-btn {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+    padding: 11px 18px;
+    background: none;
+    border: none;
+    border-left: 3px solid transparent;
+    color: rgba(255,255,255,0.8);
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 700;
+    transition: all 0.15s;
+  }
+  .test-btn:hover { background: rgba(255,255,255,0.06); }
+  .test-btn.active {
+    background: rgba(0,188,212,0.15);
+    color: white;
+    border-left-color: var(--teal);
+  }
+  .score-summary {
+    margin: 12px 16px 0;
+    background: rgba(255,255,255,0.06);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .score-summary-title {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 8px;
+  }
+  .score-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; padding: 3px 0; color: rgba(255,255,255,0.6); }
+  .score-row span:last-child { font-weight: 600; color: white; }
+
+  /* MAIN CONTENT */
+  main {
+    flex: 1;
+    overflow-y: auto;
+    padding: 28px 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .screen { display: none; width: 100%; max-width: 780px; animation: fadeIn 0.2s ease; }
+  .screen.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* HOME SCREEN */
+  .home-hero {
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    border-radius: 18px;
+    padding: 36px 32px;
+    color: white;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .home-hero::before {
+    content: '🩺';
+    position: absolute;
+    right: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 4rem;
+    opacity: 0.15;
+  }
+  .home-hero h2 { font-size: 1.7rem; font-weight: 800; margin-bottom: 8px; }
+  .home-hero p { opacity: 0.85; font-size: 0.95rem; line-height: 1.5; max-width: 460px; }
+  .topic-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
+  .topic-card {
+    background: white;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 2px 12px rgba(108,63,197,0.08);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .topic-card:hover { transform: translateY(-3px); box-shadow: 0 6px 24px rgba(108,63,197,0.16); }
+  .topic-card-icon { font-size: 1.8rem; margin-bottom: 10px; }
+  .topic-card h3 { font-size: 0.95rem; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+  .topic-card p { font-size: 0.8rem; color: var(--text-muted); }
+  .topic-card .quiz-count { font-size: 0.75rem; font-weight: 600; color: var(--purple); margin-top: 10px; }
+  .test-card {
+    background: linear-gradient(135deg, #0097a7, #00bcd4);
+    border-radius: 14px;
+    padding: 20px 24px;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 3px 16px rgba(0,150,170,0.25);
+    transition: all 0.2s;
+  }
+  .test-card:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,150,170,0.35); }
+  .test-card-icon { font-size: 2rem; }
+  .test-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 4px; }
+  .test-card p { font-size: 0.85rem; opacity: 0.85; }
+
+  /* QUIZ SCREEN */
+  .quiz-header {
+    margin-bottom: 24px;
+  }
+  .quiz-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .quiz-tag {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: rgba(108,63,197,0.12);
+    color: var(--purple);
+  }
+  .quiz-tag.t1 { background: rgba(108,63,197,0.12); color: var(--purple); }
+  .quiz-tag.t2 { background: rgba(233,30,140,0.1); color: var(--pink); }
+  .quiz-tag.t3 { background: rgba(0,188,212,0.12); color: #0097a7; }
+  .quiz-tag.t4 { background: rgba(76,175,80,0.12); color: #388e3c; }
+  .quiz-tag.t5 { background: rgba(255,152,0,0.12); color: #e65100; }
+  .quiz-tag.t6 { background: rgba(156,39,176,0.12); color: #7b1fa2; }
+  .quiz-header h2 { font-size: 1.4rem; font-weight: 800; color: var(--dark); }
+  .quiz-header p { color: var(--text-muted); font-size: 0.88rem; margin-top: 4px; }
+
+  /* PROGRESS */
+  .progress-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+  .progress-bar-bg {
+    flex: 1;
+    height: 7px;
+    background: var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--purple), var(--pink));
+    border-radius: 4px;
+    transition: width 0.3s ease;
+  }
+  .progress-label { font-size: 0.82rem; color: var(--text-muted); white-space: nowrap; }
+
+  /* QUESTION CARD */
+  .question-card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px 28px 24px;
+    box-shadow: 0 2px 16px rgba(108,63,197,0.09);
+    border: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+  .q-number {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--purple);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 10px;
+  }
+  .q-text {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--dark);
+    line-height: 1.55;
+    margin-bottom: 22px;
+  }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option-btn {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 13px 16px;
+    border-radius: 10px;
+    border: 2px solid var(--border);
+    background: #faf9ff;
+    cursor: pointer;
+    text-align: left;
+    font-size: 0.93rem;
+    color: var(--text-dark);
+    transition: all 0.15s;
+    line-height: 1.45;
+  }
+  .option-btn:hover:not(:disabled) { border-color: var(--purple); background: #f3f0ff; }
+  .option-btn .opt-letter {
+    font-weight: 700;
+    color: var(--purple);
+    min-width: 20px;
+    flex-shrink: 0;
+    padding-top: 1px;
+  }
+  .option-btn.correct { border-color: var(--correct); background: #e8f5e9; color: #2e7d32; }
+  .option-btn.correct .opt-letter { color: var(--correct); }
+  .option-btn.incorrect { border-color: var(--incorrect); background: #ffebee; color: #c62828; }
+  .option-btn.incorrect .opt-letter { color: var(--incorrect); }
+  .option-btn.revealed { border-color: var(--correct); background: #e8f5e9; color: #2e7d32; }
+  .option-btn.revealed .opt-letter { color: var(--correct); }
+  .option-btn:disabled { cursor: default; }
+
+  /* TF BUTTONS */
+  .tf-row { display: flex; gap: 12px; margin-top: 4px; }
+  .tf-btn {
+    flex: 1;
+    padding: 14px;
+    border-radius: 10px;
+    border: 2px solid var(--border);
+    background: #faf9ff;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 700;
+    transition: all 0.15s;
+    color: var(--text-dark);
+  }
+  .tf-btn:hover:not(:disabled) { border-color: var(--purple); background: #f3f0ff; }
+  .tf-btn.true-btn:hover:not(:disabled) { border-color: var(--correct); background: #e8f5e9; }
+  .tf-btn.false-btn:hover:not(:disabled) { border-color: var(--incorrect); background: #ffebee; }
+  .tf-btn.correct { border-color: var(--correct); background: #e8f5e9; color: #2e7d32; }
+  .tf-btn.incorrect { border-color: var(--incorrect); background: #ffebee; color: #c62828; }
+  .tf-btn.revealed { border-color: var(--correct); background: #e8f5e9; color: #2e7d32; }
+  .tf-btn:disabled { cursor: default; }
+
+  /* FEEDBACK */
+  .feedback-box {
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    margin-top: 14px;
+    display: none;
+  }
+  .feedback-box.correct { background: #e8f5e9; color: #2e7d32; border-left: 3px solid var(--correct); }
+  .feedback-box.incorrect { background: #ffebee; color: #c62828; border-left: 3px solid var(--incorrect); }
+  .feedback-box.show { display: block; }
+  .feedback-box strong { display: block; margin-bottom: 3px; }
+
+  /* NAV BUTTONS */
+  .quiz-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 4px;
+  }
+  .nav-btn {
+    padding: 11px 22px;
+    border-radius: 10px;
+    border: 2px solid var(--border);
+    background: white;
+    color: var(--dark);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .nav-btn:hover { border-color: var(--purple); color: var(--purple); }
+  .nav-btn.primary {
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    color: white;
+    border: none;
+  }
+  .nav-btn.primary:hover { opacity: 0.9; }
+  .nav-btn:disabled { opacity: 0.4; cursor: default; }
+
+  /* RESULTS SCREEN */
+  .result-hero {
+    text-align: center;
+    background: white;
+    border-radius: 18px;
+    padding: 36px 28px;
+    box-shadow: 0 2px 20px rgba(108,63,197,0.1);
+    border: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+  .result-emoji { font-size: 3.5rem; margin-bottom: 14px; }
+  .result-score-big {
+    font-size: 3.2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+  .result-label { font-size: 1rem; color: var(--text-muted); margin-bottom: 16px; }
+  .result-message { font-size: 0.95rem; color: var(--dark); font-weight: 500; margin-bottom: 20px; }
+  .result-bars {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .result-bar-wrap { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .result-bar-bg {
+    width: 28px;
+    height: 70px;
+    background: #f0eeff;
+    border-radius: 6px;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+  }
+  .result-bar-fill {
+    width: 100%;
+    background: linear-gradient(180deg, var(--purple), var(--pink));
+    border-radius: 6px;
+    transition: height 0.6s ease;
+  }
+  .result-bar-label { font-size: 0.68rem; color: var(--text-muted); }
+  .result-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .result-btn {
+    padding: 11px 22px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 2px solid var(--border);
+    background: white;
+    color: var(--dark);
+  }
+  .result-btn.primary {
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    color: white;
+    border: none;
+  }
+  .result-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+
+  /* REVIEW PANEL */
+  .review-list { display: flex; flex-direction: column; gap: 12px; }
+  .review-item {
+    background: white;
+    border-radius: 12px;
+    padding: 16px 18px;
+    border: 1px solid var(--border);
+    font-size: 0.88rem;
+  }
+  .review-item.correct { border-left: 4px solid var(--correct); }
+  .review-item.incorrect { border-left: 4px solid var(--incorrect); }
+  .review-q { font-weight: 600; color: var(--dark); margin-bottom: 6px; }
+  .review-answer { color: var(--text-muted); }
+  .review-answer .your { display: block; }
+  .review-answer .model { color: #2e7d32; font-weight: 600; display: block; margin-top: 2px; }
+
+  /* TEST SCREEN */
+  .test-header { margin-bottom: 24px; }
+  .test-header h2 { font-size: 1.4rem; font-weight: 800; color: var(--dark); margin-bottom: 6px; }
+  .test-header p { font-size: 0.88rem; color: var(--text-muted); }
+  .test-section-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--purple);
+    padding: 6px 0;
+    margin: 20px 0 14px;
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .test-section-title span { font-weight: 400; color: var(--text-muted); font-size: 0.75rem; letter-spacing: 0; text-transform: none; }
+  .test-q-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px 22px;
+    border: 1px solid var(--border);
+    margin-bottom: 12px;
+    box-shadow: 0 1px 8px rgba(108,63,197,0.06);
+  }
+  .test-q-num {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--purple);
+    margin-bottom: 8px;
+  }
+  .test-q-text { font-size: 0.96rem; font-weight: 600; color: var(--dark); line-height: 1.5; margin-bottom: 14px; }
+  .test-options { display: flex; flex-direction: column; gap: 8px; }
+  .test-option-btn {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 9px;
+    border: 2px solid var(--border);
+    background: #faf9ff;
+    cursor: pointer;
+    text-align: left;
+    font-size: 0.88rem;
+    color: var(--text-dark);
+    transition: all 0.12s;
+    line-height: 1.4;
+  }
+  .test-option-btn:hover:not(:disabled) { border-color: var(--purple); background: #f3f0ff; }
+  .test-option-btn .opt-letter { font-weight: 700; color: var(--purple); min-width: 18px; flex-shrink: 0; }
+  .test-option-btn.selected { border-color: var(--purple); background: #ede8ff; }
+  .test-option-btn.correct { border-color: var(--correct); background: #e8f5e9; color: #2e7d32; }
+  .test-option-btn.correct .opt-letter { color: var(--correct); }
+  .test-option-btn.incorrect { border-color: var(--incorrect); background: #ffebee; color: #c62828; }
+  .test-option-btn.incorrect .opt-letter { color: var(--incorrect); }
+  .test-option-btn.revealed { border-color: var(--correct); background: #e8f5e9; color: #2e7d32; }
+  .test-option-btn:disabled { cursor: default; }
+
+  .test-tf-row { display: flex; gap: 10px; }
+  .test-tf-btn {
+    flex: 1;
+    padding: 11px;
+    border-radius: 9px;
+    border: 2px solid var(--border);
+    background: #faf9ff;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 700;
+    transition: all 0.12s;
+    color: var(--text-dark);
+  }
+  .test-tf-btn:hover:not(:disabled) { border-color: var(--purple); background: #f3f0ff; }
+  .test-tf-btn.selected { border-color: var(--purple); background: #ede8ff; }
+  .test-tf-btn.correct { border-color: var(--correct); background: #e8f5e9; color: #2e7d32; }
+  .test-tf-btn.incorrect { border-color: var(--incorrect); background: #ffebee; color: #c62828; }
+  .test-tf-btn.revealed { border-color: var(--correct); background: #e8f5e9; color: #2e7d32; }
+  .test-tf-btn:disabled { cursor: default; }
+
+  .test-textarea {
+    width: 100%;
+    border: 2px solid var(--border);
+    border-radius: 9px;
+    padding: 12px 14px;
+    font-size: 0.88rem;
+    font-family: inherit;
+    color: var(--text-dark);
+    background: #faf9ff;
+    resize: vertical;
+    min-height: 90px;
+    transition: border-color 0.15s;
+    line-height: 1.5;
+  }
+  .test-textarea:focus { outline: none; border-color: var(--purple); background: white; }
+  .test-textarea.large { min-height: 160px; }
+  .model-answer-box {
+    margin-top: 10px;
+    padding: 12px 14px;
+    background: #e8f5e9;
+    border-radius: 9px;
+    border-left: 3px solid var(--correct);
+    font-size: 0.86rem;
+    color: #2e7d32;
+    line-height: 1.55;
+    display: none;
+  }
+  .model-answer-box.show { display: block; }
+  .model-answer-box strong { display: block; margin-bottom: 4px; color: #1b5e20; }
+  .mark-scheme-box {
+    margin-top: 10px;
+    padding: 14px 16px;
+    background: #fff8e1;
+    border-radius: 9px;
+    border-left: 3px solid var(--warn);
+    font-size: 0.86rem;
+    color: #5f4000;
+    line-height: 1.6;
+    display: none;
+  }
+  .mark-scheme-box.show { display: block; }
+  .mark-scheme-box strong { display: block; margin-bottom: 4px; color: #5f4000; }
+
+  .reveal-btn {
+    margin-top: 10px;
+    padding: 8px 16px;
+    background: #f3f0ff;
+    border: 1px solid var(--purple);
+    border-radius: 8px;
+    color: var(--purple);
+    font-size: 0.84rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .reveal-btn:hover { background: #e8e1ff; }
+
+  .test-submit-row {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+  .submit-btn {
+    padding: 13px 36px;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: none;
+    background: linear-gradient(135deg, #0097a7, #00bcd4);
+    color: white;
+    box-shadow: 0 3px 14px rgba(0,150,170,0.3);
+  }
+  .submit-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+  /* TEST RESULTS */
+  .test-result-hero {
+    text-align: center;
+    background: white;
+    border-radius: 18px;
+    padding: 36px 28px;
+    box-shadow: 0 2px 20px rgba(0,150,170,0.12);
+    border: 1px solid #b2ebf2;
+    margin-bottom: 24px;
+  }
+  .test-score-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin: 20px 0;
+  }
+  .test-score-cell {
+    background: #f5f3ff;
+    border-radius: 10px;
+    padding: 14px;
+    text-align: center;
+  }
+  .test-score-cell .num { font-size: 1.6rem; font-weight: 800; color: var(--purple); }
+  .test-score-cell .lbl { font-size: 0.78rem; color: var(--text-muted); }
+  .test-score-cell.teal { background: #e0f7fa; }
+  .test-score-cell.teal .num { color: #0097a7; }
+
+  /* RESPONSIVE */
+  @media (max-width: 720px) {
+    .topic-cards { grid-template-columns: 1fr; }
+    main { padding: 20px 16px; }
+    .sidebar { width: 220px; min-width: 220px; }
+    .question-card { padding: 20px 16px; }
+    .q-text { font-size: 0.97rem; }
+  }
+  @media (max-width: 540px) {
+    .app { flex-direction: column; height: auto; }
+    .sidebar { width: 100%; min-width: unset; max-height: 200px; }
+    .quiz-btn { padding-left: 30px; }
+  }
+
+
+  /* ── A11Y TOOLBAR ── */
+  #a11y-toolbar{position:fixed!important;bottom:24px!important;right:24px!important;z-index:2147483647!important;font-family:'Lexend','Segoe UI',sans-serif;}
+  #a11y-fab{width:50px;height:50px;border-radius:50%;background:#1565c0;border:none;color:#fff;font-size:1.3rem;cursor:pointer;box-shadow:0 4px 18px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;transition:transform .2s,background .2s;}
+  #a11y-fab:hover{background:#0d47a1;transform:scale(1.07);}
+  #a11y-fab.open{background:#0d47a1;}
+  #a11y-panel{position:absolute;bottom:62px;right:0;background:#fff;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.2);padding:16px;width:260px;border:1px solid rgba(0,0,0,.07);}
+  #a11y-panel[hidden]{display:none!important;}
+  .a11y-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#888;margin-bottom:12px;}
+  .a11y-action-btn{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border-radius:10px;background:#f0f7ff;border:1.5px solid #cde4f5;color:#1565c0;font-size:.9rem;font-weight:600;cursor:pointer;font-family:inherit;}
+  .a11y-action-btn.a11y-stop{background:#fee2e2;border-color:#fca5a5;color:#dc2626;}
+  .a11y-divider{height:1px;background:#e5e7eb;margin:12px 0;}
+  .a11y-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+  .a11y-col-row{flex-direction:column;align-items:flex-start;gap:8px;margin-bottom:4px;}
+  .a11y-label{font-size:.85rem;color:#222;font-weight:500;}
+  .a11y-pill{padding:4px 14px;border-radius:20px;border:2px solid #d1d5db;background:#f3f4f6;color:#6b7280;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;}
+  .a11y-pill.on{background:#1565c0;border-color:#1565c0;color:#fff;}
+  #a11y-colours{display:flex;gap:7px;flex-wrap:wrap;}
+  .a11y-col-chip{width:28px;height:28px;border-radius:50%;border:2.5px solid #d1d5db;cursor:pointer;font-size:.65rem;display:flex;align-items:center;justify-content:center;background:#e5e7eb;}
+  .a11y-col-chip.sel{border-color:#1565c0;border-width:3px;}
+  #a11y-overlay{position:fixed!important;inset:0;pointer-events:none;z-index:2147483646!important;transition:background .35s;}
+  b.bionic-b{font-weight:800;}
+  .a11y-stepper{display:flex;gap:4px;}
+  .a11y-step-btn{width:32px;height:28px;border-radius:8px;border:2px solid #d1d5db;background:#f3f4f6;color:#6b7280;font-size:.82rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;transition:background .15s,border-color .15s;}
+  .a11y-step-btn.on{background:#1565c0;border-color:#1565c0;color:#fff;}
+  #a11y-ruler-line{position:fixed!important;left:0;right:0;height:34px;pointer-events:none;z-index:2147483645!important;background:rgba(21,101,192,.1);border-top:2px solid rgba(21,101,192,.35);border-bottom:2px solid rgba(21,101,192,.35);display:none;top:0;}
+  body.ruler-on #a11y-ruler-line{display:block;}
+  body.opendyslexic,body.opendyslexic *{font-family:'OpenDyslexic','Lexend','Segoe UI',sans-serif!important;}
+
+</style>
+</head>
+<body>
+<div id="a11y-toolbar"><button id="a11y-fab" title="Accessibility tools" aria-label="Accessibility tools">&#9681;</button><div id="a11y-panel" hidden><div class="a11y-title">Accessibility</div><button id="a11y-tts" class="a11y-action-btn"><span id="a11y-tts-icon">&#128266;</span><span id="a11y-tts-label"> Read aloud</span></button><div class="a11y-divider"></div><div class="a11y-row"><span class="a11y-label">Bionic reading</span><button id="a11y-bionic" class="a11y-pill">Off</button></div><div class="a11y-row"><span class="a11y-label">OpenDyslexic font</span><button id="a11y-od" class="a11y-pill">Off</button></div><div class="a11y-row"><span class="a11y-label">Reading ruler</span><button id="a11y-ruler-btn" class="a11y-pill">Off</button></div><div class="a11y-divider"></div><div class="a11y-row"><span class="a11y-label">Text size</span><div class="a11y-stepper"><button class="a11y-step-btn on" id="a11y-sz1" title="Normal">A</button><button class="a11y-step-btn" id="a11y-sz2" title="Large">A+</button><button class="a11y-step-btn" id="a11y-sz3" title="XL">A++</button></div></div><div class="a11y-row"><span class="a11y-label">Line spacing</span><div class="a11y-stepper"><button class="a11y-step-btn on" id="a11y-ls1" title="Normal">1&#215;</button><button class="a11y-step-btn" id="a11y-ls2" title="Relaxed">1.5&#215;</button><button class="a11y-step-btn" id="a11y-ls3" title="Wide">2&#215;</button></div></div><div class="a11y-divider"></div><div class="a11y-row a11y-col-row"><span class="a11y-label">Colour overlay</span><div id="a11y-colours"><button class="a11y-col-chip sel" data-col="none" title="None">&#x2715;</button><button class="a11y-col-chip" data-col="cream" style="background:#fdf6e3" title="Cream"></button><button class="a11y-col-chip" data-col="yellow" style="background:#fff9c4" title="Yellow"></button><button class="a11y-col-chip" data-col="blue" style="background:#dbeafe" title="Blue"></button><button class="a11y-col-chip" data-col="green" style="background:#dcfce7" title="Green"></button><button class="a11y-col-chip" data-col="peach" style="background:#fce7f3" title="Peach"></button></div></div></div></div><div id="a11y-overlay"></div><div id="a11y-ruler-line"></div>
+
+
+<header>
+  <div class="header-left">
+    <a class="back-btn" href="index.html">← Home</a>
+    <h1>Health &amp; Social Care <span>Quizzes &amp; Test</span></h1>
+  </div>
+  <div class="header-badge">Aruna · Year 10</div>
+</header>
+
+<div class="app">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-section-label">Topics &amp; Quizzes</div>
+
+    <div class="topic-group open" id="tg0">
+      <button class="topic-header-btn" onclick="toggleTopic(0)">
+        <span class="topic-icon">🧬</span>
+        <span>Human Growth &amp; Dev</span>
+        <span class="topic-chevron">▶</span>
+      </button>
+      <div class="quiz-list">
+        <button class="quiz-btn active" onclick="loadQuiz(0,0)" id="qbtn-0-0">
+          Quiz 1: Life Stages &amp; PIES <span class="quiz-status" id="qs-0-0">10 Q</span>
+        </button>
+        <button class="quiz-btn" onclick="loadQuiz(0,1)" id="qbtn-0-1">
+          Quiz 2: Milestones &amp; PIES in Practice <span class="quiz-status" id="qs-0-1">10 Q</span>
+        </button>
+        <button class="quiz-btn" onclick="loadQuiz(0,2)" id="qbtn-0-2">
+          Quiz 3: Life Events &amp; Scenarios <span class="quiz-status" id="qs-0-2">10 Q</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="topic-group" id="tg1">
+      <button class="topic-header-btn" onclick="toggleTopic(1)">
+        <span class="topic-icon">🌍</span>
+        <span>Factors Affecting Dev</span>
+        <span class="topic-chevron">▶</span>
+      </button>
+      <div class="quiz-list">
+        <button class="quiz-btn" onclick="loadQuiz(1,0)" id="qbtn-1-0">
+          Quiz 1: Genetic &amp; Biological <span class="quiz-status" id="qs-1-0">10 Q</span>
+        </button>
+        <button class="quiz-btn" onclick="loadQuiz(1,1)" id="qbtn-1-1">
+          Quiz 2: Socioeconomic &amp; Environmental <span class="quiz-status" id="qs-1-1">10 Q</span>
+        </button>
+        <button class="quiz-btn" onclick="loadQuiz(1,2)" id="qbtn-1-2">
+          Quiz 3: Lifestyle, Culture &amp; Media <span class="quiz-status" id="qs-1-2">10 Q</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="topic-group" id="tg2">
+      <button class="topic-header-btn" onclick="toggleTopic(2)">
+        <span class="topic-icon">🏥</span>
+        <span>Health &amp; Care Services</span>
+        <span class="topic-chevron">▶</span>
+      </button>
+      <div class="quiz-list">
+        <button class="quiz-btn" onclick="loadQuiz(2,0)" id="qbtn-2-0">
+          Quiz 1: Types of Services <span class="quiz-status" id="qs-2-0">10 Q</span>
+        </button>
+        <button class="quiz-btn" onclick="loadQuiz(2,1)" id="qbtn-2-1">
+          Quiz 2: NHS &amp; Multi-agency <span class="quiz-status" id="qs-2-1">10 Q</span>
+        </button>
+        <button class="quiz-btn" onclick="loadQuiz(2,2)" id="qbtn-2-2">
+          Quiz 3: Barriers to Access <span class="quiz-status" id="qs-2-2">10 Q</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="topic-group" id="tg3">
+      <button class="topic-header-btn" onclick="toggleTopic(3)">
+        <span class="topic-icon">💬</span>
+        <span>Communication</span>
+        <span class="topic-chevron">▶</span>
+      </button>
+      <div class="quiz-list">
+        <button class="quiz-btn" onclick="loadQuiz(3,0)" id="qbtn-3-0">
+          Quiz 1: Types &amp; Theories <span class="quiz-status" id="qs-3-0">10 Q</span>
+        </button>
+        <button class="quiz-btn" onclick="loadQuiz(3,1)" id="qbtn-3-1">
+          Quiz 2: Barriers &amp; Overcoming <span class="quiz-status" id="qs-3-1">10 Q</span>
+        </button>
+        <button class="quiz-btn" onclick="loadQuiz(3,2)" id="qbtn-3-2">
+          Quiz 3: Professional Skills <span class="quiz-status" id="qs-3-2">10 Q</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="topic-group" id="tg4">
+      <button class="topic-header-btn" onclick="toggleTopic(4)">
+        <span class="topic-icon">❤️</span>
+        <span>Care Values &amp; Ethics</span>
+        <span class="topic-chevron">▶</span>
+      </button>
+      <div class="quiz-list">
+        <button class="quiz-btn" onclick="loadQuiz(4,0)" id="qbtn-4-0">
+          Quiz 1: Core Care Values <span class="quiz-status" id="qs-4-0">10 Q</span>
+        </button>
+        <button class="quiz-btn" onclick="loadQuiz(4,1)" id="qbtn-4-1">
+          Quiz 2: Legislation &amp; Rights <span class="quiz-status" id="qs-4-1">10 Q</span>
+        </button>
+        <button class="quiz-btn" onclick="loadQuiz(4,2)" id="qbtn-4-2">
+          Quiz 3: Safeguarding &amp; Ethics <span class="quiz-status" id="qs-4-2">10 Q</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="topic-group" id="tg5">
+      <button class="topic-header-btn" onclick="toggleTopic(5)">
+        <span class="topic-icon">💪</span>
+        <span>Health &amp; Wellbeing</span>
+        <span class="topic-chevron">▶</span>
+      </button>
+      <div class="quiz-list">
+        <button class="quiz-btn" onclick="loadQuiz(5,0)" id="qbtn-5-0">
+          Quiz 1: Definitions &amp; Concepts <span class="quiz-status" id="qs-5-0">10 Q</span>
+        </button>
+        <button class="quiz-btn" onclick="loadQuiz(5,1)" id="qbtn-5-1">
+          Quiz 2: Lifestyle Factors <span class="quiz-status" id="qs-5-1">10 Q</span>
+        </button>
+        <button class="quiz-btn" onclick="loadQuiz(5,2)" id="qbtn-5-2">
+          Quiz 3: Health Promotion <span class="quiz-status" id="qs-5-2">10 Q</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section-label">Assessment</div>
+    <button class="test-btn" onclick="showTest()" id="test-nav-btn">
+      <span class="topic-icon">📋</span>
+      <span>Comprehensive Test</span>
+      <span class="quiz-status" id="qs-test" style="margin-left:auto">60 Q</span>
+    </button>
+
+    <div class="score-summary" id="score-summary" style="display:none">
+      <div class="score-summary-title">Your Scores</div>
+      <div id="score-summary-rows"></div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main>
+
+    <!-- HOME SCREEN -->
+    <div class="screen active" id="screen-home">
+      <div class="home-hero">
+        <h2>Health &amp; Social Care 🩺</h2>
+        <p>Six topics, eighteen quizzes, and a full 60-question exam. Work through each topic or jump straight to the comprehensive test!</p>
+      </div>
+      <div class="topic-cards" style="grid-template-columns: repeat(2,1fr)">
+        <div class="topic-card" onclick="loadQuiz(0,0)">
+          <div class="topic-card-icon">🧬</div>
+          <h3>Human Growth &amp; Development</h3>
+          <p>Life stages, PIES development and key milestones</p>
+          <div class="quiz-count">3 quizzes · 30 questions</div>
+        </div>
+        <div class="topic-card" onclick="loadQuiz(1,0)">
+          <div class="topic-card-icon">🌍</div>
+          <h3>Factors Affecting Development</h3>
+          <p>Genetic, environmental, socioeconomic and lifestyle factors</p>
+          <div class="quiz-count">3 quizzes · 30 questions</div>
+        </div>
+        <div class="topic-card" onclick="loadQuiz(2,0)">
+          <div class="topic-card-icon">🏥</div>
+          <h3>Health &amp; Care Services</h3>
+          <p>NHS structure, types of care, multi-agency working</p>
+          <div class="quiz-count">3 quizzes · 30 questions</div>
+        </div>
+        <div class="topic-card" onclick="loadQuiz(3,0)">
+          <div class="topic-card-icon">💬</div>
+          <h3>Communication</h3>
+          <p>Types, theories, barriers and professional skills</p>
+          <div class="quiz-count">3 quizzes · 30 questions</div>
+        </div>
+        <div class="topic-card" onclick="loadQuiz(4,0)">
+          <div class="topic-card-icon">❤️</div>
+          <h3>Care Values &amp; Ethics</h3>
+          <p>Person-centred care, dignity, safeguarding &amp; legislation</p>
+          <div class="quiz-count">3 quizzes · 30 questions</div>
+        </div>
+        <div class="topic-card" onclick="loadQuiz(5,0)">
+          <div class="topic-card-icon">💪</div>
+          <h3>Promoting Health &amp; Wellbeing</h3>
+          <p>Health models, lifestyle factors and promotion campaigns</p>
+          <div class="quiz-count">3 quizzes · 30 questions</div>
+        </div>
+      </div>
+      <div class="test-card" onclick="showTest()">
+        <div class="test-card-icon">📋</div>
+        <div>
+          <h3>Comprehensive Health &amp; Social Care Test</h3>
+          <p>60 questions covering all six topics — multiple choice, true/false &amp; written answers</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUIZ SCREEN -->
+    <div class="screen" id="screen-quiz">
+      <div class="quiz-header">
+        <div class="quiz-meta">
+          <span class="quiz-tag" id="quiz-topic-tag">Topic 1</span>
+          <span style="font-size:0.78rem;color:var(--text-muted)" id="quiz-sub-tag">Quiz 1 of 3</span>
+        </div>
+        <h2 id="quiz-title">Life Stages &amp; PIES</h2>
+        <p id="quiz-desc">Test your knowledge of the six life stages and PIES development.</p>
+      </div>
+      <div class="progress-row">
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="quiz-progress-bar" style="width:10%"></div></div>
+        <div class="progress-label" id="quiz-progress-label">1 / 10</div>
+      </div>
+      <div class="question-card" id="quiz-q-card">
+        <div class="q-number" id="quiz-q-num">Question 1</div>
+        <div class="q-text" id="quiz-q-text"></div>
+        <div class="options" id="quiz-options"></div>
+        <div class="feedback-box" id="quiz-feedback"></div>
+      </div>
+      <div class="quiz-nav">
+        <button class="nav-btn" id="quiz-prev-btn" onclick="quizPrev()" disabled>← Previous</button>
+        <button class="nav-btn primary" id="quiz-next-btn" onclick="quizNext()">Next →</button>
+      </div>
+    </div>
+
+    <!-- QUIZ RESULTS SCREEN -->
+    <div class="screen" id="screen-result">
+      <div class="result-hero">
+        <div class="result-emoji" id="result-emoji">🎉</div>
+        <div class="result-score-big" id="result-score-big">8 / 10</div>
+        <div class="result-label" id="result-label">Quiz complete</div>
+        <div class="result-message" id="result-message">Great work!</div>
+        <!-- shown when score < 80% -->
+        <div id="quiz-retry-nudge" style="display:none;margin:20px 0 8px;text-align:center">
+          <p style="font-size:1.05rem;font-weight:700;color:#c62828;margin-bottom:14px">Looks like you need to do this again, bucko.</p>
+          <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+            <button class="result-btn primary" onclick="retryQuiz()">Take Test Again</button>
+            <button class="result-btn" onclick="goHome()">I Need to Study More</button>
+          </div>
+        </div>
+        <!-- shown when score >= 80% -->
+        <div id="quiz-pass-actions" class="result-actions">
+          <button class="result-btn" onclick="showReview()">Review Answers</button>
+          <button class="result-btn primary" onclick="retryQuiz()">Try Again</button>
+          <button class="result-btn" onclick="goHome()">All Quizzes</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- REVIEW SCREEN -->
+    <div class="screen" id="screen-review">
+      <h2 style="font-size:1.3rem;font-weight:800;margin-bottom:20px;color:var(--dark)">Answer Review</h2>
+      <div class="review-list" id="review-list"></div>
+      <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap">
+        <button class="nav-btn primary" onclick="retryQuiz()">Try Again</button>
+        <button class="nav-btn" onclick="goHome()">All Quizzes</button>
+      </div>
+    </div>
+
+    <!-- TEST SCREEN -->
+    <div class="screen" id="screen-test">
+      <div class="test-header">
+        <h2>Comprehensive Test — Health &amp; Social Care</h2>
+        <p>50 questions across all three topics. Complete all sections, then click Submit to see your score and model answers.</p>
+      </div>
+
+      <!-- Section A: Multiple Choice -->
+      <div class="test-section-title">
+        Section A — Multiple Choice <span>Questions 1–30 · 2 marks each</span>
+      </div>
+      <div id="test-mc-container"></div>
+
+      <!-- Section B: True or False -->
+      <div class="test-section-title" style="color:#0097a7;border-bottom-color:#b2ebf2">
+        Section B — True or False <span>Questions 31–35 · 1 mark each</span>
+      </div>
+      <div id="test-tf-container"></div>
+
+      <!-- Section C: Short Answer -->
+      <div class="test-section-title" style="color:#e65100;border-bottom-color:#ffe0b2">
+        Section C — Short Answer / Problem Solving <span>Questions 36–45 · 4 marks each</span>
+      </div>
+      <div id="test-sa-container"></div>
+
+      <!-- Section D: Extended Response -->
+      <div class="test-section-title" style="color:#4a148c;border-bottom-color:#e1bee7">
+        Section D — Extended Response <span>Questions 46–50 · 8 marks each</span>
+      </div>
+      <div id="test-er-container"></div>
+
+      <div class="test-submit-row">
+        <button class="submit-btn" onclick="submitTest()">Submit Test &amp; See Results</button>
+      </div>
+    </div>
+
+    <!-- TEST RESULTS -->
+    <div class="screen" id="screen-test-result">
+      <div class="test-result-hero">
+        <div class="result-emoji" id="test-result-emoji">📋</div>
+        <div class="result-score-big" id="test-result-score" style="background:linear-gradient(135deg,#0097a7,#00bcd4)"></div>
+        <div class="result-label">Comprehensive Test</div>
+        <div class="result-message" id="test-result-message"></div>
+        <div class="test-score-grid">
+          <div class="test-score-cell">
+            <div class="num" id="tr-mc">0/60</div>
+            <div class="lbl">Multiple Choice</div>
+          </div>
+          <div class="test-score-cell teal">
+            <div class="num" id="tr-tf">0/5</div>
+            <div class="lbl">True or False</div>
+          </div>
+          <div class="test-score-cell">
+            <div class="num" id="tr-sa">—</div>
+            <div class="lbl">Short Answer</div>
+          </div>
+          <div class="test-score-cell teal">
+            <div class="num" id="tr-er">—</div>
+            <div class="lbl">Extended Response</div>
+          </div>
+        </div>
+        <!-- Token reward — shown when score >= 90% -->
+        <div id="test-token-banner" style="display:none;margin:16px 0;padding:18px 22px;background:linear-gradient(135deg,#f9a825,#ffd54f);border-radius:14px;color:#3e2000;font-weight:700;font-size:1rem;line-height:1.5;box-shadow:0 4px 18px rgba(249,168,37,0.35)">
+          🏆 Amazing work, Aruna! You scored over 90%!<br>
+          <span style="font-weight:400;font-size:0.9rem">Find Mum and collect your token! 🎉</span>
+        </div>
+        <!-- shown when score < 80% -->
+        <div id="test-retake-nudge" style="display:none;margin:20px 0 8px;text-align:center">
+          <p style="font-size:1.05rem;font-weight:700;color:#c62828;margin-bottom:14px">Looks like you need to do this again, bucko.</p>
+          <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+            <button class="result-btn primary" onclick="retryTest()">Take Test Again</button>
+            <button class="result-btn" onclick="goHome()">I Need to Study More</button>
+          </div>
+        </div>
+        <!-- shown when score >= 80% -->
+        <div id="test-pass-actions" class="result-actions">
+          <button class="result-btn" onclick="reviewTest()">Review Answers &amp; Model Answers</button>
+          <button class="result-btn primary" onclick="retryTest()">Retake Test</button>
+          <button class="result-btn" onclick="goHome()">Home</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+(function(){
+var S='ateam_a11y',st={bionic:false,overlay:'none',od:false,ruler:false,sz:1,ls:1};
+try{Object.assign(st,JSON.parse(localStorage.getItem(S)||'{}'));}catch(e){}
+var fab,panel,ttsBtn,ttsIcon,ttsLbl,bioBtn,ovl,ttsOn=false;
+function init(){
+  fab=document.getElementById('a11y-fab');
+  panel=document.getElementById('a11y-panel');
+  ttsBtn=document.getElementById('a11y-tts');
+  ttsIcon=document.getElementById('a11y-tts-icon');
+  ttsLbl=document.getElementById('a11y-tts-label');
+  bioBtn=document.getElementById('a11y-bionic');
+  ovl=document.getElementById('a11y-overlay');
+  if(!fab)return;
+  var OV={none:'transparent',cream:'rgba(253,246,227,.5)',yellow:'rgba(255,249,196,.5)',blue:'rgba(219,234,254,.5)',green:'rgba(220,252,231,.5)',peach:'rgba(252,231,243,.5)'};
+  fab.addEventListener('click',function(e){e.stopPropagation();var o=panel.hasAttribute('hidden');if(o)panel.removeAttribute('hidden');else panel.setAttribute('hidden','');fab.classList.toggle('open',o);});
+  document.addEventListener('click',function(e){var tb=document.getElementById('a11y-toolbar');if(tb&&!tb.contains(e.target))panel.setAttribute('hidden','');});
+  var ttsOn=false;
+  function getText(){var fc=document.getElementById('flashcard');if(fc){var id=fc.classList.contains('flipped')?'cardAnswer':'cardQuestion';var el=document.getElementById(id);if(el&&el.innerText.trim())return el.innerText.trim();}var q=document.querySelector('.screen.active .q-text');if(q)return q.innerText.trim();var ns=document.querySelectorAll('.notes-section.open .notes-section-body');if(ns.length)return Array.from(ns).map(function(n){return n.innerText.trim();}).join('\n\n');var m=document.querySelector('main')||document.querySelector('.screen.active');return m?m.innerText.trim().slice(0,2500):'';}
+  function startTTS(){window.speechSynthesis.cancel();var t=getText();if(!t)return;var u=new SpeechSynthesisUtterance(t);u.rate=0.88;u.onend=u.onerror=function(){setTS(false);};window.speechSynthesis.speak(u);setTS(true);}
+  function stopTTS(){window.speechSynthesis.cancel();setTS(false);}
+  function setTS(on){ttsOn=on;ttsBtn.classList.toggle('a11y-stop',on);ttsIcon.innerHTML=on?'&#9209;':'&#128266;';ttsLbl.textContent=on?' Stop':' Read aloud';}
+  ttsBtn.addEventListener('click',function(){ttsOn?stopTTS():startTTS();});
+  function bioW(w){if(w.length<=2)return w;var h=Math.ceil(w.length/2);return '<b class="bionic-b">'+w.slice(0,h)+'</b>'+w.slice(h);}
+  function walkBold(node){if(node.nodeType===3){var t=node.textContent;if(!t.trim())return;var html=t.replace(/([A-Za-zÀ-ɏ]{2,})/g,function(w){return bioW(w);});if(html===t)return;var s=document.createElement('span');s.innerHTML=html;node.parentNode.replaceChild(s,node);}else if(node.nodeType===1&&!/^(SCRIPT|STYLE|B|BUTTON|INPUT)$/.test(node.tagName))Array.from(node.childNodes).forEach(walkBold);}
+  var TG='#cardQuestion,#cardAnswer,.q-text,.option-btn,.notes-section-body,.card-text,.home-hero p';
+  function applyBio(){document.querySelectorAll(TG).forEach(function(el){if(el.dataset.bd)return;el.dataset.bd='1';el.dataset.bo=el.innerHTML;walkBold(el);});}
+  function removeBio(){document.querySelectorAll('[data-bd]').forEach(function(el){el.innerHTML=el.dataset.bo||el.innerHTML;delete el.dataset.bd;delete el.dataset.bo;});}
+  ['flipCard','loadQuestion','showQuestion','nextCard','prevCard'].forEach(function(fn){if(typeof window[fn]==='function'){var o=window[fn];window[fn]=function(){var r=o.apply(this,arguments);if(st.bionic)setTimeout(applyBio,80);return r;};}});
+  var bt;new MutationObserver(function(){if(!st.bionic)return;clearTimeout(bt);bt=setTimeout(applyBio,80);}).observe(document.body,{childList:true,subtree:true});
+  function setBio(on){st.bionic=on;bioBtn.textContent=on?'On':'Off';bioBtn.classList.toggle('on',on);if(on)applyBio();else removeBio();save();}
+  bioBtn.addEventListener('click',function(){setBio(!st.bionic);});
+  function setOvl(col){st.overlay=col;ovl.style.background=OV[col]||'transparent';document.querySelectorAll('.a11y-col-chip').forEach(function(c){c.classList.toggle('sel',c.dataset.col===col);});save();}
+  document.querySelectorAll('.a11y-col-chip').forEach(function(btn){btn.addEventListener('click',function(){setOvl(btn.dataset.col);});});
+  // OpenDyslexic font
+  var odBtn=document.getElementById('a11y-od');
+  function setOD(on){st.od=on;document.body.classList.toggle('opendyslexic',on);if(on&&!document.getElementById('od-font')){var l=document.createElement('link');l.id='od-font';l.rel='stylesheet';l.href='https://fonts.cdnfonts.com/css/opendyslexic';document.head.appendChild(l);}if(odBtn){odBtn.textContent=on?'On':'Off';odBtn.classList.toggle('on',on);}save();}
+  if(odBtn)odBtn.addEventListener('click',function(){setOD(!st.od);});
+  // Reading ruler
+  var rulerEl=document.getElementById('a11y-ruler-line'),rulerBtn=document.getElementById('a11y-ruler-btn');
+  function setRuler(on){st.ruler=on;document.body.classList.toggle('ruler-on',on);if(rulerBtn){rulerBtn.textContent=on?'On':'Off';rulerBtn.classList.toggle('on',on);}save();}
+  document.addEventListener('mousemove',function(e){if(st.ruler&&rulerEl)rulerEl.style.top=(e.clientY-17)+'px';});
+  if(rulerBtn)rulerBtn.addEventListener('click',function(){setRuler(!st.ruler);});
+  // Text size (3 steps: 100% / 118% / 136%)
+  var SZ=[1,1.18,1.36],szBtns=[document.getElementById('a11y-sz1'),document.getElementById('a11y-sz2'),document.getElementById('a11y-sz3')];
+  function setSz(i){st.sz=i;document.documentElement.style.fontSize=(SZ[i-1]*16)+'px';szBtns.forEach(function(b,idx){if(b)b.classList.toggle('on',idx+1===i);});save();}
+  szBtns.forEach(function(b,i){if(b)b.addEventListener('click',function(){setSz(i+1);});});
+  // Line spacing (3 steps: 1.7 / 2.1 / 2.6)
+  var LS=[1.7,2.1,2.6],lsBtns=[document.getElementById('a11y-ls1'),document.getElementById('a11y-ls2'),document.getElementById('a11y-ls3')];
+  function setLs(i){st.ls=i;document.body.style.lineHeight=LS[i-1];lsBtns.forEach(function(b,idx){if(b)b.classList.toggle('on',idx+1===i);});save();}
+  lsBtns.forEach(function(b,i){if(b)b.addEventListener('click',function(){setLs(i+1);});});
+  // Save & restore all settings
+  function save(){try{localStorage.setItem(S,JSON.stringify({bionic:st.bionic,overlay:st.overlay,od:st.od,ruler:st.ruler,sz:st.sz,ls:st.ls}));}catch(e){}}
+  setOvl(st.overlay);if(st.bionic)setBio(true);setOD(!!st.od);setRuler(!!st.ruler);setSz(st.sz||1);setLs(st.ls||1);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+<script>
+// =====================================================
+// DATA
+// =====================================================
+
+const TOPICS = ['Human Growth & Development', 'Factors Affecting Development', 'Health & Care Services', 'Communication', 'Care Values & Ethics', 'Promoting Health & Wellbeing'];
+const TOPIC_TAGS = ['t1','t2','t3','t1','t2','t3'];
+const TOPIC_COLORS = ['var(--purple)','var(--pink)','#0097a7','var(--purple)','var(--pink)','#0097a7'];
+const QUIZ_NAMES = [
+  ['Life Stages & PIES', 'Milestones & PIES in Practice', 'Life Events & Scenarios'],
+  ['Genetic & Biological Factors', 'Socioeconomic & Environmental', 'Lifestyle, Culture & Media'],
+  ['Types of Services', 'NHS & Multi-agency Working', 'Barriers to Access'],
+  ['Types & Theories of Communication', 'Barriers & Overcoming Them', 'Professional Communication Skills'],
+  ['Core Care Values', 'Legislation & Rights', 'Safeguarding & Ethics'],
+  ['Definitions & Concepts', 'Lifestyle Factors', 'Health Promotion']
+];
+const QUIZ_DESCS = [
+  [
+    'Test your knowledge of the life stages and the four areas of PIES development.',
+    'Apply your understanding of physical, intellectual, emotional and social milestones.',
+    'Apply your knowledge of lifespan development to real-life scenarios and life events.'
+  ],
+  [
+    'Explore genetic conditions, biological factors and the nature vs nurture debate.',
+    'Examine how poverty, housing, education and environment shape development.',
+    'Consider how lifestyle choices, culture, religion and media affect development.'
+  ],
+  [
+    'Identify primary, secondary and tertiary health and social care services.',
+    'Understand how the NHS is funded, multi-agency working and key care roles.',
+    'Explore the physical, psychological, financial and cultural barriers to accessing care.'
+  ],
+  [
+    'Master the types of communication and key theories including Argyle\'s cycle.',
+    'Identify barriers to communication and how to overcome them in care settings.',
+    'Apply professional communication skills including active listening and confidentiality.'
+  ],
+  [
+    'Understand the core care values that underpin all health and social care practice.',
+    'Explore the key legislation and rights that protect service users.',
+    'Understand safeguarding principles, types of abuse and ethical dilemmas in care.'
+  ],
+  [
+    'Master key definitions and models of health and wellbeing including Maslow.',
+    'Examine how lifestyle choices affect long-term physical and mental health.',
+    'Understand health promotion strategies, campaigns and prevention approaches.'
+  ]
+];
+
+const QUIZZES = [
+  // ── TOPIC 0: HUMAN GROWTH & DEVELOPMENT ──────────────────────
+  [
+    // Quiz 0-0: Life Stages & PIES
+    [
+      { q: 'What are the six life stages in the correct order?', opts: ['Infancy, Early Childhood, Adolescence, Early Adulthood, Middle Adulthood, Later Adulthood','Infant, Toddler, Child, Teen, Adult, Elderly','Baby, Child, Teen, Adult, Middle Age, Old Age','Neonate, Infant, Child, Adolescent, Adult, Elderly'], ans: 0, exp: 'The six life stages are: Infancy (0–2), Early Childhood (3–8), Adolescence (9–18), Early Adulthood (19–45), Middle Adulthood (46–65), Later Adulthood (65+).' },
+      { q: 'Which age range correctly defines adolescence?', opts: ['0–2 years','3–8 years','9–18 years','19–45 years'], ans: 2, exp: 'Adolescence spans approximately ages 9–18, covering puberty, identity formation, and increasing independence.' },
+      { q: 'What does PIES stand for?', opts: ['Physical, Individual, Emotional, Social','Physical, Intellectual, Emotional, Social','Psychological, Intellectual, Emotional, Social','Physical, Intellectual, Educational, Social'], ans: 1, exp: 'PIES stands for Physical, Intellectual, Emotional, and Social development — the four key areas used to track human development.' },
+      { q: 'Which of the following is a gross motor skill developed in infancy?', opts: ['Drawing a circle','Pincer grip','Rolling over','Writing letters'], ans: 2, exp: 'Gross motor skills involve large muscle movements, such as rolling over, sitting, crawling, and walking. Fine motor skills involve precise small-muscle movements like the pincer grip.' },
+      { q: 'At which life stage does puberty typically occur?', opts: ['Early childhood','Adolescence','Early adulthood','Middle adulthood'], ans: 1, exp: 'Puberty — the hormonal changes that bring about sexual maturity — typically occurs during adolescence (approximately ages 9–18).' },
+      { q: 'Which type of development involves the ability to think, reason and problem-solve?', opts: ['Physical','Emotional','Social','Intellectual'], ans: 3, exp: 'Intellectual development refers to cognitive abilities including thinking, reasoning, problem-solving, and language development.' },
+      { q: 'Forming close relationships and developing a sense of self are mainly which type of development?', opts: ['Physical','Intellectual','Emotional and Social','Cognitive'], ans: 2, exp: 'Emotional development (sense of self, managing feelings) and social development (forming relationships, understanding social norms) are closely linked.' },
+      { q: 'During which life stage does the menopause typically occur?', opts: ['Early adulthood','Middle adulthood','Later adulthood','Adolescence'], ans: 1, exp: 'Menopause typically occurs in middle adulthood, usually between ages 45–55. It marks the end of a woman\'s reproductive years.' },
+      { q: 'Fine motor skills refer to:', opts: ['Large muscle movements like walking','Precise movements using small muscles','Emotional regulation','Language development'], ans: 1, exp: 'Fine motor skills involve small, precise movements using the hands and fingers — for example, holding a pencil, buttoning clothes, or using cutlery.' },
+      { q: 'Which life stage is characterised by retirement and reduced physical ability?', opts: ['Middle adulthood','Early adulthood','Adolescence','Later adulthood'], ans: 3, exp: 'Later adulthood (65+) is typically associated with retirement, reduced physical capacity, slower reflexes, and life review.' }
+    ],
+    // Quiz 0-1: Milestones & PIES in Practice
+    [
+      { q: 'At approximately what age do most babies take their first independent steps?', opts: ['6–9 months','10–14 months','18–24 months','2–3 years'], ans: 1, exp: 'Most babies take their first steps between 10–14 months. This is a gross motor milestone — walking uses large muscle groups in the legs and core.' },
+      { q: 'Which area of PIES does forming a first friendship at nursery primarily represent?', opts: ['Physical','Intellectual','Emotional','Social'], ans: 3, exp: 'Forming friendships is a social development milestone — learning to cooperate, share, and build relationships with peers is a key part of early childhood social development.' },
+      { q: 'A teenager who starts to question their values and identity is showing which type of development?', opts: ['Physical','Intellectual','Emotional','Social'], ans: 2, exp: 'Identity formation is a key aspect of emotional development in adolescence — Erik Erikson called this stage "Identity vs Role Confusion."' },
+      { q: 'By age 3, most children can speak in sentences. This is a milestone in which area of PIES?', opts: ['Physical','Intellectual','Emotional','Social'], ans: 1, exp: 'Language development is an intellectual milestone. Speaking in sentences shows cognitive growth in areas of memory, reasoning, and symbolic thinking.' },
+      { q: 'Reduced bone density and increased risk of osteoporosis in later adulthood is an example of which PIES area?', opts: ['Physical','Intellectual','Emotional','Social'], ans: 0, exp: 'Bone density decline is a physical change associated with ageing — particularly post-menopause in women, when oestrogen levels fall and bone loss accelerates.' },
+      { q: 'Which statement correctly describes the difference between growth and development?', opts: ['Growth involves gaining new skills; development is measurable physical change','Growth is measurable physical increase (e.g. height/weight); development is gaining new abilities','They mean the same thing','Growth only occurs in childhood; development continues throughout life'], ans: 1, exp: 'Growth = measurable physical changes (height, weight, brain size). Development = gaining new skills, abilities and understanding — it continues throughout life.' },
+      { q: 'A 7-year-old learning to read is an example of which PIES area?', opts: ['Physical','Intellectual','Emotional','Social'], ans: 1, exp: 'Reading involves cognitive skills — decoding symbols, language comprehension, and memory. It is a key intellectual milestone of early childhood.' },
+      { q: 'In later adulthood, which physical change is most commonly experienced?', opts: ['Rapid intellectual growth','Increased physical strength','Decline in reaction time and sensory abilities','Emotional instability'], ans: 2, exp: 'Slowing of reflexes, reduced hearing and vision, and declining muscle mass are normal physical changes of later adulthood (65+).' },
+      { q: 'Holistic development means:', opts: ['Only studying physical changes','Considering how all PIES areas interact and affect each other','Focusing on emotional development above all else','Measuring only intellectual growth'], ans: 1, exp: 'Holistic development recognises that physical, intellectual, emotional and social development are interconnected — changes in one area affect all others.' },
+      { q: 'A child who begins to share toys and take turns with peers is showing development in which PIES area?', opts: ['Physical','Intellectual','Emotional','Social'], ans: 3, exp: 'Sharing and turn-taking are key social development milestones of early childhood (3–8 years) — they reflect understanding of social rules and empathy.' }
+    ],
+    // Quiz 0-2: Life Events & Scenarios
+    [
+      { q: 'Zara, aged 14, is becoming more independent, questioning her identity, and forming strong friendships. Which life stage is she in?', opts: ['Early childhood','Middle adulthood','Adolescence','Early adulthood'], ans: 2, exp: 'These are classic markers of adolescence — increased independence, identity exploration, and the importance of peer relationships.' },
+      { q: 'James, aged 68, has retired and notices his reflexes are slower. This change is an example of:', opts: ['Intellectual development','Emotional decline','Normal physical ageing','Social withdrawal'], ans: 2, exp: 'Slowing of reflexes is a normal aspect of physical ageing in later adulthood.' },
+      { q: 'A baby can now grip a rattle and sit unsupported at 6 months. These are examples of:', opts: ['Fine and gross motor development','Intellectual and social development','Emotional development','Linguistic development'], ans: 0, exp: 'Gripping (fine motor) and sitting unsupported (gross motor) are key physical milestones of infancy.' },
+      { q: 'Sarah lost her job unexpectedly at 42. This is best described as:', opts: ['An expected life event','A physical life event','An unexpected life event','A genetic factor'], ans: 2, exp: 'Unexpected redundancy is an unplanned life event that can significantly affect financial security, self-esteem, and emotional wellbeing.' },
+      { q: 'Tom, aged 25, has recently moved out, started a new job and entered a long-term relationship. This is most typical of which life stage?', opts: ['Adolescence','Later adulthood','Middle adulthood','Early adulthood'], ans: 3, exp: 'Early adulthood (19–45) is typically characterised by independence, career establishment, and forming long-term romantic partnerships.' },
+      { q: 'A child raised in a stimulating, book-rich environment is likely to benefit most in which PIES area?', opts: ['Physical development','Intellectual development','Genetic inheritance','Hormonal development'], ans: 1, exp: 'A stimulating environment supports intellectual development — language, literacy, and problem-solving skills.' },
+      { q: 'Maria, aged 50, is experiencing mood changes, hot flushes, and irregular periods. She is most likely experiencing:', opts: ['Early puberty','Pregnancy','Menopause','Chronic illness'], ans: 2, exp: 'These are classic symptoms of menopause, which typically occurs in middle adulthood (45–55 years).' },
+      { q: 'A child in foster care experiences multiple placement changes. This is most likely to affect:', opts: ['Physical growth','Genetic potential','Fine motor skills','Emotional and social development'], ans: 3, exp: 'Instability in early care environments disrupts attachment and can lead to emotional difficulties, trust issues, and challenges forming relationships.' },
+      { q: 'Which of the following shows positive intellectual development in early childhood?', opts: ['First steps','Emotional tantrums','Learning to count and recognise letters','Formation of adult relationships'], ans: 2, exp: 'Learning to count and recognise letters are key cognitive milestones in early childhood (3–8 years).' },
+      { q: 'A person aged 35 starts a family, takes out a mortgage and gets promoted. These are all examples of:', opts: ['Unexpected life events','Expected life events','Genetic factors','Environmental influences'], ans: 1, exp: 'Starting a family, buying a home, and career advancement are anticipated milestones in early to middle adulthood — classic expected life events.' }
+    ]
+  ],
+
+  // ── TOPIC 1: FACTORS AFFECTING DEVELOPMENT ───────────────────
+  [
+    // Quiz 1-0: Genetic & Biological Factors
+    [
+      { q: 'What is a genetic factor affecting development?', opts: ['A factor caused by poor diet','An inherited characteristic passed from parent to child via genes','An environmental condition','A lifestyle choice'], ans: 1, exp: 'Genetic factors are inherited — they are present from conception and include conditions like Down\'s syndrome, cystic fibrosis, and inherited predispositions to certain diseases.' },
+      { q: 'Down\'s syndrome is caused by:', opts: ['A viral infection during pregnancy','An extra copy of chromosome 21','Poor nutrition in infancy','Environmental pollution'], ans: 1, exp: 'Down\'s syndrome (trisomy 21) occurs when a person has three copies of chromosome 21 instead of two. It affects intellectual development and physical health.' },
+      { q: 'Which of the following is an example of a biological factor affecting development?', opts: ['Living in a deprived area','Having a genetic condition such as cystic fibrosis','Attending a poorly resourced school','Social media use'], ans: 1, exp: 'Cystic fibrosis is a genetic condition affecting the lungs and digestive system. It is inherited from both parents and is a biological factor affecting physical development.' },
+      { q: 'The nature vs nurture debate asks:', opts: ['Whether boys or girls develop faster','Whether development is shaped by genetics (nature) or environment/experience (nurture)','Whether health is caused by lifestyle or illness','Whether mental health is real or imagined'], ans: 1, exp: 'The nature vs nurture debate explores the relative contributions of genetic inheritance and environmental experiences in shaping human development.' },
+      { q: 'John Bowlby\'s attachment theory suggests that:', opts: ['Physical development is the most important in infancy','Early bonding between child and caregiver has lasting effects on emotional development','Genes determine all future behaviour','Social class determines life outcomes'], ans: 1, exp: 'Bowlby proposed that secure attachment to a primary caregiver in infancy is critical — disrupted attachment can lead to long-term emotional and social difficulties.' },
+      { q: 'Which of the following is an inherited condition that may affect development?', opts: ['Asthma caused by air pollution','Depression caused by stress','Sickle cell anaemia','Obesity caused by a poor diet'], ans: 2, exp: 'Sickle cell anaemia is a genetic condition caused by an inherited mutation affecting red blood cells. It can cause chronic pain, fatigue, and reduced physical development.' },
+      { q: 'A child born prematurely may face challenges in which areas of development?', opts: ['Only social development','Only emotional development','Physical and intellectual development','No areas — premature birth has no lasting effects'], ans: 2, exp: 'Premature birth can affect brain development, lung maturity, and physical growth — placing the child at greater risk of developmental delays in physical and intellectual areas.' },
+      { q: 'Which statement correctly describes the relationship between genes and environment?', opts: ['Genes are the only factor that matters','Environment is the only factor that matters','Both genes and environment interact to shape development','Genes determine development; environment has no role after birth'], ans: 2, exp: 'Most developmental psychologists now accept that development results from an interaction between genetic predispositions and environmental experiences — neither alone is sufficient.' },
+      { q: 'A family history of heart disease is an example of which type of factor?', opts: ['Socioeconomic','Environmental','Genetic/biological','Cultural'], ans: 2, exp: 'A family history of heart disease indicates a genetic predisposition. This inherited risk factor increases likelihood of developing cardiovascular problems.' },
+      { q: 'Foetal Alcohol Syndrome (FAS) is caused by:', opts: ['Genetic inheritance from the father','A mother consuming alcohol during pregnancy','Poor diet in early childhood','Environmental pollution'], ans: 1, exp: 'FAS occurs when alcohol consumed by a pregnant woman crosses the placenta and damages the developing foetus — causing physical abnormalities and intellectual disability.' }
+    ],
+    // Quiz 1-1: Socioeconomic & Environmental Factors
+    [
+      { q: 'Which of the following is a socioeconomic factor affecting development?', opts: ['Eye colour','Genetic predisposition to illness','Level of household income','Hormonal changes at puberty'], ans: 2, exp: 'Socioeconomic factors include income, employment, education level, and social class. They shape access to resources, healthcare, and opportunities throughout life.' },
+      { q: 'How can poverty negatively affect a child\'s development?', opts: ['It always improves resilience and motivation','It limits access to nutrition, education, and healthcare','It has no effect on development','It only affects physical development'], ans: 1, exp: 'Poverty restricts access to healthy food, good housing, educational resources, and healthcare — negatively affecting all four PIES areas.' },
+      { q: 'Damp and overcrowded housing is most likely to directly affect which aspect of PIES?', opts: ['Intellectual development','Social development','Physical development','Emotional development only'], ans: 2, exp: 'Damp housing increases risk of respiratory conditions (asthma, bronchitis), and overcrowding disrupts sleep and concentration — primarily affecting physical health and wellbeing.' },
+      { q: 'Higher levels of education are associated with:', opts: ['Lower life expectancy','Fewer opportunities','Improved health outcomes and increased income','No measurable effects on development'], ans: 2, exp: 'Education improves intellectual development directly and is strongly associated with better employment, higher income, improved health literacy, and overall wellbeing.' },
+      { q: 'Access to green spaces and recreational facilities is which type of factor?', opts: ['Genetic','Biological','Environmental','Cultural'], ans: 2, exp: 'Environmental factors include the physical surroundings in which people live. Access to parks and facilities encourages physical activity and supports wellbeing.' },
+      { q: 'A child who grows up in a high-crime neighbourhood is most likely to be affected by:', opts: ['Improved resilience in all cases','Reduced physical and emotional wellbeing due to stress and fear','No developmental effects','Only physical development'], ans: 1, exp: 'Living in a high-crime area creates chronic stress, fear, and restricted freedom — negatively affecting emotional wellbeing, social development, and physical health.' },
+      { q: 'The term "social mobility" refers to:', opts: ['The ability to walk and exercise','Moving house frequently','The ability to improve one\'s social and economic position','How often people change jobs'], ans: 2, exp: 'Social mobility refers to the ability to move up (or down) the social and economic ladder — influenced by education, opportunity, and structural factors like inequality.' },
+      { q: 'Which of the following shows the impact of environmental pollution on development?', opts: ['Children in polluted areas tend to have higher IQs','Air pollution is linked to respiratory problems and reduced cognitive development','Environmental factors only affect adults','Pollution has no proven link to development'], ans: 1, exp: 'Research shows that exposure to air pollution — particularly in childhood — is linked to asthma, reduced lung function, and poorer cognitive development.' },
+      { q: 'A supportive school environment is an example of which type of factor?', opts: ['Genetic','Environmental and socioeconomic','Biological','Cultural'], ans: 1, exp: 'A supportive school environment is both an environmental and socioeconomic factor — it directly shapes intellectual development, self-esteem, and social skills.' },
+      { q: 'What is a "protective factor" in relation to development?', opts: ['A genetic mutation that prevents illness','Something that increases vulnerability to negative outcomes','Something that reduces risk and supports positive development','A government health policy'], ans: 2, exp: 'Protective factors — such as a stable family, good schooling, and supportive relationships — reduce the impact of risk factors and promote positive outcomes.' }
+    ],
+    // Quiz 1-2: Lifestyle, Culture & Media
+    [
+      { q: 'A person who smokes, drinks heavily and has a sedentary lifestyle is at greater risk of:', opts: ['Improved long-term health','Only mental health problems','Cardiovascular disease, respiratory illness, and cancer','No increased risk if they are young'], ans: 2, exp: 'Smoking, excessive alcohol, and physical inactivity are three of the biggest modifiable risk factors for heart disease, cancer, and respiratory illness.' },
+      { q: 'How can cultural beliefs affect healthcare decisions?', opts: ['Cultural beliefs have no effect on health','They can influence attitudes to seeking medical help, diet, and treatment acceptance','They only affect older people','They always improve health outcomes'], ans: 1, exp: 'Cultural and religious beliefs can shape diet (e.g., halal/kosher/vegetarian), attitudes to mental health, acceptance of certain treatments, and willingness to seek help.' },
+      { q: 'Unrealistic body image portrayed on social media is most likely to affect which PIES area?', opts: ['Physical development directly','Intellectual development','Emotional development — particularly self-esteem','Social development only'], ans: 2, exp: 'Repeated exposure to idealised, often heavily filtered body images can damage self-esteem and body image — especially in adolescents — contributing to anxiety and eating disorders.' },
+      { q: 'Religion can be a protective factor in development because it can:', opts: ['Restrict access to healthcare in all cases','Provide a sense of community, identity, and moral framework','Prevent all health problems','Cause discrimination'], ans: 1, exp: 'Religious communities can provide social support, a sense of purpose, and shared values — all of which can promote emotional wellbeing and resilience.' },
+      { q: 'Which of the following is an example of a lifestyle factor positively affecting development?', opts: ['Heavy smoking from age 16','Sedentary behaviour throughout adolescence','Regular exercise, balanced diet, and good sleep','Excessive screen time and processed food'], ans: 2, exp: 'Regular exercise, healthy eating, and adequate sleep are lifestyle factors that benefit all four PIES areas throughout the lifespan.' },
+      { q: 'How might gender expectations (gender norms) affect development?', opts: ['They have no effect on development','They can limit opportunities, career choices, and emotional expression','They only affect physical development','They always improve wellbeing'], ans: 1, exp: 'Gender norms can restrict emotional expression (e.g., boys told not to cry), limit career aspirations, and affect self-concept — influencing emotional and social development.' },
+      { q: 'Peer pressure in adolescence is an example of which factor affecting development?', opts: ['Genetic','Biological','Social/environmental','Cultural only'], ans: 2, exp: 'Peer pressure is a social and environmental factor — during adolescence, the desire to fit in can influence risk-taking behaviour, lifestyle choices, and identity formation.' },
+      { q: 'A parent who models healthy eating and exercise is most likely to positively affect their child\'s:', opts: ['Genetic makeup','Intellectual development only','Physical health and lifestyle habits','Social development only'], ans: 2, exp: 'Children who observe and adopt the healthy behaviours of parents and caregivers are more likely to develop positive lifestyle habits that protect physical health throughout life.' },
+      { q: 'Which of the following shows a negative effect of media on development?', opts: ['Educational documentaries improving intellectual development','Cyberbullying causing emotional distress and social withdrawal','Social media used to stay in touch with friends','Reading news to improve awareness'], ans: 1, exp: 'Cyberbullying uses digital platforms to harass or humiliate — it can cause significant emotional harm, reduced self-esteem, anxiety, depression, and social withdrawal.' },
+      { q: 'Low self-esteem caused by discrimination based on ethnicity is an example of:', opts: ['A purely genetic factor','A lifestyle factor','A social and environmental factor affecting emotional development','A biological factor'], ans: 2, exp: 'Discrimination is a social and environmental factor that damages emotional wellbeing (self-esteem, confidence) and can restrict opportunities — affecting all PIES areas.' }
+    ]
+  ],
+
+  // ── TOPIC 2: HEALTH & CARE SERVICES ─────────────────────────
+  [
+    // Quiz 2-0: Types of Services
+    [
+      { q: 'Primary healthcare refers to:', opts: ['Hospital treatment after surgery','Specialist consultant appointments','First point of contact services such as GPs and dentists','Residential care homes'], ans: 2, exp: 'Primary healthcare is the first point of contact with the health system. It includes GPs, dentists, opticians, community nurses, and pharmacists.' },
+      { q: 'Which of the following is an example of secondary healthcare?', opts: ['A GP appointment','A hospital specialist appointment','A community nurse home visit','A pharmacy dispensing medication'], ans: 1, exp: 'Secondary healthcare involves specialist hospital services — you are typically referred by your GP to see a consultant or receive treatment in hospital.' },
+      { q: 'Social care services are primarily designed to support:', opts: ['Only people with mental health conditions','People who need help with daily activities due to age, disability or illness','Only patients in hospitals','People with acute medical conditions only'], ans: 1, exp: 'Social care supports people of all ages who need help with daily activities — covering residential care, home care, and day services.' },
+      { q: 'Which organisation is responsible for registering and inspecting care services in England?', opts: ['NHS England','Department of Health','Care Quality Commission (CQC)','OFSTED'], ans: 2, exp: 'The CQC is the independent regulator for health and social care in England, ensuring services are safe, effective, caring, responsive, and well-led.' },
+      { q: 'Informal care is provided by:', opts: ['Social workers','NHS nurses','Family members, friends, and neighbours','Registered charity workers'], ans: 2, exp: 'Informal carers are unpaid individuals — usually family members or friends — who provide support to someone who needs help due to illness, disability, or old age.' },
+      { q: 'Early years services are aimed at children aged approximately:', opts: ['5–11 years','0–8 years','11–16 years','Birth to 1 year only'], ans: 1, exp: 'Early years services support children from birth to age 8, covering nurseries, Sure Start centres, childminders, playgroups, and Reception classes.' },
+      { q: 'A domiciliary care worker provides support:', opts: ['In a hospital ward','In a care home','In the service user\'s own home','In a GP surgery'], ans: 2, exp: 'Domiciliary (home) care workers visit people in their own homes to help with personal care, household tasks, medication, and meals.' },
+      { q: 'Tertiary care typically refers to:', opts: ['Basic first aid','GP appointments','Highly specialised treatment, such as cancer care or complex surgery','Community mental health support'], ans: 2, exp: 'Tertiary care involves highly specialised services usually delivered in regional or national centres — e.g. neurosurgery, specialist cancer treatment, or organ transplants.' },
+      { q: 'Which of the following is NOT an early years service?', opts: ['Sure Start children\'s centres','Nursery schools','Child minders','Hospital A&E departments'], ans: 3, exp: 'A&E is an acute secondary healthcare service, not an early years provision. Early years services focus on education, play, and developmental support.' },
+      { q: 'The NHS is primarily funded through:', opts: ['Private insurance','Charitable donations','Taxation','Patient fees'], ans: 2, exp: 'The NHS is funded primarily through general taxation and is a universal service — most services are free at the point of use for UK residents.' }
+    ],
+    // Quiz 2-1: NHS & Multi-agency Working
+    [
+      { q: 'What does NHS stand for?', opts: ['National Health System','National Healthcare Service','National Health Service','Nationwide Health Support'], ans: 2, exp: 'The NHS (National Health Service) was founded in 1948. It provides healthcare funded through taxation and is free at the point of use.' },
+      { q: 'Multi-agency working means:', opts: ['One professional managing all of a patient\'s needs','Different services and professionals working together to support an individual','A single agency providing all care','Only health services working together'], ans: 1, exp: 'Multi-agency working involves health, social care, education, housing, and other services collaborating to provide coordinated, holistic support.' },
+      { q: 'Why is multi-agency working important?', opts: ['It is cheaper than single-agency care','It ensures all of a person\'s needs are met and reduces gaps in care','It removes the need for individual professionals','It only benefits older adults'], ans: 1, exp: 'When services work together effectively, care is more joined-up, holistic, and responsive — reducing the risk of important needs being missed.' },
+      { q: 'What is the role of a social worker?', opts: ['To prescribe medication','To perform surgical operations','To assess individuals\' needs and arrange appropriate services','To teach children with learning difficulties'], ans: 2, exp: 'Social workers assess vulnerable individuals\' needs and arrange appropriate services — they work across child protection, adult social care, and mental health.' },
+      { q: 'What is a care plan?', opts: ['A hospital floor plan','A document outlining an individual\'s care needs, wishes, and planned support','A financial budget for a care home','A list of medications'], ans: 1, exp: 'A care plan is a written document developed collaboratively with the service user that sets out their needs, preferences, and the care and support they will receive.' },
+      { q: 'What does "person-centred care" mean in a service context?', opts: ['Providing identical care to everyone','Focusing on the most urgent medical need','Tailoring care to the individual\'s specific needs, wishes and preferences','Letting the care manager make all decisions'], ans: 2, exp: 'Person-centred care puts the individual at the centre of all decisions — their goals, values, and preferences guide the care they receive.' },
+      { q: 'What is early intervention?', opts: ['Emergency surgery','Treating only serious illnesses','Identifying and addressing problems early before they become more serious','Providing intensive support only when crisis occurs'], ans: 2, exp: 'Early intervention identifies risks or difficulties early and provides timely support to prevent escalation — this is especially important in children\'s services.' },
+      { q: 'What is a voluntary care organisation? Give an example.', opts: ['A government department','A profit-making company','A charity providing care services, such as Age UK or Macmillan','A private hospital'], ans: 2, exp: 'Voluntary organisations are charities that provide care and support services — e.g. Age UK (older adults), Macmillan Cancer Support, and Barnardo\'s (children).' },
+      { q: 'What does "needs assessment" mean?', opts: ['A financial audit of a care home','A test to see if a person qualifies for the NHS','A professional evaluation of what support an individual requires','A health screening for a new job'], ans: 2, exp: 'A needs assessment is carried out by a care professional (often a social worker) to identify an individual\'s support needs and plan appropriate services.' },
+      { q: 'Which of the following best describes a care pathway?', opts: ['A physical corridor in a hospital','A planned route of care setting out the steps of treatment or support a person will receive','A policy document for NHS managers','A map of care homes in an area'], ans: 1, exp: 'A care pathway outlines the planned sequence of care — who will provide it, when, and how — helping ensure consistent, coordinated support.' }
+    ],
+    // Quiz 2-2: Barriers to Access
+    [
+      { q: 'A physical barrier to accessing healthcare might be:', opts: ['Not speaking English','Being embarrassed about a condition','Living far from a GP surgery with no transport','Not being able to afford private treatment'], ans: 2, exp: 'Physical barriers include mobility difficulties, lack of transport, or inaccessible premises that prevent someone from physically reaching a service.' },
+      { q: 'A psychological barrier to accessing care is:', opts: ['Being unable to travel','Not understanding a letter from the NHS','Feeling embarrassed or scared about seeking help','Having no internet access to book online'], ans: 2, exp: 'Psychological barriers include fear, embarrassment, stigma, low self-worth, or past negative experiences that stop someone from seeking help.' },
+      { q: 'A language barrier occurs when:', opts: ['A person is deaf','A person cannot access the internet','A person does not speak the same language as the care provider','A person has cognitive difficulties'], ans: 2, exp: 'Language barriers arise when service users and care providers cannot communicate effectively due to different languages, including sign language.' },
+      { q: 'Financial barriers to accessing care include:', opts: ['Being unable to travel due to disability','Not feeling worthy of care','Being unable to afford prescriptions or dental treatment','Not knowing what services are available'], ans: 2, exp: 'Financial barriers include the cost of prescriptions, dental care, travel to appointments, or private treatment for those facing NHS waiting times.' },
+      { q: 'Which of the following best describes a geographical barrier?', opts: ['Not understanding medical terminology','Living in a rural area far from health services','Cultural beliefs against seeking treatment','Feeling too proud to ask for help'], ans: 1, exp: 'Geographical barriers occur when someone lives far from services — particularly in rural or isolated areas — making it difficult to access care regularly.' },
+      { q: 'A cultural barrier to care might be:', opts: ['Not having transport','Not speaking the language','Holding beliefs that conflict with recommended treatments','Having a physical disability'], ans: 2, exp: 'Cultural barriers include beliefs, values, or religious practices that conflict with standard treatments, or cultural norms that discourage seeking certain types of help.' },
+      { q: 'What strategy can care providers use to overcome language barriers?', opts: ['Refuse to treat non-English speakers','Use professional interpreters and translated materials','Ask family members to interpret all medical information','Only provide written information'], ans: 1, exp: 'Professional interpreters ensure accurate communication and maintain confidentiality. Translated leaflets and bilingual staff are also effective strategies.' },
+      { q: 'Which of the following would reduce a financial barrier to care?', opts: ['Charging higher fees','Reducing clinic hours','Providing free prescriptions to eligible groups','Building clinics in city centres only'], ans: 2, exp: 'Free prescriptions for eligible groups (e.g., under 16s, over 60s, those on low income) directly address financial barriers to accessing medication.' },
+      { q: 'A patient does not seek help for chest pain because they don\'t want to "bother" the doctor. This is an example of:', opts: ['A geographical barrier','A financial barrier','A physical barrier','A psychological barrier'], ans: 3, exp: 'Not wanting to "be a bother" reflects a psychological barrier — self-imposed reluctance based on attitudes or beliefs about one\'s own worth.' },
+      { q: 'Which of these would help reduce physical barriers to care?', opts: ['Providing online appointment booking','Offering home visits and accessible premises','Printing leaflets in multiple languages','Training staff in cultural awareness'], ans: 1, exp: 'Home visits and wheelchair-accessible premises directly address physical barriers by bringing care to the person or ensuring they can physically access the facility.' }
+    ]
+  ],
+
+  // ── TOPIC 3: COMMUNICATION ───────────────────────────────────
+  [
+    // Quiz 3-0: Types & Theories of Communication
+    [
+      { q: 'Which of the following is a form of verbal communication?', opts: ['A raised eyebrow','Crossing your arms','Explaining a diagnosis clearly to a patient','A written care plan'], ans: 2, exp: 'Verbal communication uses spoken words. Explaining information aloud is verbal — written communication uses text, and non-verbal uses body language.' },
+      { q: 'Non-verbal communication includes:', opts: ['Speaking clearly and slowly','Sending a text message','Making eye contact and using open body language','Writing a letter'], ans: 2, exp: 'Non-verbal communication encompasses all messaging without words — including facial expressions, gestures, posture, eye contact, and touch.' },
+      { q: 'Argyle\'s Communication Cycle describes communication as:', opts: ['A one-way process from sender to receiver','A six-stage two-way process: idea → encode → transmit → receive → decode → understand','A written record of all interactions','A verbal exchange between two people only'], ans: 1, exp: 'Michael Argyle\'s Communication Cycle (1972) shows communication as a continuous, two-way process involving encoding, transmitting, receiving, and decoding messages.' },
+      { q: 'What does "encoding" mean in Argyle\'s Communication Cycle?', opts: ['Reading a message','Deleting a message','Putting your idea into words, signs or body language','Understanding what was meant'], ans: 2, exp: 'Encoding is the process of turning your thoughts into a form that can be communicated — choosing words, tone, and body language to convey your meaning.' },
+      { q: 'What does "decoding" mean in communication?', opts: ['Sending a message','Encrypting data','Interpreting and making sense of a received message','Writing up care records'], ans: 2, exp: 'Decoding is the recipient\'s process of interpreting the message — making sense of the words, tone, and non-verbal cues they have received.' },
+      { q: 'Makaton is a form of communication that:', opts: ['Uses only spoken language','Uses signs and symbols to support people with communication difficulties','Is only used with deaf people','Is a form of written communication'], ans: 1, exp: 'Makaton is a language programme combining speech with signs and symbols. It supports people with learning disabilities, autism, or other communication difficulties.' },
+      { q: 'Which of the following is an example of written communication in a care setting?', opts: ['A care worker speaking to a service user','Nodding while listening','Completing a care record','Using a picture board'], ans: 2, exp: 'Written communication in care includes care plans, incident records, referral letters, and medication charts. It ensures continuity and legal accountability.' },
+      { q: 'What is "tone" in communication?', opts: ['The volume of a written message','The way something is said — pitch, pace, volume — affecting how the message is received','The colour of a care record','The physical setting of a conversation'], ans: 1, exp: 'Tone refers to the quality of voice — how warm, cold, firm, or gentle — that carries emotional meaning beyond the literal words used.' },
+      { q: 'Which of the following is an example of a communication aid?', opts: ['A blood pressure machine','A hearing loop or Braille materials','A care plan document','A medication chart'], ans: 1, exp: 'Communication aids include hearing loops, Braille materials, speech-to-text software, picture boards, and text relay services — all support access to communication.' },
+      { q: 'Why is effective communication particularly important in health and social care?', opts: ['It is not especially important in care settings','It is only important for managers','It builds trust, ensures accurate information exchange, and supports safety and wellbeing','It is only needed for written records'], ans: 2, exp: 'Effective communication is fundamental in care — it builds therapeutic relationships, prevents misdiagnosis, ensures informed consent, and safeguards service users.' }
+    ],
+    // Quiz 3-1: Barriers & Overcoming Them
+    [
+      { q: 'Which of the following is a barrier to communication in care settings?', opts: ['Open body language','Appropriate eye contact','Noisy environments and background distractions','Speaking at a steady pace'], ans: 2, exp: 'Environmental noise is a physical barrier to communication — it interferes with the ability to hear clearly and focus on the message being transmitted.' },
+      { q: 'A sensory impairment such as hearing loss is:', opts: ['A cultural barrier','A physical/sensory barrier to communication','A psychological barrier only','Not a significant barrier in modern care'], ans: 1, exp: 'Hearing loss is a sensory barrier — it affects the ability to receive verbal messages. Care settings must use alternative communication methods such as hearing loops or sign language.' },
+      { q: 'Using complex medical jargon with a patient is an example of which barrier?', opts: ['A language barrier','A physical barrier','A cultural barrier','A sensory barrier'], ans: 0, exp: 'Jargon creates a language barrier — when technical terms are used without explanation, they can confuse or alienate service users, preventing effective communication.' },
+      { q: 'A service user who is experiencing grief or anxiety may struggle to communicate effectively because of:', opts: ['A language barrier','A physical barrier','An emotional/psychological barrier','A cultural barrier'], ans: 2, exp: 'Emotional distress, anxiety, grief, or fear can act as psychological barriers — making it difficult to concentrate, process information, or express oneself clearly.' },
+      { q: 'How can a care worker reduce a language barrier for a non-English speaker?', opts: ['Speak louder and more slowly in English','Use a professional interpreter and provide translated materials','Ask a family member to translate medical information','Ignore the language difference'], ans: 1, exp: 'Professional interpreters maintain accuracy and confidentiality. Translated materials ensure the service user can access written information. Family members are not appropriate for sensitive medical conversations.' },
+      { q: 'Which strategy best overcomes a sensory barrier for someone with a hearing impairment?', opts: ['Communicating only in writing','Using a hearing loop, sign language interpreter, or facing the person clearly when speaking','Ignoring the barrier','Speaking very quietly'], ans: 1, exp: 'Hearing loops amplify sound; sign language interpreters translate verbally; clear lip movement aids lip-reading. Multiple strategies may be needed depending on the individual.' },
+      { q: 'Poor lighting in a care setting can affect communication by:', opts: ['Improving concentration','Making it harder to read non-verbal cues, facial expressions, and lip movements','Increasing the volume of speech','Having no effect on communication'], ans: 1, exp: 'Adequate lighting is essential for reading facial expressions, lip movements, and non-verbal cues — particularly important for people with hearing or visual impairments.' },
+      { q: 'A service user who has had a bad previous experience with healthcare may be reluctant to share information. This is an example of:', opts: ['A physical barrier','A language barrier','A cultural barrier','A psychological barrier'], ans: 3, exp: 'Past negative experiences can create distrust, fear, or reluctance — a psychological barrier that prevents open communication and may delay access to care.' },
+      { q: 'Which of the following best demonstrates overcoming a cultural barrier to communication?', opts: ['Assuming all service users have the same cultural values','Adapting communication style and being sensitive to cultural beliefs and practices','Only communicating in English','Avoiding cultural topics entirely'], ans: 1, exp: 'Cultural competence requires adapting communication to respect diverse values, beliefs, and practices — ensuring service users feel understood and respected.' },
+      { q: 'Which environmental factor can act as a barrier to communication in care settings?', opts: ['A private, quiet room','A well-lit consultation area','A noisy, open ward with many distractions','Adequate personal space'], ans: 2, exp: 'Noisy, open environments make it difficult to hear, concentrate, or maintain confidentiality — significantly reducing the quality of communication.' }
+    ],
+    // Quiz 3-2: Professional Communication Skills
+    [
+      { q: 'What is active listening?', opts: ['Hearing background noise while working','Passively waiting for your turn to speak','Giving full attention — maintaining eye contact, nodding, and reflecting back what is heard','Only listening when it is convenient'], ans: 2, exp: 'Active listening involves fully focusing on the speaker, demonstrating attention through eye contact and body language, and reflecting back to confirm understanding.' },
+      { q: 'Why is confidentiality important in communication in care settings?', opts: ['It is only required by law for managers','It builds trust, protects personal information, and is a legal requirement under data protection law','It is only needed for written records','It prevents service users from talking to each other'], ans: 1, exp: 'Confidentiality builds the therapeutic relationship, protects service users from harm, and is required by the Data Protection Act 2018 and GDPR.' },
+      { q: 'Which of the following demonstrates positive non-verbal communication in a care setting?', opts: ['Arms crossed, avoiding eye contact','Open posture, gentle facial expression, appropriate eye contact, and facing the person','Standing over the service user while talking','Checking your watch during a conversation'], ans: 1, exp: 'Open, attentive body language signals that the care worker is engaged and approachable — this is essential for building trust with service users.' },
+      { q: 'What does "empathy" mean in a communication context?', opts: ['Feeling sorry for someone','Agreeing with everything someone says','Understanding and sharing the feelings of another person — seeing things from their perspective','Providing solutions immediately when someone is upset'], ans: 2, exp: 'Empathy involves genuinely trying to understand another person\'s emotional experience. In care, it builds therapeutic relationships and helps service users feel valued and heard.' },
+      { q: 'A care worker who uses open questions (e.g., "How are you feeling today?") is doing this to:', opts: ['End the conversation quickly','Limit the service user\'s response','Encourage the service user to share more information freely','Test the service user\'s intelligence'], ans: 2, exp: 'Open questions invite detailed, expressive responses and encourage service users to share their feelings and experiences — supporting person-centred communication.' },
+      { q: 'When should a care worker maintain written records of communications?', opts: ['Only when something goes wrong','Only for elderly service users','For all significant interactions — to ensure continuity of care and legal accountability','Only when asked by a manager'], ans: 2, exp: 'Written records of communications ensure continuity of care (other staff are informed), provide legal evidence, and support accountability and transparency.' },
+      { q: 'Which of the following is an appropriate way to use touch in a care setting?', opts: ['Touching service users frequently without consent to show care','Avoiding all physical contact','Using reassuring touch (e.g. a gentle hand on the shoulder) with the service user\'s consent','Patting service users on the head'], ans: 2, exp: 'Touch can be a powerful form of communication — offering reassurance and warmth. However, it must always respect personal boundaries and be given with consent.' },
+      { q: 'Reflective listening involves:', opts: ['Repeating everything the service user says word for word','Paraphrasing or summarising what the service user has said to show understanding','Ignoring the emotional content of messages','Telling the service user what they should think'], ans: 1, exp: 'Reflective listening involves paraphrasing or summarising what has been shared — demonstrating that you have understood both the content and feeling of the message.' },
+      { q: 'What is the purpose of maintaining good eye contact in a care setting?', opts: ['To intimidate the service user','To show attentiveness, build trust, and signal respect','To monitor the service user for signs of lying','It has no purpose in care communication'], ans: 1, exp: 'Appropriate eye contact demonstrates active engagement, builds rapport, and shows the service user they have your full attention — essential for trust-based care relationships.' },
+      { q: 'A care worker who discloses a service user\'s personal information to a neighbour is:', opts: ['Acting appropriately if they are concerned','Breaking confidentiality and potentially breaching the Data Protection Act 2018','Only wrong if the service user finds out','Following good practice'], ans: 1, exp: 'Sharing personal information with unauthorised individuals — even with good intentions — is a breach of confidentiality and may constitute a criminal offence under data protection law.' }
+    ]
+  ],
+
+  // ── TOPIC 4: CARE VALUES & ETHICS ───────────────────────────
+  [
+    // Quiz 4-0: Core Care Values
+    [
+      { q: 'Which of the following best defines "dignity" in a care setting?', opts: ['Giving the service user everything they ask for','Treating individuals with respect and maintaining their privacy and sense of self-worth','Ensuring the care home is clean','Providing the cheapest possible care'], ans: 1, exp: 'Dignity means treating people as valued individuals — maintaining their privacy, respecting their choices, and communicating with respect at all times.' },
+      { q: 'Person-centred care means:', opts: ['Providing the same care to all service users','Tailoring care to the individual\'s needs, preferences and values','Making decisions on behalf of the service user','Focusing only on medical needs'], ans: 1, exp: 'Person-centred care recognises the individual as an expert on their own life. Care is built around their specific needs, wishes, and goals.' },
+      { q: 'Which care value involves supporting individuals to make their own decisions?', opts: ['Dignity','Respect','Empowerment','Equality'], ans: 2, exp: 'Empowerment means enabling service users to make informed choices about their own lives and care, giving them control rather than making decisions for them.' },
+      { q: 'Anti-discriminatory practice in care means:', opts: ['Treating everyone identically regardless of need','Actively working to prevent unfair treatment based on protected characteristics','Only providing care to certain groups','Avoiding all cultural conversations'], ans: 1, exp: 'Anti-discriminatory practice involves recognising and challenging discrimination, treating everyone fairly, and adapting care to meet diverse needs.' },
+      { q: 'What does "duty of care" mean for a healthcare worker?', opts: ['They must care for all family members','They have a legal obligation to act in the best interests of their service users','They must follow orders from managers even if unsafe','They only have responsibilities during working hours'], ans: 1, exp: 'Duty of care is a legal and professional obligation to take reasonable steps to ensure the safety and wellbeing of those in your care.' },
+      { q: 'What does "promoting independence" mean in care?', opts: ['Doing everything for service users so they don\'t have to','Encouraging individuals to do as much for themselves as possible, building confidence','Removing all choices to simplify care','Only applicable to younger service users'], ans: 1, exp: 'Promoting independence means supporting service users to develop and use their own abilities — rather than creating dependency on care workers.' },
+      { q: 'The difference between equality and equity in care is:', opts: ['They mean exactly the same thing','Equality means same treatment; equity means adjusted support to achieve fair outcomes','Equity means identical care for all','Equality only applies to protected characteristics'], ans: 1, exp: 'Equality = same treatment for all. Equity = providing tailored support based on individual need so that everyone can achieve equivalent outcomes — a more nuanced approach.' },
+      { q: 'Why is it important to respect cultural diversity in care?', opts: ['It is not especially important','Different cultures have different values and needs — ignoring this leads to discrimination and poor care','It only applies to religious beliefs','It complicates care unnecessarily'], ans: 1, exp: 'Culturally sensitive care respects individual identity, prevents discrimination, and ensures that care truly meets the person\'s holistic needs and preferences.' },
+      { q: 'Which of the following demonstrates empathy in a care setting?', opts: ['Telling a patient not to worry','Completing tasks quickly to save time','Listening to a service user\'s concerns and acknowledging their feelings','Only speaking when necessary'], ans: 2, exp: 'Empathy involves genuinely trying to understand and share another person\'s feelings — active listening and acknowledging emotions are key.' },
+      { q: '"Informed consent" in care means:', opts: ['A service user signs a form without reading it','A care worker makes decisions for the service user','An individual agrees to treatment or care after being fully informed of what it involves','Only doctors can give consent'], ans: 2, exp: 'Informed consent requires the service user to understand what is proposed — its nature, risks, and alternatives — before agreeing. It must be voluntary and informed.' }
+    ],
+    // Quiz 4-1: Legislation & Rights
+    [
+      { q: 'The Equality Act 2010 protects individuals from discrimination based on:', opts: ['Only age and gender','Only race and disability','Nine protected characteristics including age, race, disability, gender, and religion','Employment status and income'], ans: 2, exp: 'The nine protected characteristics are: age, disability, gender reassignment, marriage/civil partnership, pregnancy/maternity, race, religion/belief, sex, and sexual orientation.' },
+      { q: 'The Data Protection Act 2018 (GDPR) relates to:', opts: ['The right to access a GP','How personal information must be stored, used, and protected','Safeguarding children in schools','Rules for prescribing medication'], ans: 1, exp: 'The Data Protection Act 2018 implements GDPR in the UK — it governs how personal data is collected, stored, and used, including health and care records.' },
+      { q: 'The Mental Capacity Act 2005 ensures that:', opts: ['All patients can refuse treatment','People who lack capacity to make decisions have their best interests protected','Care workers can make any decision for service users','Older adults automatically lose decision-making rights'], ans: 1, exp: 'The Mental Capacity Act ensures people who lack capacity (e.g. due to dementia, learning disability) have decisions made in their best interests, using the least restrictive option.' },
+      { q: 'The Children Act 1989 places which principle at the centre of all decisions about children?', opts: ['The rights of parents','The welfare of the child is paramount','The opinion of social workers','Financial considerations'], ans: 1, exp: 'The Children Act 1989 establishes that the welfare of the child must be the paramount consideration in all decisions — from custody to child protection.' },
+      { q: 'Under the Care Act 2014, local authorities have a duty to:', opts: ['Fund all private care services','Carry out needs assessments and provide appropriate care and support for eligible adults','Set the national minimum wage for care workers','Build new care homes'], ans: 1, exp: 'The Care Act 2014 requires local authorities to assess the care and support needs of adults and carers, and to provide or commission services to meet eligible needs.' },
+      { q: 'Which piece of legislation introduced the principle of "every child matters"?', opts: ['The Children Act 1989','The Equality Act 2010','The Children Act 2004','The Care Act 2014'], ans: 2, exp: 'The Children Act 2004 introduced Every Child Matters — a framework to improve outcomes for children across five areas: be healthy, stay safe, enjoy and achieve, make a positive contribution, achieve economic wellbeing.' },
+      { q: 'A service user has the right to refuse treatment. This right is most closely linked to which principle?', opts: ['Duty of care','Safeguarding','Autonomy and informed consent','Anti-discriminatory practice'], ans: 2, exp: 'Autonomy is the principle of self-determination. A competent adult has the right to refuse treatment, even if care workers disagree — this is protected by law.' },
+      { q: 'Whistleblowing in a care context means:', opts: ['Encouraging service users to complain','Reporting concerns about unsafe practice or harm, even against colleagues or management','Raising a formal grievance about pay','Leaving a care organisation without notice'], ans: 1, exp: 'Whistleblowing involves reporting suspected wrongdoing or unsafe practice in the public interest. The Public Interest Disclosure Act 1998 protects whistleblowers from dismissal or victimisation.' },
+      { q: 'The Human Rights Act 1998 incorporates which international framework into UK law?', opts: ['The United Nations Convention on the Rights of the Child','The European Convention on Human Rights','The Geneva Convention','The WHO Constitution'], ans: 1, exp: 'The Human Rights Act 1998 incorporates rights from the European Convention on Human Rights into UK law — including the right to life, respect for private life, and freedom from torture.' },
+      { q: 'Which legislation introduced mandatory Disclosure and Barring Service (DBS) checks for care workers?', opts: ['The Equality Act 2010','The Safeguarding Vulnerable Groups Act 2006','The Health and Social Care Act 2012','The Mental Capacity Act 2005'], ans: 1, exp: 'The Safeguarding Vulnerable Groups Act 2006 established the framework for DBS checks — ensuring people with a history of harm are barred from working with vulnerable groups.' }
+    ],
+    // Quiz 4-2: Safeguarding & Ethics
+    [
+      { q: 'What is safeguarding in health and social care?', opts: ['Locking away medications safely','Protecting vulnerable individuals from harm, abuse, and neglect','Ensuring staff receive adequate pay','Completing risk assessments only'], ans: 1, exp: 'Safeguarding is the process of protecting vulnerable children and adults from abuse, neglect, and exploitation — ensuring their safety, health, and wellbeing.' },
+      { q: 'Which of the following is an example of physical abuse?', opts: ['Withholding financial allowances','Shouting or threatening a service user','Hitting, slapping or restraining a service user inappropriately','Ignoring a service user\'s requests'], ans: 2, exp: 'Physical abuse involves any deliberate act that causes physical harm — including hitting, slapping, burning, or inappropriate restraint.' },
+      { q: 'Emotional/psychological abuse includes:', opts: ['Withholding food and medication','Shouting, threatening, humiliating, or manipulating a service user','Taking a service user\'s money without consent','Making a service user do something sexual against their will'], ans: 1, exp: 'Emotional or psychological abuse involves verbal aggression, intimidation, humiliation, threats, and coercive control — causing psychological harm without physical contact.' },
+      { q: 'Financial abuse in a care setting might involve:', opts: ['A care worker arriving late','A care worker stealing from or misusing a service user\'s money or assets','A service user refusing medication','A service user arguing with a family member'], ans: 1, exp: 'Financial abuse includes theft, misuse of a service user\'s funds, pressure to change a will, and exploitation of financial vulnerability — often by those in a position of trust.' },
+      { q: 'Neglect in care settings means:', opts: ['Failing to meet a service user\'s basic needs — including food, hygiene, medication, and emotional support','Ignoring paperwork','Providing too much support','Overcrowding in a care home'], ans: 0, exp: 'Neglect is the failure to provide necessary care — whether intentional or unintentional — resulting in harm or risk of harm to a vulnerable person.' },
+      { q: 'If a care worker suspects abuse, they should:', opts: ['Do nothing — it\'s not their responsibility','Investigate it themselves before reporting','Follow the organisation\'s safeguarding procedures and report to the designated safeguarding lead','Only act if they have absolute proof'], ans: 2, exp: 'All care workers have a duty to report safeguarding concerns through proper channels. They should not investigate themselves but must follow their organisation\'s safeguarding policy.' },
+      { q: 'A "duty of candour" in care means:', opts: ['The duty to maintain confidentiality at all times','The obligation to be open and honest with service users about errors or harm','The duty to care for all patients regardless of ability to pay','A legal right to refuse care'], ans: 1, exp: 'Duty of candour (introduced in England 2014) requires health and care organisations to be honest with service users when things go wrong — including apologies and explanations.' },
+      { q: 'Which of the following describes an ethical dilemma in care?', opts: ['A care worker being late for a shift','A situation where two correct courses of action conflict — e.g. respecting autonomy vs preventing harm','Disagreeing with a colleague about break times','A service user complaining about food'], ans: 1, exp: 'Ethical dilemmas in care arise when two or more valid principles (e.g., autonomy and beneficence) are in conflict — requiring careful professional judgement.' },
+
+      { q: 'What does "beneficence" mean in healthcare ethics?', opts: ['Avoiding harm','Acting in the best interests of the service user','Treating all patients fairly','Telling the truth'], ans: 1, exp: 'Beneficence means acting in the best interests of the patient or service user — one of the four principles of medical ethics (alongside non-maleficence, justice, and autonomy).' },
+      { q: 'What is "non-maleficence" in care ethics?', opts: ['The duty to care for all people','The obligation to do good for service users','The principle of doing no harm — avoiding actions that could cause unnecessary damage','The right to make decisions for others'], ans: 2, exp: 'Non-maleficence (from the Latin "do no harm") requires care professionals to avoid causing harm through their actions, decisions, or omissions.' }
+    ]
+  ],
+
+  // ── TOPIC 5: PROMOTING HEALTH & WELLBEING ────────────────────
+  [
+    // Quiz 5-0: Definitions & Concepts
+    [
+      { q: 'The World Health Organisation (WHO) defines health as:', opts: ['The absence of disease and illness','A complete state of physical, mental and social wellbeing — not merely the absence of disease','Physical fitness and a healthy BMI','The ability to carry out daily activities without pain'], ans: 1, exp: 'The WHO\'s 1948 definition is holistic: health is "a state of complete physical, mental and social wellbeing and not merely the absence of disease or infirmity."' },
+      { q: 'What does Maslow\'s Hierarchy of Needs suggest about health?', opts: ['Physical needs are the only true health needs','People can reach their full potential (self-actualisation) only when lower-order needs are met first','Mental health is more important than physical health','Social needs are irrelevant to health'], ans: 1, exp: 'Maslow\'s hierarchy (1943) argues that basic physiological needs (food, shelter) must be met before safety, love, esteem, and finally self-actualisation can be achieved.' },
+      { q: 'Which of the following is an example of a positive indicator of health and wellbeing?', opts: ['Frequent illness','High cholesterol','Emotional resilience and good social relationships','Chronic pain'], ans: 2, exp: 'Positive health indicators include emotional resilience, good social networks, meaningful activity, and absence of long-term conditions.' },
+      { q: 'What is the difference between health and wellbeing?', opts: ['They mean the same thing','Health refers to physical state only; wellbeing is irrelevant in care','Health is often defined as physical and mental state; wellbeing is a broader subjective sense of fulfilment and quality of life','Wellbeing is about finances only'], ans: 2, exp: 'Health includes physical and mental dimensions; wellbeing is broader — it encompasses how people feel about their lives, relationships, purpose, and circumstances.' },
+      { q: 'Which model of health focuses only on biological causes of illness and their treatment?', opts: ['The social model','The holistic model','The biomedical model','The wellness model'], ans: 2, exp: 'The biomedical model views health in terms of physical processes — disease is caused by pathogens, genetics, or physiological dysfunction — and is treated medically.' },
+      { q: 'The social model of health emphasises:', opts: ['Treating illness with medication','Individual lifestyle choices','Social, economic and environmental factors as determinants of health','Genetic causes of disease'], ans: 2, exp: 'The social model recognises that health is shaped by wider determinants — income, housing, education, employment — beyond individual biology or behaviour.' },
+      { q: 'What is meant by "health inequalities"?', opts: ['Differences in height and weight','Avoidable, unfair differences in health outcomes between different population groups','The range of symptoms in a single illness','Differences in hospital waiting times'], ans: 1, exp: 'Health inequalities are avoidable differences in health status — people from lower socioeconomic backgrounds, certain ethnicities, or deprived areas consistently experience worse health outcomes.' },
+      { q: 'Which of the following is a social determinant of health?', opts: ['Blood pressure','Genetics','Housing quality and neighbourhood environment','Heart rate'], ans: 2, exp: 'Social determinants of health include housing, education, income, employment, and the physical environment — factors shaped by social and economic policy.' },
+      { q: 'A person who feels a sense of purpose, strong relationships and is managing stress effectively demonstrates:', opts: ['Poor physical health','Positive mental wellbeing','Negative health behaviour','A high risk of disease'], ans: 1, exp: 'Positive mental wellbeing includes a sense of purpose, good relationships, resilience, and effective stress management — contributing to overall quality of life.' },
+      { q: 'The "holistic" approach to health considers:', opts: ['Only physical symptoms','Only mental health','All aspects of a person — physical, emotional, social and spiritual — as interconnected','Only lifestyle choices'], ans: 2, exp: 'A holistic approach recognises that physical, mental, emotional, social and spiritual dimensions all interact — true wellbeing requires attention to all aspects of a person.' }
+    ],
+    // Quiz 5-1: Lifestyle Factors
+    [
+      { q: 'Which of the following is a risk factor for cardiovascular disease?', opts: ['Regular aerobic exercise','A high-fibre, low-fat diet','Smoking, high blood pressure and obesity','Adequate sleep and low stress'], ans: 2, exp: 'Major modifiable risk factors for cardiovascular disease include smoking, hypertension, high cholesterol, obesity, physical inactivity, and excessive alcohol consumption.' },
+      { q: 'How does regular physical activity benefit health?', opts: ['It only benefits physical fitness','It reduces the risk of chronic disease, improves mental health, and strengthens bones and muscles','It has no effect on mental health','It only benefits people under 40'], ans: 1, exp: 'Regular exercise reduces risk of cardiovascular disease, type 2 diabetes, some cancers, and obesity. It also releases endorphins that improve mood, reduce anxiety and depression.' },
+      { q: 'What is the NHS recommended number of units of alcohol per week for adults?', opts: ['No more than 7 units','No more than 14 units','No more than 21 units','No more than 28 units'], ans: 1, exp: 'UK Chief Medical Officers advise no more than 14 units per week for both men and women, spread across several days with alcohol-free days.' },
+      { q: 'Long-term heavy smoking is most strongly associated with which conditions?', opts: ['Type 2 diabetes and arthritis','Lung cancer, COPD and cardiovascular disease','Osteoporosis and depression','Alzheimer\'s disease and kidney disease'], ans: 1, exp: 'Smoking is the UK\'s single biggest preventable cause of premature death — linked to lung cancer, COPD (chronic obstructive pulmonary disease), and cardiovascular disease.' },
+      { q: 'A diet high in saturated fat and low in fruit and vegetables increases risk of:', opts: ['Improved cholesterol levels','Cardiovascular disease, obesity, and type 2 diabetes','Better immune function','No measurable health effects'], ans: 1, exp: 'Poor diet is a major risk factor for obesity, type 2 diabetes, cardiovascular disease and certain cancers. Five portions of fruit and vegetables daily is the recommended minimum.' },
+      { q: 'Sleep deprivation over time is associated with:', opts: ['Improved memory and concentration','Increased risk of obesity, depression, and cardiovascular disease','No significant health effects','Better immune function'], ans: 1, exp: 'Chronic sleep deprivation (under 7 hours per night) is linked to impaired cognition, increased risk of obesity, diabetes, heart disease, and mental health problems.' },
+      { q: 'Which of the following is a lifestyle factor that positively affects mental health?', opts: ['Heavy alcohol use','Social isolation','Regular physical activity, social connection and mindfulness','Excessive screen time'], ans: 2, exp: 'Physical activity boosts mood through endorphins; strong social connections provide emotional support; mindfulness reduces stress — all evidence-based ways to protect mental health.' },
+      { q: 'Obesity is defined as having a Body Mass Index (BMI) of:', opts: ['Over 25','Over 30','Over 35','Over 40'], ans: 1, exp: 'A BMI of 25–29.9 is classified as overweight; 30 or above is obese. However, BMI does not account for muscle mass or fat distribution.' },
+      { q: 'How can stress negatively affect health?', opts: ['It always improves performance','It has no physical health effects','Chronic stress raises cortisol levels, suppresses immunity, and increases risk of heart disease and depression','Stress only affects mental health'], ans: 2, exp: 'Prolonged stress elevates cortisol, which can suppress immune function, damage blood vessels, disrupt sleep, and contribute to anxiety, depression, and cardiovascular disease.' },
+      { q: 'What is the recommended minimum amount of moderate physical activity for adults per week?', opts: ['30 minutes','75 minutes','150 minutes','300 minutes'], ans: 2, exp: 'The NHS recommends at least 150 minutes of moderate physical activity (e.g., brisk walking, cycling) per week, plus muscle-strengthening activities on 2 days.' }
+    ],
+    // Quiz 5-2: Health Promotion
+    [
+      { q: 'Health promotion aims to:', opts: ['Only treat existing illness','Enable people to increase control over and improve their health','Replace the NHS','Only target smokers and drinkers'], ans: 1, exp: 'The Ottawa Charter (WHO 1986) defines health promotion as "the process of enabling people to increase control over, and to improve, their health."' },
+      { q: 'Which level of prevention involves treating a disease once it has occurred?', opts: ['Primary prevention','Secondary prevention','Tertiary prevention','Quaternary prevention'], ans: 2, exp: 'Tertiary prevention aims to reduce the impact of an established condition — through rehabilitation, managing complications, and preventing further deterioration.' },
+      { q: 'Vaccination programmes are an example of which level of prevention?', opts: ['Primary prevention','Secondary prevention','Tertiary prevention','Quaternary prevention'], ans: 0, exp: 'Primary prevention aims to prevent disease before it occurs — vaccinations, health education, and smoking cessation programmes are all primary prevention measures.' },
+      { q: 'Breast cancer screening is an example of:', opts: ['Primary prevention','Secondary prevention','Tertiary prevention','No prevention'], ans: 1, exp: 'Secondary prevention involves early detection of disease to enable prompt treatment — screening programmes catch conditions early when treatment is most effective.' },
+      { q: 'Which government campaign aimed to reduce smoking rates in England?', opts: ['Change4Life','Stoptober','NHS 24','Think!'], ans: 1, exp: 'Stoptober is an annual Public Health England campaign encouraging smokers to quit for October — supported by the NHS, it has helped hundreds of thousands quit.' },
+      { q: 'The Change4Life campaign is primarily aimed at:', opts: ['Reducing alcohol consumption in adults','Encouraging healthy eating and physical activity — particularly in children and families','Promoting sexual health awareness','Improving workplace safety'], ans: 1, exp: 'Change4Life promotes healthy eating, reducing sugar intake, and increasing physical activity — aimed primarily at families with children to prevent childhood obesity.' },
+      { q: 'A "social prescribing" approach in health promotion involves:', opts: ['Prescribing medication for social anxiety','Connecting patients to community activities and support as a non-medical intervention','Posting health advice on social media','Prescribing healthy food vouchers'], ans: 1, exp: 'Social prescribing connects people with community activities, volunteering, arts, nature, and social groups — addressing social determinants of health through non-clinical means.' },
+      { q: 'Health promotion campaigns most commonly use which approach to change behaviour?', opts: ['Individual surgical intervention','Mass media campaigns, education and environmental change','Only one-to-one GP consultations','Mandatory behaviour change laws only'], ans: 1, exp: 'Health promotion uses a variety of approaches: mass media (advertising, social media), education, community programmes, and environmental change (e.g. sugar taxes, smoke-free areas).' },
+      { q: 'Which of the following shows the government using legislation to promote health?', opts: ['Encouraging people to eat more fruit','The NHS 5-a-Day campaign','The smoking ban in enclosed public spaces (2007)','Providing free gym memberships'], ans: 2, exp: 'The Health Act 2006 banned smoking in enclosed public spaces in England — a legislative approach to health promotion that reduced passive smoking and supported cessation.' },
+      { q: 'What is a potential limitation of health promotion campaigns?', opts: ['They always succeed in changing behaviour','They are too expensive to run','They may not reach the most vulnerable populations and do not address root causes like poverty','They have no limitations'], ans: 2, exp: 'Health promotion campaigns often reach those already motivated to change (the "inverse care law"). They do not address structural factors like poverty, housing or inequality that drive poor health.' }
+    ]
+  ]
+];
+
+// ============================================================
+// QUIZ META
+// ============================================================
+const quizMeta = [
+  [
+    { topic: 'Human Growth & Development', name: 'Quiz 1', title: 'Quiz 1: Life Stages & PIES', desc: 'Test your knowledge of the six life stages and PIES development.' },
+    { topic: 'Human Growth & Development', name: 'Quiz 2', title: 'Quiz 2: Milestones & PIES in Practice', desc: 'Apply your understanding of physical, intellectual, emotional and social milestones.' },
+    { topic: 'Human Growth & Development', name: 'Quiz 3', title: 'Quiz 3: Life Events & Scenarios', desc: 'Apply your knowledge of lifespan development to real-life scenarios.' },
+  ],
+  [
+    { topic: 'Factors Affecting Development', name: 'Quiz 1', title: 'Quiz 1: Genetic & Biological Factors', desc: 'Explore genetic conditions, biological factors and the nature vs nurture debate.' },
+    { topic: 'Factors Affecting Development', name: 'Quiz 2', title: 'Quiz 2: Socioeconomic & Environmental', desc: 'Examine how poverty, housing, education and environment shape development.' },
+    { topic: 'Factors Affecting Development', name: 'Quiz 3', title: 'Quiz 3: Lifestyle, Culture & Media', desc: 'Consider how lifestyle choices, culture, religion and media affect development.' },
+  ],
+  [
+    { topic: 'Health & Care Services', name: 'Quiz 1', title: 'Quiz 1: Types of Services', desc: 'Identify primary, secondary and tertiary health and social care services.' },
+    { topic: 'Health & Care Services', name: 'Quiz 2', title: 'Quiz 2: NHS & Multi-agency Working', desc: 'Understand how the NHS is funded, multi-agency working and key care roles.' },
+    { topic: 'Health & Care Services', name: 'Quiz 3', title: 'Quiz 3: Barriers to Access', desc: 'Explore the physical, psychological, financial and cultural barriers to accessing care.' },
+  ],
+  [
+    { topic: 'Communication', name: 'Quiz 1', title: 'Quiz 1: Types & Theories', desc: 'Master the types of communication and key theories including Argyle\'s cycle.' },
+    { topic: 'Communication', name: 'Quiz 2', title: 'Quiz 2: Barriers & Overcoming', desc: 'Identify barriers to communication and how to overcome them in care settings.' },
+    { topic: 'Communication', name: 'Quiz 3', title: 'Quiz 3: Professional Skills', desc: 'Apply professional communication skills including active listening and confidentiality.' },
+  ],
+  [
+    { topic: 'Care Values & Ethics', name: 'Quiz 1', title: 'Quiz 1: Core Care Values', desc: 'Understand the core care values that underpin all health and social care practice.' },
+    { topic: 'Care Values & Ethics', name: 'Quiz 2', title: 'Quiz 2: Legislation & Rights', desc: 'Explore the key legislation and rights that protect service users.' },
+    { topic: 'Care Values & Ethics', name: 'Quiz 3', title: 'Quiz 3: Safeguarding & Ethics', desc: 'Understand safeguarding principles, types of abuse and ethical dilemmas in care.' },
+  ],
+  [
+    { topic: 'Promoting Health & Wellbeing', name: 'Quiz 1', title: 'Quiz 1: Definitions & Concepts', desc: 'Master key definitions and models of health and wellbeing including Maslow.' },
+    { topic: 'Promoting Health & Wellbeing', name: 'Quiz 2', title: 'Quiz 2: Lifestyle Factors', desc: 'Examine how lifestyle choices affect long-term physical and mental health.' },
+    { topic: 'Promoting Health & Wellbeing', name: 'Quiz 3', title: 'Quiz 3: Health Promotion', desc: 'Understand health promotion strategies, campaigns and prevention approaches.' },
+  ],
+];
+
+// ============================================================
+// COMPREHENSIVE TEST QUESTIONS (60 questions)
+// ============================================================
+const testQuestions = [
+  // ── HUMAN GROWTH & DEVELOPMENT (10) ─────────────────────────
+  { section: '🧬 Human Growth & Development', q: 'What are the six life stages in order?', type: 'mcq', opts: ['Infancy, Early Childhood, Adolescence, Early Adulthood, Middle Adulthood, Later Adulthood','Baby, Child, Teen, Adult, Middle Age, Elderly','Neonate, Infant, Child, Adolescent, Adult, Senior','Toddler, Child, Teen, Young Adult, Adult, Old Age'], ans: 0 },
+  { section: null, q: 'What does PIES stand for?', type: 'mcq', opts: ['Physical, Individual, Emotional, Social','Physical, Intellectual, Emotional, Social','Psychological, Intellectual, Emotional, Social','Physical, Intellectual, Educational, Social'], ans: 1 },
+  { section: null, q: 'Puberty typically occurs during the adolescence life stage.', type: 'tf', ans: true },
+  { section: null, q: 'At which life stage does menopause typically occur?', type: 'mcq', opts: ['Early adulthood','Middle adulthood','Later adulthood','Adolescence'], ans: 1 },
+  { section: null, q: 'Describe what holistic development means and give an example of how PIES areas interact.', type: 'written', model: 'Holistic development means considering all four PIES areas as interconnected. For example, a child who is physically ill (physical) may miss school (intellectual), feel anxious (emotional), and become isolated from friends (social).' },
+  { section: null, q: 'Fine motor skills involve large muscle movements such as walking.', type: 'tf', ans: false },
+  { section: null, q: 'Forming close friendships and developing a sense of identity are primarily which type of development?', type: 'mcq', opts: ['Physical','Intellectual','Emotional and social','Cognitive only'], ans: 2 },
+  { section: null, q: 'Which life stage is associated with retirement and reduced physical ability?', type: 'mcq', opts: ['Middle adulthood','Early adulthood','Adolescence','Later adulthood'], ans: 3 },
+  { section: null, q: 'Explain the difference between an expected and an unexpected life event. Give one example of each.', type: 'written', model: 'Expected life events are anticipated milestones such as starting school, marriage, or retirement. Unexpected life events are unplanned occurrences such as serious illness, redundancy, or bereavement. Both can significantly affect all areas of PIES development.' },
+  { section: null, q: 'Growth refers to gaining new skills; development refers to measurable physical change.', type: 'tf', ans: false },
+  // ── FACTORS AFFECTING DEVELOPMENT (10) ──────────────────────
+  { section: '🌍 Factors Affecting Development', q: 'What is the nature vs nurture debate?', type: 'mcq', opts: ['Whether boys develop faster than girls','Whether development is shaped by genetics (nature) or environment (nurture)','Whether health is caused by lifestyle or illness','Whether mental health is real'], ans: 1 },
+  { section: null, q: 'Down\'s syndrome is caused by an extra copy of chromosome 21.', type: 'tf', ans: true },
+  { section: null, q: 'Which of the following is a socioeconomic factor affecting development?', type: 'mcq', opts: ['Eye colour','Genetic predisposition','Household income and access to education','Hormonal changes at puberty'], ans: 2 },
+  { section: null, q: 'Foetal Alcohol Syndrome (FAS) is caused by:', type: 'mcq', opts: ['Genetic inheritance','A mother consuming alcohol during pregnancy','Air pollution','Poor nutrition in early childhood'], ans: 1 },
+  { section: null, q: 'Explain how poverty can negatively affect a child\'s development across two PIES areas.', type: 'written', model: 'Physical: poverty limits access to nutritious food and healthcare, increasing risk of illness and developmental delays. Intellectual: lack of books, poor school resources, and stress from financial insecurity can impair cognitive development and academic achievement.' },
+  { section: null, q: 'Social media use can negatively affect emotional development by damaging self-esteem.', type: 'tf', ans: true },
+  { section: null, q: 'Bowlby\'s attachment theory states that early bonding has lasting effects on emotional development.', type: 'tf', ans: true },
+  { section: null, q: 'Living in a high-crime neighbourhood primarily affects which PIES areas?', type: 'mcq', opts: ['Physical only','Intellectual and physical','Emotional and social wellbeing','None — location has no effect'], ans: 2 },
+  { section: null, q: 'A "protective factor" in development is something that:', type: 'mcq', opts: ['Increases vulnerability','Reduces risk and supports positive outcomes','Is the same as a risk factor','Only applies in childhood'], ans: 1 },
+  { section: null, q: 'Cultural and religious beliefs can influence health behaviours, dietary choices and attitudes to medical treatment.', type: 'tf', ans: true },
+  // ── HEALTH & CARE SERVICES (10) ─────────────────────────────
+  { section: '🏥 Health & Care Services', q: 'Primary healthcare refers to:', type: 'mcq', opts: ['Hospital specialist treatment','First point of contact services such as GPs and dentists','Residential care homes','Intensive care units'], ans: 1 },
+  { section: null, q: 'The CQC is responsible for registering and inspecting care services in England.', type: 'tf', ans: true },
+  { section: null, q: 'Multi-agency working means different services working together to support an individual.', type: 'tf', ans: true },
+  { section: null, q: 'What does "person-centred care" mean?', type: 'mcq', opts: ['Providing identical care to everyone','Tailoring care to the individual\'s needs, preferences and values','Making all decisions for the service user','Focusing only on medical needs'], ans: 1 },
+  { section: null, q: 'Explain what early intervention is and why it is important in children\'s services.', type: 'written', model: 'Early intervention means identifying risks or difficulties at an early stage and providing timely support before problems escalate. In children\'s services it prevents abuse, neglect or developmental delays from worsening, improving long-term outcomes and reducing the need for more intensive intervention later.' },
+  { section: null, q: 'Tertiary healthcare involves highly specialised services such as cancer care or complex surgery.', type: 'tf', ans: true },
+  { section: null, q: 'A domiciliary care worker provides support in:', type: 'mcq', opts: ['A hospital ward','A care home','The service user\'s own home','A GP surgery'], ans: 2 },
+  { section: null, q: 'The NHS is primarily funded through:', type: 'mcq', opts: ['Private insurance','Charitable donations','Taxation','Patient fees'], ans: 2 },
+  { section: null, q: 'Informal carers are:', type: 'mcq', opts: ['Social workers','NHS nurses','Unpaid family members or friends who provide support','Registered charity workers'], ans: 2 },
+  { section: null, q: 'Describe two physical and two psychological barriers to accessing healthcare.', type: 'written', model: 'Physical barriers: lack of transport to appointments; inaccessible premises for those with mobility difficulties. Psychological barriers: embarrassment or fear about seeking help; past negative experiences causing distrust of healthcare professionals.' },
+  // ── COMMUNICATION (10) ──────────────────────────────────────
+  { section: '💬 Communication', q: 'Argyle\'s Communication Cycle is best described as:', type: 'mcq', opts: ['A one-way broadcast','A six-stage two-way process: idea, encode, transmit, receive, decode, understand','A written record of interactions','A verbal exchange only'], ans: 1 },
+  { section: null, q: 'Non-verbal communication includes facial expressions, gestures and posture.', type: 'tf', ans: true },
+  { section: null, q: 'Makaton uses signs and symbols to support people with communication difficulties.', type: 'tf', ans: true },
+  { section: null, q: 'Using complex medical jargon with a patient creates which type of barrier?', type: 'mcq', opts: ['Physical','Cultural','Language/jargon barrier','Sensory'], ans: 2 },
+  { section: null, q: 'Explain what active listening is and why it is important in care settings.', type: 'written', model: 'Active listening involves giving full attention to the speaker — maintaining appropriate eye contact, nodding, avoiding interruptions, and reflecting back what has been said. In care settings it builds trust, ensures the service user feels valued, and helps gather accurate information for care planning.' },
+  { section: null, q: 'Confidentiality in care is required by the Data Protection Act 2018 and GDPR.', type: 'tf', ans: true },
+  { section: null, q: 'A professional interpreter should be used when a language barrier exists, rather than a family member.', type: 'tf', ans: true },
+  { section: null, q: 'Which of the following demonstrates positive non-verbal communication in care?', type: 'mcq', opts: ['Arms crossed and avoiding eye contact','Open posture, appropriate eye contact and a warm facial expression','Checking your watch during a conversation','Standing over the service user'], ans: 1 },
+  { section: null, q: 'Poor lighting in a care setting is an example of which type of communication barrier?', type: 'mcq', opts: ['Psychological','Cultural','Environmental/physical','Language'], ans: 2 },
+  { section: null, q: 'What is "empathy" and why is it important in professional care communication?', type: 'written', model: 'Empathy means genuinely trying to understand and share the feelings of another person — seeing things from their perspective. In care, it builds therapeutic relationships, helps service users feel heard and valued, and supports person-centred practice.' },
+  // ── CARE VALUES & ETHICS (10) ────────────────────────────────
+  { section: '❤️ Care Values & Ethics', q: 'Person-centred care involves tailoring care to the individual\'s specific needs and preferences.', type: 'tf', ans: true },
+  { section: null, q: 'The Equality Act 2010 protects people from discrimination based on nine protected characteristics.', type: 'tf', ans: true },
+  { section: null, q: 'What does "duty of care" mean for a healthcare professional?', type: 'mcq', opts: ['They must follow all instructions from managers','A legal obligation to act in the best interests of service users','They must care for all family members','Only a moral obligation with no legal basis'], ans: 1 },
+  { section: null, q: 'The Mental Capacity Act 2005 ensures people who lack capacity have decisions made in their best interests.', type: 'tf', ans: true },
+  { section: null, q: 'Explain the difference between equality and equity in health and social care.', type: 'written', model: 'Equality means providing the same treatment or resources to everyone. Equity means providing different levels of support based on individual need so everyone can achieve equivalent outcomes. In care, equity is often more appropriate — a person with a disability may need more support to achieve the same health outcomes as someone without.' },
+  { section: null, q: 'What is safeguarding?', type: 'mcq', opts: ['Locking away medications','Protecting vulnerable individuals from harm, abuse and neglect','Completing risk assessments only','Ensuring staff are paid correctly'], ans: 1 },
+  { section: null, q: 'Emotional abuse includes shouting, threatening and humiliating a service user.', type: 'tf', ans: true },
+  { section: null, q: 'If a care worker suspects abuse, they should investigate it themselves before reporting.', type: 'tf', ans: false },
+  { section: null, q: 'The principle of "autonomy" in care ethics means:', type: 'mcq', opts: ['The care worker makes all decisions','The service user has the right to make informed decisions about their own care','All decisions are made by the GP','Autonomy only applies to adults over 18'], ans: 1 },
+  { section: null, q: 'Describe what whistleblowing means in care and what legal protection exists for whistleblowers.', type: 'written', model: 'Whistleblowing means reporting concerns about unsafe, unethical or illegal practice — even when this is against the wishes of colleagues or management. The Public Interest Disclosure Act 1998 protects whistleblowers from dismissal or victimisation when they report concerns in good faith.' },
+  // ── PROMOTING HEALTH & WELLBEING (10) ───────────────────────
+  { section: '💪 Promoting Health & Wellbeing', q: 'The WHO defines health as complete physical, mental and social wellbeing — not merely absence of disease.', type: 'tf', ans: true },
+  { section: null, q: 'Maslow\'s Hierarchy places self-actualisation at the top, achievable only after lower needs are met.', type: 'tf', ans: true },
+  { section: null, q: 'The biomedical model of health focuses on:', type: 'mcq', opts: ['Social and environmental determinants','Biological causes of illness and medical treatment','Holistic wellbeing','Community health promotion'], ans: 1 },
+  { section: null, q: 'Smoking is a major preventable risk factor for lung cancer and cardiovascular disease.', type: 'tf', ans: true },
+  { section: null, q: 'Explain what health inequalities are and give one example.', type: 'written', model: 'Health inequalities are avoidable, unfair differences in health outcomes between different groups. For example, people living in the most deprived areas of England die on average 10 years younger than those in the most affluent areas — due to differences in income, housing, diet and access to healthcare.' },
+  { section: null, q: 'Primary prevention aims to prevent disease before it occurs.', type: 'tf', ans: true },
+  { section: null, q: 'The Change4Life campaign primarily targets:', type: 'mcq', opts: ['Smoking cessation in adults','Healthy eating and physical activity in children and families','Alcohol reduction in teenagers','Mental health awareness in workplaces'], ans: 1 },
+  { section: null, q: 'Breast cancer screening is an example of secondary prevention.', type: 'tf', ans: true },
+  { section: null, q: 'Which lifestyle factor is most strongly linked to improved mental health?', type: 'mcq', opts: ['Heavy alcohol use','Social isolation','Regular physical activity and strong social connections','Excessive screen time'], ans: 2 },
+  { section: null, q: 'Evaluate two approaches a health professional could use to promote healthy behaviour change in a patient with type 2 diabetes.', type: 'written', model: 'Motivational interviewing: a person-centred conversation technique that explores the patient\'s own motivations for change — more effective than lecturing. Social prescribing: connecting the patient to community walking groups, cooking classes or peer support — addressing lifestyle factors through community rather than clinical means. Both empower the patient and address the social determinants of their health.' }
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let currentQuizT = 0, currentQuizQ = 0;
+let currentQIdx = 0;
+let quizAnswers = [];
+let quizScores = {};
+let activeQuiz = null;
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function goHome() { showScreen('screen-home'); clearActiveQuizBtn(); }
+
+function toggleTopic(idx) {
+  const tg = document.getElementById(`tg${idx}`);
+  tg.classList.toggle('open');
+}
+
+function clearActiveQuizBtn() {
+  document.querySelectorAll('.quiz-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('test-nav-btn').classList.remove('active');
+}
+
+// ============================================================
+// QUIZ
+// ============================================================
+function loadQuiz(topicIdx, quizIdx) {
+  clearActiveQuizBtn();
+  const btn = document.getElementById(`qbtn-${topicIdx}-${quizIdx}`);
+  if (btn) btn.classList.add('active');
+
+  const tg = document.getElementById(`tg${topicIdx}`);
+  if (!tg.classList.contains('open')) tg.classList.add('open');
+
+  currentQuizT = topicIdx;
+  currentQuizQ = quizIdx;
+  activeQuiz = { t: topicIdx, q: quizIdx };
+  currentQIdx = 0;
+  quizAnswers = new Array(10).fill(null);
+
+  const meta = quizMeta[topicIdx][quizIdx];
+  document.getElementById('quiz-topic-tag').textContent = meta.topic;
+  const subTag = document.getElementById('quiz-sub-tag');
+  if (subTag) subTag.textContent = meta.name + ' of 3';
+  document.getElementById('quiz-title').textContent = meta.title;
+  document.getElementById('quiz-desc').textContent = meta.desc;
+
+  showScreen('screen-quiz');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const qs = QUIZZES[currentQuizT][currentQuizQ][currentQIdx];
+  const total = QUIZZES[currentQuizT][currentQuizQ].length;
+
+  document.getElementById('quiz-q-num').textContent = `Question ${currentQIdx + 1} of ${total}`;
+  document.getElementById('quiz-q-text').textContent = qs.q;
+  document.getElementById('quiz-progress-bar').style.width = `${(currentQIdx / total) * 100}%`;
+  document.getElementById('quiz-progress-label').textContent = `${currentQIdx} / ${total}`;
+
+  const fb = document.getElementById('quiz-feedback');
+  fb.className = 'feedback-box';
+  fb.innerHTML = '';
+
+  const optEl = document.getElementById('quiz-options');
+  optEl.innerHTML = '';
+
+  const nextBtn = document.getElementById('quiz-next-btn');
+  const prevBtn = document.getElementById('quiz-prev-btn');
+  nextBtn.style.display = 'none';
+  if (prevBtn) prevBtn.disabled = currentQIdx === 0;
+
+  const letters = ['A', 'B', 'C', 'D'];
+  const div = document.createElement('div');
+  div.className = 'options';
+  qs.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="opt-letter">${letters[i]}</span>${opt}`;
+    btn.onclick = () => answerMCQ(i, qs.ans, qs.exp, btn, div);
+    div.appendChild(btn);
+  });
+  optEl.appendChild(div);
+}
+
+function answerMCQ(chosen, correct, explain, btn, container) {
+  container.querySelectorAll('.option-btn').forEach(b => { b.disabled = true; });
+  const isCorrect = chosen === correct;
+  btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+  container.querySelectorAll('.option-btn')[correct].classList.add('correct');
+  quizAnswers[currentQIdx] = chosen;
+  showFeedback(isCorrect, explain);
+}
+
+function showFeedback(isCorrect, explain) {
+  const fb = document.getElementById('quiz-feedback');
+  fb.className = `feedback-box ${isCorrect ? 'correct' : 'incorrect'} show`;
+  fb.innerHTML = `<strong>${isCorrect ? '✅ Correct!' : '❌ Not quite.'}</strong> ${explain || ''}`;
+  document.getElementById('quiz-next-btn').style.display = 'inline-flex';
+}
+
+function quizNext() {
+  currentQIdx++;
+  const total = QUIZZES[currentQuizT][currentQuizQ].length;
+  if (currentQIdx >= total) {
+    showQuizResult();
+  } else {
+    renderQuestion();
+  }
+}
+
+function quizPrev() {
+  if (currentQIdx > 0) {
+    currentQIdx--;
+    renderQuestion();
+  }
+}
+
+function showQuizResult() {
+  const data = QUIZZES[currentQuizT][currentQuizQ];
+  let correct = 0;
+  data.forEach((q, i) => {
+    if (quizAnswers[i] === q.ans) correct++;
+  });
+
+  const total = data.length;
+  const pct = Math.round((correct / total) * 100);
+
+  document.getElementById('result-score-big').textContent = `${correct} / ${total}`;
+  document.getElementById('result-label').textContent = 'Quiz complete';
+
+  let emoji = '😕', msg = 'Keep going — practise the ones you missed!';
+  if (pct >= 90) { emoji = '🌟'; msg = 'Brilliant work, Aruna! Nearly perfect!'; }
+  else if (pct >= 70) { emoji = '🎉'; msg = 'Great effort! Review the ones you missed.'; }
+  else if (pct >= 50) { emoji = '👏'; msg = 'Decent start — go over the revision notes and try again.'; }
+
+  document.getElementById('result-emoji').textContent = emoji;
+  document.getElementById('result-message').textContent = msg;
+
+  const qid = `${currentQuizT}-${currentQuizQ}`;
+  quizScores[qid] = `${correct}/${total}`;
+  const qs = document.getElementById(`qs-${qid}`);
+  if (qs) { qs.textContent = `${correct}/${total}`; qs.className = 'quiz-status done'; }
+  persistProgress();
+
+  updateScoreSummary();
+
+  document.getElementById('quiz-retry-nudge').style.display = pct < 80 ? 'block' : 'none';
+  document.getElementById('quiz-pass-actions').style.display = pct < 80 ? 'none' : 'flex';
+
+  showScreen('screen-result');
+}
+
+function retryQuiz() {
+  loadQuiz(currentQuizT, currentQuizQ);
+}
+
+function showReview() {
+  const data = QUIZZES[currentQuizT][currentQuizQ];
+  const list = document.getElementById('review-list');
+  list.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  data.forEach((q, i) => {
+    const isCorrect = quizAnswers[i] === q.ans;
+    const div = document.createElement('div');
+    div.className = `review-item ${isCorrect ? 'correct' : 'incorrect'}`;
+    const yourAns = quizAnswers[i] !== null
+      ? `${letters[quizAnswers[i]]}: ${q.opts[quizAnswers[i]]}`
+      : 'Not answered';
+    const modelAns = `${letters[q.ans]}: ${q.opts[q.ans]}`;
+    div.innerHTML = `<div class="review-q">${q.q}</div>
+      <div class="review-answer">
+        <span class="your">Your answer: <strong>${yourAns}</strong></span>
+        ${!isCorrect ? `<span class="model">✓ Correct: ${modelAns}</span>` : ''}
+      </div>`;
+    list.appendChild(div);
+  });
+  showScreen('screen-review');
+}
+
+function updateScoreSummary() {
+  if (Object.keys(quizScores).length === 0) return;
+  const summary = document.getElementById('score-summary');
+  const rows = document.getElementById('score-summary-rows');
+  const labels = [
+    ['0-0','Growth: Life Stages'],['0-1','Growth: Milestones'],['0-2','Growth: Scenarios'],
+    ['1-0','Factors: Genetic'],['1-1','Factors: Socioeconomic'],['1-2','Factors: Lifestyle'],
+    ['2-0','Services: Types'],['2-1','Services: NHS'],['2-2','Services: Barriers'],
+    ['3-0','Comms: Types'],['3-1','Comms: Barriers'],['3-2','Comms: Skills'],
+    ['4-0','Values: Core'],['4-1','Values: Legislation'],['4-2','Values: Safeguarding'],
+    ['5-0','Health: Concepts'],['5-1','Health: Lifestyle'],['5-2','Health: Promotion'],
+  ];
+  rows.innerHTML = labels.filter(([id]) => quizScores[id]).map(([id, label]) =>
+    `<div class="score-row"><span>${label}</span><span>${quizScores[id]}</span></div>`
+  ).join('');
+  summary.style.display = 'block';
+}
+
+// ============================================================
+// TEST
+// ============================================================
+function showTest() {
+  clearActiveQuizBtn();
+  document.getElementById('test-nav-btn').classList.add('active');
+  buildTest();
+  showScreen('screen-test');
+}
+
+let testUserAnswers = {};
+
+function buildTest() {
+  testUserAnswers = {};
+  const letters = ['A','B','C','D'];
+
+  const mcContainer = document.getElementById('test-mc-container');
+  const tfContainer = document.getElementById('test-tf-container');
+  const saContainer = document.getElementById('test-sa-container');
+  const erContainer = document.getElementById('test-er-container');
+  if (mcContainer) mcContainer.innerHTML = '';
+  if (tfContainer) tfContainer.innerHTML = '';
+  if (saContainer) saContainer.innerHTML = '';
+  if (erContainer) erContainer.innerHTML = '';
+
+  let mcNum = 0, tfNum = 0, saNum = 0, erNum = 0;
+
+  testQuestions.forEach((tq, i) => {
+    if (tq.section) {
+      const sec = document.createElement('div');
+      sec.className = 'test-section-title';
+      sec.innerHTML = `${tq.section}`;
+      const card = document.createElement('div');
+      card.className = 'test-q-card';
+      if (tq.type === 'mcq') {
+        mcNum++;
+        card.innerHTML = `<div class="test-q-num">Q${mcNum}</div><div class="test-q-text">${tq.q}</div>`;
+        const opts = buildMCQOpts(tq, i, letters);
+        card.appendChild(opts);
+        if (mcContainer) { mcContainer.appendChild(sec); mcContainer.appendChild(card); }
+      }
+    } else {
+      const card = document.createElement('div');
+      card.className = 'test-q-card';
+      if (tq.type === 'mcq') {
+        mcNum++;
+        card.innerHTML = `<div class="test-q-num">Q${mcNum}</div><div class="test-q-text">${tq.q}</div>`;
+        card.appendChild(buildMCQOpts(tq, i, letters));
+        if (mcContainer) mcContainer.appendChild(card);
+      } else if (tq.type === 'tf') {
+        tfNum++;
+        card.innerHTML = `<div class="test-q-num">Q${tfNum}</div><div class="test-q-text">${tq.q}</div>`;
+        card.appendChild(buildTFOpts(tq, i));
+        if (tfContainer) tfContainer.appendChild(card);
+      } else if (tq.type === 'written') {
+        const isExtended = tq.q.length > 80;
+        const container = isExtended ? erContainer : saContainer;
+        isExtended ? erNum++ : saNum++;
+        card.innerHTML = `<div class="test-q-num">Q${isExtended ? erNum : saNum}</div><div class="test-q-text">${tq.q}</div>`;
+        const ta = document.createElement('textarea');
+        ta.className = 'test-written-input';
+        ta.placeholder = 'Write your answer here…';
+        ta.rows = isExtended ? 5 : 3;
+        ta.oninput = function() { testUserAnswers[i] = this.value; };
+        card.appendChild(ta);
+        if (container) container.appendChild(card);
+      }
+    }
+  });
+}
+
+function buildMCQOpts(tq, i, letters) {
+  const opts = document.createElement('div');
+  opts.className = 'test-options';
+  tq.opts.forEach((opt, j) => {
+    const btn = document.createElement('button');
+    btn.className = 'test-opt-btn';
+    btn.innerHTML = `<span class="opt-letter">${letters[j]}</span>${opt}`;
+    btn.onclick = function() {
+      opts.querySelectorAll('.test-opt-btn').forEach(b => b.classList.remove('selected'));
+      this.classList.add('selected');
+      testUserAnswers[i] = j;
+    };
+    opts.appendChild(btn);
+  });
+  return opts;
+}
+
+function buildTFOpts(tq, i) {
+  const row = document.createElement('div');
+  row.className = 'test-tf-row';
+  ['True','False'].forEach((label, j) => {
+    const btn = document.createElement('button');
+    btn.className = 'test-tf-btn';
+    btn.textContent = label;
+    btn.onclick = function() {
+      row.querySelectorAll('.test-tf-btn').forEach(b => b.classList.remove('selected'));
+      this.classList.add('selected');
+      testUserAnswers[i] = j === 0;
+    };
+    row.appendChild(btn);
+  });
+  return row;
+}
+
+function submitTest() {
+  let correct = 0, total = 0, writtenCount = 0;
+  testQuestions.forEach((tq, i) => {
+    if (tq.type === 'written') { writtenCount++; return; }
+    total++;
+    const userAns = testUserAnswers[i];
+    const correctAns = tq.type === 'tf' ? tq.ans : tq.ans;
+    if (userAns === correctAns) correct++;
+  });
+
+  const pct = Math.round((correct / total) * 100);
+  let emoji, msg;
+  if (pct >= 90)      { emoji = '🌟'; msg = 'Outstanding, Aruna! An exceptional result.'; }
+  else if (pct >= 80) { emoji = '🎉'; msg = 'Really well done — a strong performance.'; }
+  else if (pct >= 60) { emoji = '👍'; msg = 'Good effort. Review the sections you missed.'; }
+  else                { emoji = '📖'; msg = "Keep revising — you'll improve with practice!"; }
+
+  document.getElementById('test-result-emoji').textContent = emoji;
+  document.getElementById('test-result-score').textContent = pct + '%';
+  document.getElementById('test-result-message').textContent = msg;
+  const mcEl = document.getElementById('tr-mc');
+  const tfEl = document.getElementById('tr-tf');
+  const saEl = document.getElementById('tr-sa');
+  const erEl = document.getElementById('tr-er');
+  if (mcEl) mcEl.textContent = correct + '/' + total;
+  if (tfEl) tfEl.textContent = (testQuestions.filter(q => q.type === 'tf').filter((q,i,a) => testUserAnswers[testQuestions.indexOf(q)] === q.ans).length) + '/' + testQuestions.filter(q => q.type === 'tf').length;
+  if (saEl) saEl.textContent = '(self-mark)';
+  if (erEl) erEl.textContent = '(self-mark)';
+
+  // Token banner
+  const banner = document.getElementById('test-token-banner');
+  if (banner) banner.style.display = pct >= 90 ? 'block' : 'none';
+
+  document.getElementById('test-retake-nudge').style.display = pct < 80 ? 'block' : 'none';
+  document.getElementById('test-pass-actions').style.display = pct < 80 ? 'none' : 'flex';
+
+  quizScores['test'] = correct + '/' + total;
+  const qsTest = document.getElementById('qs-test');
+  if (qsTest) { qsTest.textContent = correct + '/' + total; qsTest.className = 'quiz-status done'; }
+  persistProgress();
+  updateScoreSummary();
+  showScreen('screen-test-result');
+}
+
+function reviewTest() {
+  // Build and show a review - reuse the review screen
+  const list = document.getElementById('review-list');
+  list.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  let currentSection = '';
+  testQuestions.forEach((tq, i) => {
+    if (tq.section && tq.section !== currentSection) {
+      currentSection = tq.section;
+      const hdr = document.createElement('h3');
+      hdr.style.cssText = 'margin:24px 0 10px;font-size:1rem;font-weight:800;color:var(--dark)';
+      hdr.textContent = tq.section;
+      list.appendChild(hdr);
+    }
+    const isWritten = tq.type === 'written';
+    const isCorrect = !isWritten && testUserAnswers[i] === tq.ans;
+    const div = document.createElement('div');
+    div.className = `review-item ${isWritten ? 'correct' : (isCorrect ? 'correct' : 'incorrect')}`;
+    let yourAns = 'Not answered';
+    let modelAns = '';
+    if (tq.type === 'mcq' && testUserAnswers[i] !== undefined) {
+      yourAns = letters[testUserAnswers[i]] + ': ' + tq.opts[testUserAnswers[i]];
+      modelAns = letters[tq.ans] + ': ' + tq.opts[tq.ans];
+    } else if (tq.type === 'tf') {
+      yourAns = testUserAnswers[i] === true ? 'True' : testUserAnswers[i] === false ? 'False' : 'Not answered';
+      modelAns = tq.ans ? 'True' : 'False';
+    } else if (isWritten) {
+      yourAns = testUserAnswers[i] || '(no answer written)';
+    }
+    div.innerHTML = '<div class="review-q">' + tq.q + '</div>'
+      + '<div class="review-answer">'
+      + '<span class="your">Your answer: <strong>' + yourAns + '</strong></span>'
+      + (isWritten
+          ? '<span class="model">📝 Model answer: ' + tq.model + '</span>'
+          : (!isCorrect ? '<span class="model">✓ Correct: ' + modelAns + '</span>' : ''))
+      + '</div>';
+    list.appendChild(div);
+  });
+  showScreen('screen-review');
+}
+
+function retryTest() {
+  buildTest();
+  showScreen('screen-test');
+}
+
+
+// ---- Progress persistence (test/quiz completion + scores) ----
+const PROG_KEY = 'ateam_progress_aruna_hsc';
+function loadProg(){ try{ return JSON.parse(localStorage.getItem(PROG_KEY)||'{}'); }catch(e){ return {}; } }
+function saveProg(p){ try{ localStorage.setItem(PROG_KEY, JSON.stringify(p)); }catch(e){} }
+function persistProgress(){
+  const p = { quizScores: quizScores };
+  saveProg(p);
+}
+function restoreProgress(){
+  const p = loadProg();
+  if (p.quizScores) Object.assign(quizScores, p.quizScores);
+  Object.keys(quizScores).forEach(qid => {
+    const qs = document.getElementById('qs-' + qid);
+    if (qs) { qs.textContent = quizScores[qid]; qs.className = 'quiz-status done'; }
+  });
+  updateScoreSummary();
+}
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  restoreProgress();
+  document.getElementById('tg0').classList.add('open');
+  loadQuiz(0, 0);
+});
+</script></body>
+</html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                

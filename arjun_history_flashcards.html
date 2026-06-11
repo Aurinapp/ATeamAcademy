@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arjun's History Flashcards</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --blue: #1565c0;
+    --teal: #0097a7;
+    --teal2: #00bcd4;
+    --light: #f0f7ff;
+    --dark: #0a1f3c;
+    --card-bg: #ffffff;
+    --correct: #4caf50;
+    --incorrect: #f44336;
+    --unseen: #9e9e9e;
+  }
+
+  body {
+    font-family: 'Lexend', 'Segoe UI', sans-serif;
+    background: var(--light);
+    color: var(--dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  
+  line-height: 1.7;
+
+  word-spacing: 0.05em;
+
+  font-size: 1rem;
+}
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--blue), var(--teal));
+    color: white;
+    padding: 18px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 3px 12px rgba(21,101,192,0.3);
+  }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .back-btn {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .back-btn:hover { background: rgba(255,255,255,0.3); }
+  header h1 { font-size: 1.4rem; font-weight: 700; letter-spacing: 0.5px; }
+  header h1 span { opacity: 0.8; font-weight: 400; font-size: 1rem; margin-left: 8px; }
+  .header-badge {
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  /* LAYOUT */
+  .app { display: flex; flex: 1; }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 260px;
+    min-width: 260px;
+    background: var(--dark);
+    color: white;
+    padding: 20px 0;
+    overflow-y: auto;
+  }
+  .sidebar-title {
+    padding: 0 20px 14px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: rgba(255,255,255,0.4);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 8px;
+  }
+  .topic-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px 20px;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.7);
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    border-left: 3px solid transparent;
+  }
+  .topic-btn:hover { background: rgba(255,255,255,0.06); color: white; }
+  .topic-btn.active {
+    background: rgba(0,151,167,0.18);
+    color: white;
+    border-left-color: var(--teal2);
+    font-weight: 600;
+  }
+  .topic-icon { font-size: 1.1rem; width: 24px; text-align: center; }
+  .topic-count {
+    margin-left: auto;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 2px 8px;
+    font-size: 0.75rem;
+  }
+
+  /* MAIN */
+  main {
+    flex: 1;
+    padding: 28px 32px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .topic-header {
+    margin-bottom: 20px;
+  }
+  .topic-header h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--blue);
+    margin-bottom: 4px;
+  }
+  .topic-header p {
+    color: #555;
+    font-size: 0.92rem;
+  }
+
+  /* MODE TOGGLE */
+  .mode-toggle {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 22px;
+  }
+  .mode-btn {
+    padding: 9px 22px;
+    border-radius: 22px;
+    border: 2px solid #cde4f5;
+    background: white;
+    color: #444;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+  .mode-btn:hover { border-color: var(--teal); color: var(--teal); }
+  .mode-btn.active {
+    background: linear-gradient(135deg, var(--blue), var(--teal));
+    border-color: transparent;
+    color: white;
+  }
+
+  /* FLASHCARD VIEW */
+  .flashcard-view { display: block; }
+  .flashcard-view.hidden { display: none; }
+
+  /* PROGRESS */
+  .progress-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 12px;
+  }
+  .progress-bar-wrap {
+    flex: 1;
+    height: 8px;
+    background: #d0e6f5;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue), var(--teal2));
+    border-radius: 4px;
+    transition: width 0.4s ease;
+  }
+  .progress-label { font-size: 0.82rem; color: #666; white-space: nowrap; }
+
+  /* STATS */
+  .stats-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .stat-chip {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    background: white;
+    border: 1.5px solid;
+  }
+  .stat-chip.correct { color: var(--correct); border-color: #c8e6c9; }
+  .stat-chip.incorrect { color: var(--incorrect); border-color: #ffcdd2; }
+  .stat-chip.unseen { color: #777; border-color: #e0e0e0; }
+  .stat-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+    flex-shrink: 0;
+  }
+
+  /* FLASHCARD */
+  .card-area {
+    perspective: 1000px;
+    margin-bottom: 18px;
+  }
+  .flashcard {
+    width: 100%;
+    min-height: 200px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.45s cubic-bezier(.4,0,.2,1);
+    cursor: pointer;
+  }
+  .flashcard.flipped { transform: rotateY(180deg); }
+  .card-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 36px;
+    box-shadow: 0 4px 20px rgba(21,101,192,0.12);
+  }
+  .card-front {
+    background: white;
+    border: 2px solid #d0e6f5;
+  }
+  .card-back {
+    background: linear-gradient(135deg, #e8f4fd, #e0f7fa);
+    border: 2px solid var(--teal2);
+    transform: rotateY(180deg);
+  }
+  .card-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    font-weight: 700;
+    color: var(--teal);
+    margin-bottom: 12px;
+    align-self: flex-start;
+  }
+  .card-text {
+    font-size: 1.15rem;
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.55;
+    color: var(--dark);
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .card-hint {
+    margin-top: 14px;
+    font-size: 0.78rem;
+    color: #aaa;
+  }
+  .card-number {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    font-size: 0.75rem;
+    color: #bbb;
+    font-weight: 600;
+  }
+
+  /* This is needed to set the height since card faces are absolute */
+  .card-area { min-height: 200px; }
+  .flashcard { min-height: 200px; height: 200px; }
+
+  /* RATING */
+  .rating-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .rating-label { font-size: 0.88rem; color: #666; font-weight: 600; }
+
+  /* CONTROLS */
+  .controls {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .btn {
+    padding: 9px 18px;
+    border-radius: 10px;
+    border: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+  .btn-correct { background: #e8f5e9; color: #2e7d32; border: 1.5px solid #a5d6a7; }
+  .btn-correct:hover { background: #c8e6c9; }
+  .btn-incorrect { background: #ffebee; color: #c62828; border: 1.5px solid #ef9a9a; }
+  .btn-incorrect:hover { background: #ffcdd2; }
+  .btn-prev, .btn-next { background: white; color: var(--blue); border: 1.5px solid #cde4f5; }
+  .btn-prev:hover, .btn-next:hover { background: #e3f2fd; }
+  .btn-shuffle { background: white; color: var(--teal); border: 1.5px solid #b2ebf2; }
+  .btn-shuffle:hover { background: #e0f7fa; }
+  .btn-reset { background: white; color: #777; border: 1.5px solid #e0e0e0; }
+  .btn-reset:hover { background: #f5f5f5; }
+  .btn-grid { background: white; color: var(--blue); border: 1.5px solid #cde4f5; font-size: 0.82rem; }
+  .btn-grid:hover { background: #e3f2fd; }
+
+  /* CARD GRID */
+  .card-grid-toggle { margin-bottom: 8px; }
+  .card-grid {
+    display: none;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 8px;
+    margin-top: 8px;
+    margin-bottom: 16px;
+  }
+  .card-grid.visible { display: grid; }
+  .mini-card {
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1.5px solid transparent;
+    line-height: 1.4;
+  }
+  .mini-card.unseen { background: #f5f5f5; color: #777; border-color: #e0e0e0; }
+  .mini-card.correct { background: #e8f5e9; color: #2e7d32; border-color: #a5d6a7; }
+  .mini-card.incorrect { background: #ffebee; color: #c62828; border-color: #ef9a9a; }
+  .mini-card.current { box-shadow: 0 0 0 2px var(--teal); }
+  .mini-card:hover { transform: translateY(-1px); }
+
+  /* COMPLETION BANNER */
+  .complete-banner {
+    display: none;
+    text-align: center;
+    background: linear-gradient(135deg, #e3f2fd, #e0f7fa);
+    border: 2px solid var(--teal2);
+    border-radius: 16px;
+    padding: 28px;
+    margin-top: 12px;
+  }
+  .complete-banner.visible { display: block; }
+  .score-big {
+    font-size: 3rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--blue), var(--teal2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+  }
+  .complete-banner h3 { font-size: 1.2rem; margin-bottom: 6px; color: var(--dark); }
+  .complete-banner p { color: #555; font-size: 0.92rem; }
+
+  /* NOTES VIEW */
+  .notes-view { display: none; }
+  .notes-view.visible { display: block; }
+
+  .notes-intro {
+    background: linear-gradient(135deg, #e3f2fd, #e0f7fa22);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    font-size: 0.92rem;
+    color: #0d3057;
+    line-height: 1.6;
+    border: 1px solid #b3d9f2;
+  }
+
+  .notes-section {
+    border-radius: 10px;
+    margin-bottom: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    border: 1px solid rgba(0,0,0,0.06);
+  }
+  .notes-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    cursor: pointer;
+    user-select: none;
+    font-weight: 700;
+    font-size: 0.97rem;
+    transition: background 0.15s;
+  }
+  .notes-section-header:hover { filter: brightness(0.96); }
+  .notes-section-header .section-title { display: flex; align-items: center; gap: 10px; }
+  .notes-section-header .chevron {
+    font-size: 0.8rem;
+    transition: transform 0.2s;
+    opacity: 0.6;
+  }
+  .notes-section.open .chevron { transform: rotate(180deg); }
+
+  .notes-section-body {
+    display: none;
+    padding: 16px 18px 18px;
+    background: white;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: #2d2d2d;
+  }
+  .notes-section.open .notes-section-body { display: block; }
+
+  .notes-section-body h4 {
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--blue);
+    margin: 16px 0 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #d0e6f5;
+  }
+  .notes-section-body h4:first-child { margin-top: 0; }
+  .notes-section-body ul { margin: 0 0 8px 0; padding-left: 18px; }
+  .notes-section-body ul li { margin-bottom: 5px; }
+  .notes-section-body ul li strong { color: #0a1f3c; }
+
+  .callout {
+    background: #e3f2fd;
+    border-left: 4px solid var(--blue);
+    border-radius: 0 8px 8px 0;
+    padding: 10px 14px;
+    margin: 12px 0;
+    font-size: 0.88rem;
+    color: #0d3057;
+  }
+  .callout strong { display: block; margin-bottom: 3px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--blue); }
+
+  .callout.teal {
+    background: #e0f7fa;
+    border-left-color: var(--teal);
+    color: #004d54;
+  }
+  .callout.teal strong { color: var(--teal); }
+
+  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+  .tag {
+    background: #e3f2fd;
+    color: var(--blue);
+    border-radius: 20px;
+    padding: 3px 11px;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+  .tag.teal { background: #e0f7fa; color: #007c8a; }
+  .tag.green { background: #e8f5e9; color: #2e7d32; }
+  .tag.orange { background: #fff3e0; color: #e65100; }
+  .tag.red { background: #ffebee; color: #c62828; }
+
+  .notes-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.86rem;
+    margin: 8px 0 12px;
+  }
+  .notes-table th {
+    background: #e3f2fd;
+    color: var(--blue);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 8px 10px;
+    text-align: left;
+    border-bottom: 2px solid #b3d9f2;
+  }
+  .notes-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #f0f7ff;
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .notes-table tr:last-child td { border-bottom: none; }
+  .notes-table tr:nth-child(even) td { background: #f8fbff; }
+
+  /* Colour-coded section headers */
+  .hdr-blue   { background: linear-gradient(90deg, #1565c0, #42a5f5); color: white; }
+  .hdr-teal   { background: linear-gradient(90deg, #0097a7, #26c6da); color: white; }
+  .hdr-brown  { background: linear-gradient(90deg, #5d4037, #a1887f); color: white; }
+  .hdr-red    { background: linear-gradient(90deg, #c62828, #ef5350); color: white; }
+  .hdr-green  { background: linear-gradient(90deg, #2e7d32, #66bb6a); color: white; }
+  .hdr-orange { background: linear-gradient(90deg, #e65100, #ffa726); color: white; }
+  .hdr-indigo { background: linear-gradient(90deg, #283593, #5c6bc0); color: white; }
+  .hdr-purple { background: linear-gradient(90deg, #6a1b9a, #ab47bc); color: white; }
+  .hdr-grey   { background: linear-gradient(90deg, #424242, #9e9e9e); color: white; }
+
+
+  /* ── A11Y TOOLBAR ── */
+  #a11y-toolbar{position:fixed!important;bottom:24px!important;right:24px!important;z-index:2147483647!important;font-family:'Lexend','Segoe UI',sans-serif;}
+  #a11y-fab{width:50px;height:50px;border-radius:50%;background:#1565c0;border:none;color:#fff;font-size:1.3rem;cursor:pointer;box-shadow:0 4px 18px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;transition:transform .2s,background .2s;}
+  #a11y-fab:hover{background:#0d47a1;transform:scale(1.07);}
+  #a11y-fab.open{background:#0d47a1;}
+  #a11y-panel{position:absolute;bottom:62px;right:0;background:#fff;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.2);padding:16px;width:260px;border:1px solid rgba(0,0,0,.07);}
+  #a11y-panel[hidden]{display:none!important;}
+  .a11y-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#888;margin-bottom:12px;}
+  .a11y-action-btn{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border-radius:10px;background:#f0f7ff;border:1.5px solid #cde4f5;color:#1565c0;font-size:.9rem;font-weight:600;cursor:pointer;font-family:inherit;}
+  .a11y-action-btn.a11y-stop{background:#fee2e2;border-color:#fca5a5;color:#dc2626;}
+  .a11y-divider{height:1px;background:#e5e7eb;margin:12px 0;}
+  .a11y-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+  .a11y-col-row{flex-direction:column;align-items:flex-start;gap:8px;margin-bottom:4px;}
+  .a11y-label{font-size:.85rem;color:#222;font-weight:500;}
+  .a11y-pill{padding:4px 14px;border-radius:20px;border:2px solid #d1d5db;background:#f3f4f6;color:#6b7280;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;}
+  .a11y-pill.on{background:#1565c0;border-color:#1565c0;color:#fff;}
+  #a11y-colours{display:flex;gap:7px;flex-wrap:wrap;}
+  .a11y-col-chip{width:28px;height:28px;border-radius:50%;border:2.5px solid #d1d5db;cursor:pointer;font-size:.65rem;display:flex;align-items:center;justify-content:center;background:#e5e7eb;}
+  .a11y-col-chip.sel{border-color:#1565c0;border-width:3px;}
+  #a11y-overlay{position:fixed!important;inset:0;pointer-events:none;z-index:2147483646!important;transition:background .35s;}
+  b.bionic-b{font-weight:800;}
+  .a11y-stepper{display:flex;gap:4px;}
+  .a11y-step-btn{width:32px;height:28px;border-radius:8px;border:2px solid #d1d5db;background:#f3f4f6;color:#6b7280;font-size:.82rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;transition:background .15s,border-color .15s;}
+  .a11y-step-btn.on{background:#1565c0;border-color:#1565c0;color:#fff;}
+  #a11y-ruler-line{position:fixed!important;left:0;right:0;height:34px;pointer-events:none;z-index:2147483645!important;background:rgba(21,101,192,.1);border-top:2px solid rgba(21,101,192,.35);border-bottom:2px solid rgba(21,101,192,.35);display:none;top:0;}
+  body.ruler-on #a11y-ruler-line{display:block;}
+  body.opendyslexic,body.opendyslexic *{font-family:'OpenDyslexic','Lexend','Segoe UI',sans-serif!important;}
+
+</style>
+</head>
+<body>
+<div id="a11y-toolbar"><button id="a11y-fab" title="Accessibility tools" aria-label="Accessibility tools">&#9681;</button><div id="a11y-panel" hidden><div class="a11y-title">Accessibility</div><button id="a11y-tts" class="a11y-action-btn"><span id="a11y-tts-icon">&#128266;</span><span id="a11y-tts-label"> Read aloud</span></button><div class="a11y-divider"></div><div class="a11y-row"><span class="a11y-label">Bionic reading</span><button id="a11y-bionic" class="a11y-pill">Off</button></div><div class="a11y-row"><span class="a11y-label">OpenDyslexic font</span><button id="a11y-od" class="a11y-pill">Off</button></div><div class="a11y-row"><span class="a11y-label">Reading ruler</span><button id="a11y-ruler-btn" class="a11y-pill">Off</button></div><div class="a11y-divider"></div><div class="a11y-row"><span class="a11y-label">Text size</span><div class="a11y-stepper"><button class="a11y-step-btn on" id="a11y-sz1" title="Normal">A</button><button class="a11y-step-btn" id="a11y-sz2" title="Large">A+</button><button class="a11y-step-btn" id="a11y-sz3" title="XL">A++</button></div></div><div class="a11y-row"><span class="a11y-label">Line spacing</span><div class="a11y-stepper"><button class="a11y-step-btn on" id="a11y-ls1" title="Normal">1&#215;</button><button class="a11y-step-btn" id="a11y-ls2" title="Relaxed">1.5&#215;</button><button class="a11y-step-btn" id="a11y-ls3" title="Wide">2&#215;</button></div></div><div class="a11y-divider"></div><div class="a11y-row a11y-col-row"><span class="a11y-label">Colour overlay</span><div id="a11y-colours"><button class="a11y-col-chip sel" data-col="none" title="None">&#x2715;</button><button class="a11y-col-chip" data-col="cream" style="background:#fdf6e3" title="Cream"></button><button class="a11y-col-chip" data-col="yellow" style="background:#fff9c4" title="Yellow"></button><button class="a11y-col-chip" data-col="blue" style="background:#dbeafe" title="Blue"></button><button class="a11y-col-chip" data-col="green" style="background:#dcfce7" title="Green"></button><button class="a11y-col-chip" data-col="peach" style="background:#fce7f3" title="Peach"></button></div></div></div></div><div id="a11y-overlay"></div><div id="a11y-ruler-line"></div>
+
+
+<header>
+  <div class="header-left">
+    <a class="back-btn" href="index.html">← Back</a>
+    <h1>📚 Arjun's Flashcards <span>History · KS3 Year 8</span></h1>
+  </div>
+  <div class="header-badge">Year 8</div>
+</header>
+
+<div class="app">
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-title">Topics</div>
+    <button class="topic-btn active" onclick="selectTopic(0)" id="topicBtn0">
+      <span class="topic-icon">⚔️</span> Medieval England
+      <span class="topic-count" id="count0">20</span>
+    </button>
+    <button class="topic-btn" onclick="selectTopic(1)" id="topicBtn1">
+      <span class="topic-icon">🏭</span> Industrial Revolution
+      <span class="topic-count" id="count1">20</span>
+    </button>
+    <button class="topic-btn" onclick="selectTopic(2)" id="topicBtn2">
+      <span class="topic-icon">🌍</span> World War I
+      <span class="topic-count" id="count2">20</span>
+    </button>
+    <button class="topic-btn" onclick="selectTopic(3)" id="topicBtn3">
+      <span class="topic-icon">✈️</span> World War II
+      <span class="topic-count" id="count3">20</span>
+    </button>
+    <button class="topic-btn" onclick="selectTopic(4)" id="topicBtn4">
+      <span class="topic-icon">✝️</span> British Reformation
+      <span class="topic-count" id="count4">20</span>
+    </button>
+    <button class="topic-btn" onclick="selectTopic(5)" id="topicBtn5">
+      <span class="topic-icon">🥐</span> French Revolution
+      <span class="topic-count" id="count5">20</span>
+    </button>
+    <button class="topic-btn" onclick="selectTopic(6)" id="topicBtn6">
+      <span class="topic-icon">⚔️</span> English Civil War
+      <span class="topic-count" id="count6">20</span>
+    </button>
+    <button class="topic-btn" onclick="selectTopic(7)" id="topicBtn7">
+      <span class="topic-icon">🌍</span> Empire &amp; Slave Trade
+      <span class="topic-count" id="count7">20</span>
+    </button>
+  </nav>
+
+  <!-- MAIN -->
+  <main>
+    <div class="topic-header">
+      <h2 id="topicTitle">⚔️ Medieval England</h2>
+      <p id="topicDesc">Norman Conquest, feudal system, the Church and life in medieval times</p>
+    </div>
+
+    <!-- MODE TOGGLE -->
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="modeFlashcards" onclick="setMode('flashcards')">🃏 Flashcards</button>
+      <button class="mode-btn" id="modeNotes" onclick="setMode('notes')">📖 Revision Notes</button>
+    </div>
+
+    <!-- REVISION NOTES VIEW -->
+    <div class="notes-view" id="notesView"></div>
+
+    <!-- FLASHCARD VIEW -->
+    <div class="flashcard-view" id="flashcardView">
+
+    <!-- PROGRESS BAR -->
+    <div class="progress-row">
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+      </div>
+      <div class="progress-label" id="progressLabel">0 / 20 seen</div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-chip correct"><span class="stat-dot"></span> <span id="correctCount">0</span> Got it</div>
+      <div class="stat-chip incorrect"><span class="stat-dot"></span> <span id="incorrectCount">0</span> Review</div>
+      <div class="stat-chip unseen"><span class="stat-dot"></span> <span id="unseenCount">20</span> Not seen</div>
+    </div>
+
+    <!-- FLASHCARD -->
+    <div class="card-area">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="card-face card-front">
+          <div class="card-label">Question</div>
+          <div class="card-text" id="cardQuestion">Loading...</div>
+          <div class="card-hint">👆 Tap to reveal answer</div>
+          <div class="card-number" id="cardNum">1 / 20</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-label">Answer</div>
+          <div class="card-text" id="cardAnswer">Loading...</div>
+          <div class="card-hint">✓ Rate yourself below</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RATING -->
+    <div class="rating-row">
+      <span class="rating-label">How did you do?</span>
+      <button class="btn btn-incorrect" onclick="rateCard('incorrect')">❌ Need to review</button>
+      <button class="btn btn-correct" onclick="rateCard('correct')">✅ Got it!</button>
+    </div>
+
+    <!-- NAV CONTROLS -->
+    <div class="controls">
+      <button class="btn btn-prev" onclick="prevCard()">◀ Previous</button>
+      <button class="btn btn-shuffle" onclick="shuffleCards()">🔀 Shuffle</button>
+      <button class="btn btn-reset" onclick="resetTopic()">↺ Reset</button>
+      <button class="btn btn-next" onclick="nextCard()">Next ▶</button>
+    </div>
+
+    <!-- GRID TOGGLE -->
+    <div class="card-grid-toggle">
+      <button class="btn btn-grid" onclick="toggleGrid()">⊞ Card overview</button>
+    </div>
+
+    <!-- MINI GRID -->
+    <div class="card-grid" id="cardGrid"></div>
+
+    <!-- COMPLETION BANNER -->
+    <div class="complete-banner" id="completeBanner">
+      <div class="score-big" id="scoreBig">0%</div>
+      <h3>🎉 Topic complete!</h3>
+      <p id="completeMsg">Well done Arjun! Keep going — tap shuffle to review again.</p>
+    </div>
+
+    </div><!-- /flashcard-view -->
+  </main>
+</div>
+
+<script>
+(function(){
+var S='ateam_a11y',st={bionic:false,overlay:'none',od:false,ruler:false,sz:1,ls:1};
+try{Object.assign(st,JSON.parse(localStorage.getItem(S)||'{}'));}catch(e){}
+var fab,panel,ttsBtn,ttsIcon,ttsLbl,bioBtn,ovl,ttsOn=false;
+function init(){
+  fab=document.getElementById('a11y-fab');
+  panel=document.getElementById('a11y-panel');
+  ttsBtn=document.getElementById('a11y-tts');
+  ttsIcon=document.getElementById('a11y-tts-icon');
+  ttsLbl=document.getElementById('a11y-tts-label');
+  bioBtn=document.getElementById('a11y-bionic');
+  ovl=document.getElementById('a11y-overlay');
+  if(!fab)return;
+  var OV={none:'transparent',cream:'rgba(253,246,227,.5)',yellow:'rgba(255,249,196,.5)',blue:'rgba(219,234,254,.5)',green:'rgba(220,252,231,.5)',peach:'rgba(252,231,243,.5)'};
+  fab.addEventListener('click',function(e){e.stopPropagation();var o=panel.hasAttribute('hidden');if(o)panel.removeAttribute('hidden');else panel.setAttribute('hidden','');fab.classList.toggle('open',o);});
+  document.addEventListener('click',function(e){var tb=document.getElementById('a11y-toolbar');if(tb&&!tb.contains(e.target))panel.setAttribute('hidden','');});
+  var ttsOn=false;
+  function getText(){var fc=document.getElementById('flashcard');if(fc){var id=fc.classList.contains('flipped')?'cardAnswer':'cardQuestion';var el=document.getElementById(id);if(el&&el.innerText.trim())return el.innerText.trim();}var q=document.querySelector('.screen.active .q-text');if(q)return q.innerText.trim();var ns=document.querySelectorAll('.notes-section.open .notes-section-body');if(ns.length)return Array.from(ns).map(function(n){return n.innerText.trim();}).join('\n\n');var m=document.querySelector('main')||document.querySelector('.screen.active');return m?m.innerText.trim().slice(0,2500):'';}
+  function startTTS(){window.speechSynthesis.cancel();var t=getText();if(!t)return;var u=new SpeechSynthesisUtterance(t);u.rate=0.88;u.onend=u.onerror=function(){setTS(false);};window.speechSynthesis.speak(u);setTS(true);}
+  function stopTTS(){window.speechSynthesis.cancel();setTS(false);}
+  function setTS(on){ttsOn=on;ttsBtn.classList.toggle('a11y-stop',on);ttsIcon.innerHTML=on?'&#9209;':'&#128266;';ttsLbl.textContent=on?' Stop':' Read aloud';}
+  ttsBtn.addEventListener('click',function(){ttsOn?stopTTS():startTTS();});
+  function bioW(w){if(w.length<=2)return w;var h=Math.ceil(w.length/2);return '<b class="bionic-b">'+w.slice(0,h)+'</b>'+w.slice(h);}
+  function walkBold(node){if(node.nodeType===3){var t=node.textContent;if(!t.trim())return;var html=t.replace(/([A-Za-zÀ-ɏ]{2,})/g,function(w){return bioW(w);});if(html===t)return;var s=document.createElement('span');s.innerHTML=html;node.parentNode.replaceChild(s,node);}else if(node.nodeType===1&&!/^(SCRIPT|STYLE|B|BUTTON|INPUT)$/.test(node.tagName))Array.from(node.childNodes).forEach(walkBold);}
+  var TG='#cardQuestion,#cardAnswer,.q-text,.option-btn,.notes-section-body,.card-text,.home-hero p';
+  function applyBio(){document.querySelectorAll(TG).forEach(function(el){if(el.dataset.bd)return;el.dataset.bd='1';el.dataset.bo=el.innerHTML;walkBold(el);});}
+  function removeBio(){document.querySelectorAll('[data-bd]').forEach(function(el){el.innerHTML=el.dataset.bo||el.innerHTML;delete el.dataset.bd;delete el.dataset.bo;});}
+  ['flipCard','loadQuestion','showQuestion','nextCard','prevCard'].forEach(function(fn){if(typeof window[fn]==='function'){var o=window[fn];window[fn]=function(){var r=o.apply(this,arguments);if(st.bionic)setTimeout(applyBio,80);return r;};}});
+  var bt;new MutationObserver(function(){if(!st.bionic)return;clearTimeout(bt);bt=setTimeout(applyBio,80);}).observe(document.body,{childList:true,subtree:true});
+  function setBio(on){st.bionic=on;bioBtn.textContent=on?'On':'Off';bioBtn.classList.toggle('on',on);if(on)applyBio();else removeBio();save();}
+  bioBtn.addEventListener('click',function(){setBio(!st.bionic);});
+  function setOvl(col){st.overlay=col;ovl.style.background=OV[col]||'transparent';document.querySelectorAll('.a11y-col-chip').forEach(function(c){c.classList.toggle('sel',c.dataset.col===col);});save();}
+  document.querySelectorAll('.a11y-col-chip').forEach(function(btn){btn.addEventListener('click',function(){setOvl(btn.dataset.col);});});
+  // OpenDyslexic font
+  var odBtn=document.getElementById('a11y-od');
+  function setOD(on){st.od=on;document.body.classList.toggle('opendyslexic',on);if(on&&!document.getElementById('od-font')){var l=document.createElement('link');l.id='od-font';l.rel='stylesheet';l.href='https://fonts.cdnfonts.com/css/opendyslexic';document.head.appendChild(l);}if(odBtn){odBtn.textContent=on?'On':'Off';odBtn.classList.toggle('on',on);}save();}
+  if(odBtn)odBtn.addEventListener('click',function(){setOD(!st.od);});
+  // Reading ruler
+  var rulerEl=document.getElementById('a11y-ruler-line'),rulerBtn=document.getElementById('a11y-ruler-btn');
+  function setRuler(on){st.ruler=on;document.body.classList.toggle('ruler-on',on);if(rulerBtn){rulerBtn.textContent=on?'On':'Off';rulerBtn.classList.toggle('on',on);}save();}
+  document.addEventListener('mousemove',function(e){if(st.ruler&&rulerEl)rulerEl.style.top=(e.clientY-17)+'px';});
+  if(rulerBtn)rulerBtn.addEventListener('click',function(){setRuler(!st.ruler);});
+  // Text size (3 steps: 100% / 118% / 136%)
+  var SZ=[1,1.18,1.36],szBtns=[document.getElementById('a11y-sz1'),document.getElementById('a11y-sz2'),document.getElementById('a11y-sz3')];
+  function setSz(i){st.sz=i;document.documentElement.style.fontSize=(SZ[i-1]*16)+'px';szBtns.forEach(function(b,idx){if(b)b.classList.toggle('on',idx+1===i);});save();}
+  szBtns.forEach(function(b,i){if(b)b.addEventListener('click',function(){setSz(i+1);});});
+  // Line spacing (3 steps: 1.7 / 2.1 / 2.6)
+  var LS=[1.7,2.1,2.6],lsBtns=[document.getElementById('a11y-ls1'),document.getElementById('a11y-ls2'),document.getElementById('a11y-ls3')];
+  function setLs(i){st.ls=i;document.body.style.lineHeight=LS[i-1];lsBtns.forEach(function(b,idx){if(b)b.classList.toggle('on',idx+1===i);});save();}
+  lsBtns.forEach(function(b,i){if(b)b.addEventListener('click',function(){setLs(i+1);});});
+  // Save & restore all settings
+  function save(){try{localStorage.setItem(S,JSON.stringify({bionic:st.bionic,overlay:st.overlay,od:st.od,ruler:st.ruler,sz:st.sz,ls:st.ls}));}catch(e){}}
+  setOvl(st.overlay);if(st.bionic)setBio(true);setOD(!!st.od);setRuler(!!st.ruler);setSz(st.sz||1);setLs(st.ls||1);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+<script>
+// ============================================================
+// FLASHCARD DATA — All 4 Topics
+// ============================================================
+const topics = [
+
+  // ── TOPIC 0: MEDIEVAL ENGLAND ──────────────────────────────
+  {
+    title: "⚔️ Medieval England",
+    desc: "Norman Conquest, feudal system, the Church and life in medieval times",
+    cards: [
+      { q: "What year did William the Conqueror invade England?", a: "1066 — he defeated King Harold at the Battle of Hastings on 14 October 1066." },
+      { q: "What is the feudal system?", a: "A hierarchy of land ownership: King → Barons/Lords → Knights → Peasants/Serfs. Land was exchanged for loyalty and military service." },
+      { q: "Why did William build castles across England?", a: "To control the local population, show Norman power, and act as military bases to crush rebellions." },
+      { q: "What was the Domesday Book (1086)?", a: "A survey ordered by William I recording who owned what land and how much it was worth — used for taxation." },
+      { q: "Who were serfs/villeins?", a: "Peasants who were legally tied to the lord's land. They could not leave without permission and had to work the lord's fields." },
+      { q: "What was the role of the Catholic Church in medieval England?", a: "It was enormously powerful — controlled education, hospitals, courts (canon law), collected tithes, and guided people's spiritual life." },
+      { q: "What was the Magna Carta (1215)?", a: "A document signed by King John limiting royal power and establishing that even the king must obey the law. First steps towards democracy." },
+      { q: "What caused the Black Death (1348–49)?", a: "The bubonic plague, spread by fleas on rats, arriving via trade routes. Killed roughly a third of England's population." },
+      { q: "What long-term impact did the Black Death have?", a: "Labour shortages meant peasants could demand higher wages, weakening the feudal system. More freedom for the lower classes." },
+      { q: "What was the Peasants' Revolt (1381)?", a: "An uprising led by Wat Tyler against unfair poll taxes and feudal conditions. It was suppressed, but showed growing peasant power." },
+      { q: "What happened at the Battle of Hastings?", a: "William of Normandy defeated King Harold II (who was killed — traditionally by an arrow to the eye). William became king." },
+      { q: "What was a 'manor'?", a: "The basic unit of feudal society — an estate run by a lord, including farmland, a village, a church and a mill." },
+      { q: "Who were the Normans?", a: "Descendants of Vikings who settled in northern France (Normandy). They brought a new culture, language (French) and government to England." },
+      { q: "What was the importance of Canterbury Cathedral in medieval England?", a: "It was the centre of the English Church. Thomas Becket was murdered there in 1170, making it a major pilgrimage site." },
+      { q: "Why was Thomas Becket murdered?", a: "He clashed with King Henry II over Church vs royal authority. Henry's knights killed him in 1170 — Henry later did penance." },
+      { q: "What was a tithe?", a: "A tax of one-tenth of a person's income or produce paid to the Church each year." },
+      { q: "What were the Crusades?", a: "Religious wars (1095–1291) launched by Christian Europe to recapture the Holy Land (Jerusalem) from Muslim rulers." },
+      { q: "Who was Richard I (Richard the Lionheart)?", a: "King of England (1189–1199), famous for leading the Third Crusade. He spent little time in England and was captured on return." },
+      { q: "What was the significance of the Domesday Book for historians?", a: "It is one of the most complete medieval records — it tells us about population, land use, wealth and social structure in 1086." },
+      { q: "How did life differ for men and women in medieval England?", a: "Women had few rights — governed by fathers then husbands. Peasant women worked the land; noble women managed households. The Church reinforced these roles." }
+    ]
+  },
+
+  // ── TOPIC 1: INDUSTRIAL REVOLUTION ───────────────────────
+  {
+    title: "🏭 Industrial Revolution",
+    desc: "Causes, inventions, living conditions, social change and the impact on Britain",
+    cards: [
+      { q: "When did the Industrial Revolution take place in Britain?", a: "Roughly 1760–1850 — Britain was the first country to industrialise." },
+      { q: "What was the Industrial Revolution?", a: "A period of rapid change from an agricultural, rural economy to one based on industry, factories and towns." },
+      { q: "Name three key inventions of the Industrial Revolution.", a: "Steam engine (Watt, 1769), spinning jenny (Hargreaves, 1764), and the steam-powered loom (Cartwright, 1785)." },
+      { q: "What was James Watt's contribution?", a: "He improved the steam engine in 1769, making it far more efficient. It powered factories, mines and railways." },
+      { q: "Why did the textile industry grow so rapidly?", a: "New machines like the spinning jenny and power loom could produce cloth far faster and cheaper than by hand." },
+      { q: "What were the living conditions like in industrial cities?", a: "Overcrowded, with poor sanitation, no clean water, disease-ridden slums. Child labour was common. Life expectancy was low." },
+      { q: "What were working conditions like in factories?", a: "Long hours (12–16 hours a day), dangerous machinery, low wages, child workers from age 5, little safety or rights." },
+      { q: "What was the significance of the railways?", a: "They transformed transport — goods and people could move quickly across Britain. Opened up markets and helped industry grow." },
+      { q: "Who was George Stephenson?", a: "He built the first successful steam locomotive (Rocket, 1829) and developed the Stockton–Darlington and Liverpool–Manchester railways." },
+      { q: "What were the social effects of the Industrial Revolution?", a: "Growth of cities (urbanisation), a new middle class of factory owners, rise of trade unions, changing family roles." },
+      { q: "What was the significance of coal and iron to industrialisation?", a: "Coal powered steam engines; iron was used for machines, railways and buildings. Britain had large deposits of both." },
+      { q: "What were 'back-to-back' houses?", a: "Rows of cheap terraced houses sharing walls on three sides, built for factory workers. Overcrowded with no gardens or sanitation." },
+      { q: "What was child labour like in the Industrial Revolution?", a: "Children as young as 5 worked in mines, factories and chimneys. They were cheap and could fit in small spaces." },
+      { q: "What reforms improved working conditions in the 19th century?", a: "Factory Acts (1833, 1844) limited child working hours; Mines Act (1842) banned women and young children underground." },
+      { q: "What was the role of trade unions?", a: "Workers organised collectively to campaign for better pay, shorter hours and safer conditions. Often faced opposition from employers." },
+      { q: "Why did people move from the countryside to cities?", a: "Enclosure Acts took away common land; factory jobs paid wages; cities offered opportunity. Known as rural–urban migration." },
+      { q: "What was the Great Exhibition of 1851?", a: "Held in Crystal Palace, London — showcased British industrial achievement to the world. A symbol of Victorian pride and progress." },
+      { q: "How did the Industrial Revolution affect the British Empire?", a: "Britain used its empire to source raw materials cheaply and sell manufactured goods, fuelling industrial growth." },
+      { q: "What was the impact of industrialisation on the environment?", a: "Air and water pollution from factories and coal. Rivers became contaminated; cities covered in smog. The landscape changed permanently." },
+      { q: "Who was Robert Owen and why was he significant?", a: "A factory owner and social reformer who provided decent housing, schools and fair wages for workers at New Lanark — showing industry could be humane." }
+    ]
+  },
+
+  // ── TOPIC 2: WORLD WAR I ─────────────────────────────────
+  {
+    title: "🌍 World War I (1914–1918)",
+    desc: "Causes, key events, trench warfare, and the impact of the Great War",
+    cards: [
+      { q: "What does MAIN stand for (causes of WWI)?", a: "Militarism, Alliance system, Imperialism, Nationalism — the four long-term causes of the First World War." },
+      { q: "What was the immediate trigger of WWI?", a: "The assassination of Archduke Franz Ferdinand of Austria-Hungary by Gavrilo Princip in Sarajevo on 28 June 1914." },
+      { q: "What were the two alliance systems in 1914?", a: "Triple Alliance: Germany, Austria-Hungary, Italy. Triple Entente: Britain, France, Russia." },
+      { q: "Why did Britain declare war on Germany in August 1914?", a: "Germany invaded neutral Belgium (Schlieffen Plan) — Britain had guaranteed Belgian neutrality by treaty." },
+      { q: "What was the Schlieffen Plan?", a: "Germany's plan to defeat France quickly in the west by invading through Belgium, then turn east to fight Russia." },
+      { q: "Why did the war become a stalemate on the Western Front?", a: "Both sides dug trenches after advances were halted. Defensive technology (machine guns, barbed wire) was stronger than offensive tactics." },
+      { q: "Describe conditions in the trenches.", a: "Waterlogged, muddy, infested with rats and lice. Soldiers suffered from trench foot, shell shock, constant danger of snipers and artillery." },
+      { q: "What was 'going over the top'?", a: "When soldiers climbed out of their trenches to advance towards enemy lines — extremely dangerous with high casualties." },
+      { q: "What was the Battle of the Somme (1916)?", a: "A British-led offensive on 1 July 1916 — the bloodiest day in British military history: 57,000 casualties on the first day alone." },
+      { q: "What was the Battle of Ypres?", a: "A series of battles (1914, 1915, 1917) near Ypres, Belgium. The Third Battle (Passchendaele, 1917) saw over 300,000 British casualties in mud." },
+      { q: "What new weapons were introduced in WWI?", a: "Poison gas (first used by Germany 1915), tanks (Britain 1916), aircraft, machine guns, and long-range artillery." },
+      { q: "What was the role of women during WWI?", a: "They took over men's jobs in factories, transport, nursing and farming. This contributed to women winning the right to vote in 1918." },
+      { q: "What was DORA (Defence of the Realm Act)?", a: "A 1914 law giving the government sweeping powers — controlling press, industry, and civilian behaviour to support the war effort." },
+      { q: "What was conscription and when was it introduced in Britain?", a: "Compulsory military service — introduced in January 1916 when voluntary recruitment was insufficient." },
+      { q: "Who were 'conscientious objectors'?", a: "Men who refused to fight on moral, religious or political grounds. Some did non-combat roles; others were imprisoned and faced social stigma." },
+      { q: "What was the significance of the USA entering the war (1917)?", a: "Brought fresh troops, money and supplies to the Allies — a decisive shift that helped break the stalemate." },
+      { q: "When and why did WWI end?", a: "11 November 1918 (Armistice). Germany was exhausted militarily and economically; revolution threatened at home; allies had collapsed." },
+      { q: "What was the Treaty of Versailles (1919)?", a: "The peace treaty blaming Germany (War Guilt Clause), demanding £6.6 billion reparations, and stripping Germany of territory and armed forces." },
+      { q: "How did the Treaty of Versailles contribute to WWII?", a: "It created resentment in Germany — economic hardship, humiliation and political instability allowed extremists like Hitler to rise." },
+      { q: "What was shell shock?", a: "A psychological condition (now called PTSD) caused by the trauma of combat — symptoms included tremors, nightmares, paralysis and breakdown." }
+    ]
+  },
+
+  // ── TOPIC 3: WORLD WAR II ────────────────────────────────
+  {
+    title: "✈️ World War II (1939–1945)",
+    desc: "Rise of Hitler, Blitz, key battles, Holocaust, and the road to Allied victory",
+    cards: [
+      { q: "When did WWII start and what triggered it?", a: "1 September 1939 — Germany invaded Poland. Britain and France declared war on Germany two days later." },
+      { q: "How did Hitler rise to power?", a: "He exploited post-WWI resentment, the Great Depression, weak government (Weimar Republic) and used propaganda and violence to become Chancellor in 1933." },
+      { q: "What was appeasement?", a: "Britain and France's policy of giving Hitler concessions (e.g. allowing annexation of Austria and Sudetenland) to avoid war. It failed." },
+      { q: "What was the Blitz (1940–41)?", a: "A German bombing campaign targeting British cities — especially London, from September 1940. Killed around 43,000 civilians." },
+      { q: "What was Dunkirk (May–June 1940)?", a: "British and Allied troops were trapped in France — over 330,000 were evacuated using naval and civilian boats. Seen as a 'miracle'." },
+      { q: "What was the Battle of Britain (1940)?", a: "An air battle between the RAF and German Luftwaffe over British skies. The RAF held off invasion — Hitler cancelled Operation Sea Lion." },
+      { q: "Who was Winston Churchill?", a: "British Prime Minister from May 1940. Known for his powerful wartime speeches ('We shall fight on the beaches') and leadership during the darkest days of WWII." },
+      { q: "What was the Holocaust?", a: "The systematic, state-sponsored murder of 6 million Jews (and millions of others — Roma, disabled people, LGBTQ+ people) by Nazi Germany." },
+      { q: "What were concentration camps?", a: "Detention and extermination camps set up by the Nazis. Auschwitz-Birkenau was the largest — over 1 million people were killed there." },
+      { q: "What was Operation Barbarossa (1941)?", a: "Germany's invasion of the Soviet Union — a massive military campaign. Eventually failed in brutal winter conditions, turning the war." },
+      { q: "Why was the Eastern Front significant?", a: "The largest theatre of WWII. The Battle of Stalingrad (1942–43) was a turning point — Germany's first major defeat, killing 800,000 Axis soldiers." },
+      { q: "What was D-Day (6 June 1944)?", a: "The Allied invasion of Nazi-occupied France via the beaches of Normandy — the largest seaborne invasion in history. Began the liberation of Western Europe." },
+      { q: "What role did the USA play in WWII?", a: "After Pearl Harbor (December 1941), the USA joined the Allies, providing enormous resources, troops and eventually the atomic bombs that ended the Pacific War." },
+      { q: "What was the significance of Pearl Harbor?", a: "Japanese surprise attack on the US Navy base in Hawaii on 7 December 1941 — brought the USA into WWII against Japan and the Axis powers." },
+      { q: "What happened to children during WWII in Britain?", a: "Many were evacuated from cities to rural areas to avoid the Blitz. Separation from parents was traumatic for many children." },
+      { q: "What was rationing?", a: "The government controlled the distribution of food, clothing and fuel to ensure fair shares. Rationing in Britain started in January 1940." },
+      { q: "What role did women play in WWII?", a: "Women worked in munitions factories, drove ambulances, served in the ATS/WRNS/WAAF, and ran households alone. Essential to the war effort." },
+      { q: "When and how did WWII end in Europe?", a: "8 May 1945 — VE Day (Victory in Europe). Germany surrendered after Hitler's suicide on 30 April 1945." },
+      { q: "How did WWII end in the Pacific?", a: "The USA dropped atomic bombs on Hiroshima (6 Aug 1945) and Nagasaki (9 Aug 1945). Japan surrendered on 15 August 1945 — VJ Day." },
+      { q: "What was the long-term impact of WWII?", a: "Creation of the UN (1945), start of the Cold War, decolonisation, creation of Israel (1948), the Welfare State in Britain, and the Nuremberg Trials." }
+    ]
+  },
+
+  // ── TOPIC 4: BRITISH REFORMATION ─────────────────────────
+  {
+    title: "✝️ The British Reformation",
+    desc: "Henry VIII's break with Rome, dissolution of the monasteries, and the religious settlement",
+    cards: [
+      { q: "What was the Reformation?", a: "A religious revolution across Europe in the 16th century that challenged the authority of the Pope and the Catholic Church, leading to the creation of Protestant churches." },
+      { q: "Why did Henry VIII break with Rome?", a: "He wanted to annul his marriage to Catherine of Aragon (who had not produced a male heir). When Pope Clement VII refused, Henry broke from the Catholic Church." },
+      { q: "What was the Act of Supremacy (1534)?", a: "It declared Henry VIII the 'Supreme Head of the Church of England', officially breaking with Rome and giving the king control over religion in England." },
+      { q: "What was the dissolution of the monasteries (1536–1541)?", a: "Henry VIII closed all monasteries in England, seizing their land and wealth for the Crown. It made Henry enormously rich and broke the Church's power." },
+      { q: "Who was Thomas Cromwell and what was his role in the Reformation?", a: "Henry's chief minister who organised the dissolution of the monasteries and the break with Rome. He was later executed in 1540." },
+      { q: "What was the Pilgrimage of Grace (1536)?", a: "A major rebellion in the north of England against the dissolution of the monasteries. It was suppressed and its leaders executed." },
+      { q: "How did religion change under Edward VI (1547–1553)?", a: "Edward VI (Henry's son) was a committed Protestant. England became more Protestant — the Book of Common Prayer was introduced and Catholic practices were banned." },
+      { q: "What was the Book of Common Prayer?", a: "A Protestant prayer book introduced in 1549 under Edward VI — church services were now conducted in English, not Latin." },
+      { q: "How did religion change under Mary I (1553–1558)?", a: "Mary I was a devout Catholic and restored papal authority. She burned around 300 Protestants at the stake, earning the name 'Bloody Mary'." },
+      { q: "Who was Archbishop Cranmer and what happened to him?", a: "Thomas Cranmer helped shape the Protestant Church of England under Henry and Edward. He was burned at the stake under Mary I in 1556." },
+      { q: "What was Elizabeth I's Religious Settlement (1559)?", a: "Elizabeth tried to create a compromise 'middle way' — the Church of England was Protestant in doctrine but kept some Catholic ceremonies. Both the Act of Supremacy and Act of Uniformity were passed." },
+      { q: "What was the Act of Uniformity (1559)?", a: "Required all English churches to use the Protestant Prayer Book and all people to attend Church of England services, or face a fine." },
+      { q: "What was the Spanish Armada (1588)?", a: "A fleet of 130 ships sent by Catholic Spain's Philip II to invade England, overthrow Elizabeth and restore Catholicism. It was defeated by English ships and storms." },
+      { q: "Why did Philip II of Spain send the Armada?", a: "He was a devout Catholic who wanted to remove the Protestant Elizabeth I and restore England to Catholicism. He was also angered by English piracy and support for Protestant rebels in the Netherlands." },
+      { q: "What was a recusant?", a: "An English Catholic who refused to attend Church of England services and continued to practise Catholicism secretly. They faced fines and could be executed for treason." },
+      { q: "Who was Martin Luther and why does he matter to the British Reformation?", a: "A German monk who challenged the Catholic Church in 1517 (95 Theses) — his ideas spread Protestant thinking across Europe and influenced the English Reformation." },
+      { q: "What were indulgences and why did Protestants object to them?", a: "Payments to the Church to reduce time in purgatory. Protestants argued salvation came from faith alone (sola fide), not paying the Church." },
+      { q: "What happened to the six wives of Henry VIII?", a: "Divorced (Catherine of Aragon), beheaded (Anne Boleyn), died (Jane Seymour), divorced (Anne of Cleves), beheaded (Catherine Howard), survived (Catherine Parr). Mnemonic: 'Divorced, beheaded, died, divorced, beheaded, survived'." },
+      { q: "What was the Counter-Reformation?", a: "The Catholic Church's response to the Protestant Reformation — reforming itself from within, launching the Council of Trent and the Jesuit order to win back Protestant areas." },
+      { q: "What was the long-term impact of the Reformation on England?", a: "England became a Protestant nation; the monarch became head of the Church; monasteries were destroyed; the Bible was translated into English; it caused decades of religious conflict." }
+    ]
+  },
+
+  // ── TOPIC 5: FRENCH REVOLUTION ───────────────────────────
+  {
+    title: "🥐 The French Revolution",
+    desc: "Causes, key events 1789–1799, Reign of Terror and the rise of Napoleon",
+    cards: [
+      { q: "When did the French Revolution begin?", a: "1789 — often dated from the storming of the Bastille on 14 July 1789." },
+      { q: "What was the Ancien Régime?", a: "The old political and social system in France before the Revolution — an absolute monarchy with a rigid class system divided into three Estates." },
+      { q: "What were the Three Estates in France?", a: "First Estate: clergy. Second Estate: nobility. Third Estate: everyone else (98% of the population) — commoners, from wealthy bourgeoisie to poor peasants." },
+      { q: "Name THREE causes of the French Revolution.", a: "Financial crisis (France nearly bankrupt after wars), inequality (Third Estate paid all taxes while nobility were exempt), food shortages, Enlightenment ideas about rights and liberty, and weak leadership by Louis XVI." },
+      { q: "What was the storming of the Bastille (14 July 1789)?", a: "Parisian crowds stormed the Bastille prison — a symbol of royal tyranny. They freed prisoners and seized weapons. It became the symbolic start of the Revolution." },
+      { q: "What was the Declaration of the Rights of Man (1789)?", a: "A document passed by the National Assembly declaring that all men are born free and equal, with rights to liberty, property and resistance to oppression." },
+      { q: "What happened to Louis XVI?", a: "He was arrested in 1792, tried for treason and guillotined on 21 January 1793. His wife Marie Antoinette was executed later the same year." },
+      { q: "What was the Reign of Terror (1793–94)?", a: "A period under Maximilien Robespierre when around 17,000 people were officially executed (mostly by guillotine) as 'enemies of the Revolution'. It ended when Robespierre himself was guillotined." },
+      { q: "Who was Maximilien Robespierre?", a: "A radical revolutionary leader who dominated the Committee of Public Safety and oversaw the Reign of Terror. He was guillotined in July 1794 in the Thermidorian Reaction." },
+      { q: "What was the guillotine?", a: "A beheading machine used to execute thousands during the Reign of Terror — seen as a swift and 'equal' form of execution for all social classes." },
+      { q: "What was the National Assembly?", a: "The political body formed by the Third Estate in 1789, which claimed the power to govern France. It replaced the old Estates-General (which had not met since 1614)." },
+      { q: "What role did Enlightenment ideas play in the Revolution?", a: "Philosophers like Voltaire, Rousseau and Montesquieu had argued for liberty, equality, separation of powers and government by consent — ideas that inspired revolutionaries." },
+      { q: "What was the Tennis Court Oath (1789)?", a: "Members of the Third Estate were locked out of their meeting hall, so they gathered at a tennis court and swore not to dissolve until France had a new constitution." },
+      { q: "What were sans-culottes?", a: "Working-class Parisian radicals who were the street-level muscle of the Revolution — named after the knee-breeches worn by aristocrats (they wore long trousers instead)." },
+      { q: "How did France change from a monarchy to a republic?", a: "In 1792, the monarchy was abolished and the First French Republic was declared. Louis XVI was executed in January 1793." },
+      { q: "Why did other European countries fear the French Revolution?", a: "They feared it would inspire revolutions in their own countries and threaten their own monarchies. Austria, Prussia and Britain all went to war against France." },
+      { q: "Who was Napoleon Bonaparte?", a: "A brilliant French military general who rose to power after the Revolution, becoming First Consul (1799) and then Emperor (1804). He spread revolutionary ideas across Europe through conquest." },
+      { q: "What was the significance of the French Revolution for world history?", a: "It ended absolute monarchy in France, spread ideas of liberty, equality and nationalism across Europe, inspired future revolutions worldwide, and led to the rise of Napoleon." },
+      { q: "What was the Vendée uprising?", a: "A counter-revolutionary rebellion in western France (1793) against the Revolution's policies — conscription, the execution of the king, and attacks on the Church. Brutally suppressed." },
+      { q: "What does 'Liberté, Égalité, Fraternité' mean?", a: "Liberty, Equality, Brotherhood — the motto of the French Revolution, later adopted as France's national motto." }
+    ]
+  },
+
+  // ── TOPIC 6: ENGLISH CIVIL WAR ────────────────────────────
+  {
+    title: "⚔️ English Civil War",
+    desc: "Charles I vs Parliament, causes, key battles, Cromwell and the Restoration",
+    cards: [
+      { q: "When was the English Civil War?", a: "1642–1651 — a series of armed conflicts between Royalists (Cavaliers, supporting King Charles I) and Parliamentarians (Roundheads)." },
+      { q: "What was the Divine Right of Kings?", a: "The belief that monarchs were appointed by God and therefore answerable to no one but God — not Parliament, the law or the people." },
+      { q: "Name THREE causes of the English Civil War.", a: "Charles I's belief in Divine Right and attempts to rule without Parliament; religious tensions (attempts to impose Anglican religion on Scotland); financial disputes — Parliament refused to fund wars without concessions." },
+      { q: "What was the Personal Rule (1629–1640)?", a: "The 11 years Charles I ruled without calling Parliament — funding himself through unpopular taxes like Ship Money. It caused deep resentment." },
+      { q: "What was Ship Money?", a: "A tax traditionally levied on coastal towns to fund the navy — Charles I extended it to all counties without Parliament's approval. It was widely seen as illegal." },
+      { q: "What event triggered the Civil War in 1642?", a: "Charles I tried to arrest five MPs in Parliament — a massive breach of parliamentary privilege. He then fled London, and both sides began raising armies." },
+      { q: "Who were the Cavaliers and Roundheads?", a: "Cavaliers = Royalists supporting Charles I (mainly from Catholic/Anglican nobility). Roundheads = Parliamentarians (mainly Puritans and merchants from the south and east)." },
+      { q: "What was the Battle of Marston Moor (1644)?", a: "A decisive Parliamentary victory in Yorkshire — Parliament and its Scottish allies defeated the Royalists, taking control of the north of England." },
+      { q: "What was the New Model Army?", a: "Parliament's professional army created in 1645 — trained, well-equipped and paid regularly. Under Fairfax and Cromwell, it proved decisive." },
+      { q: "What was the Battle of Naseby (1645)?", a: "A crushing Parliamentarian victory — the New Model Army destroyed the main Royalist army. Charles I's private letters were captured, showing he was seeking foreign help." },
+      { q: "What happened to Charles I after Parliament won?", a: "He was captured, tried for treason against the English people, and executed on 30 January 1649 — the first time an English monarch had been publicly executed." },
+      { q: "What was the Interregnum?", a: "The period 1649–1660 when England had no monarch. First a republic (Commonwealth), then effectively a military dictatorship under Oliver Cromwell as Lord Protector." },
+      { q: "Who was Oliver Cromwell?", a: "The Parliamentary general who commanded the New Model Army, became Lord Protector after the execution of Charles I, and ruled England until his death in 1658." },
+      { q: "What was Cromwell's rule of England like?", a: "Strict Puritan governance — theatres were closed, Christmas was banned, gambling prohibited. He conquered Ireland brutally and Scotland. Often compared to a military dictator." },
+      { q: "What was the Restoration (1660)?", a: "The return of the monarchy — Charles II (son of Charles I) was invited back from exile to be king after Cromwell's death led to political instability." },
+      { q: "What was the Glorious Revolution (1688)?", a: "William of Orange (a Protestant Dutchman) was invited to replace the Catholic King James II. James fled without a fight — it was almost bloodless." },
+      { q: "What was the Bill of Rights (1689)?", a: "A constitutional document limiting royal power — Parliament had to be summoned regularly, the monarch could not raise taxes or armies without Parliamentary consent." },
+      { q: "Why is the Glorious Revolution significant?", a: "It established constitutional monarchy in England — Parliament was supreme, not the king. This principle remains the foundation of British government today." },
+      { q: "What were the Scottish wars of Charles I's reign?", a: "Charles tried to impose Anglican worship on Scotland — the Scots rebelled (Bishops' Wars, 1639–40). Needing money to fight them, Charles had to recall Parliament, sparking the crisis leading to Civil War." },
+      { q: "What is a constitutional monarchy?", a: "A system where the monarch rules within the constraints of a constitution and Parliament — the monarch reigns but does not govern alone. Britain became one after 1689." }
+    ]
+  },
+
+  // ── TOPIC 7: BRITISH EMPIRE & SLAVE TRADE ─────────────────
+  {
+    title: "🌍 Empire & Slave Trade",
+    desc: "The transatlantic slave trade, British Empire expansion, and the abolition movement",
+    cards: [
+      { q: "What was the transatlantic slave trade?", a: "The forced transportation of millions of enslaved Africans across the Atlantic to the Americas to work on plantations, mainly from the 16th to 19th centuries." },
+      { q: "What was the triangular trade?", a: "A three-leg trade route: (1) goods from Britain to Africa, (2) enslaved Africans to the Americas, (3) sugar/cotton/tobacco back to Britain." },
+      { q: "What was the Middle Passage?", a: "The second leg of the triangular trade — the horrific journey of enslaved Africans across the Atlantic. Millions died from disease, maltreatment and suffocation in packed ships." },
+      { q: "How many Africans were transported across the Atlantic as slaves?", a: "Estimates suggest around 12 million people were transported — about 1.5–2 million died during the Middle Passage alone." },
+      { q: "What crops did enslaved people produce in the Americas?", a: "Sugar (in the Caribbean), tobacco (Virginia), cotton (southern USA), coffee and rice. Sugar was the most profitable." },
+      { q: "What was the role of Bristol and Liverpool in the slave trade?", a: "They were the main British slaving ports — merchants in these cities grew very wealthy from the trade. Much of their historical architecture was built on slave profits." },
+      { q: "Who was Olaudah Equiano?", a: "An enslaved African who bought his freedom, wrote his autobiography (1789) and became a leading voice in the abolition movement. His book was hugely influential." },
+      { q: "Who was William Wilberforce?", a: "A British MP who led the parliamentary campaign to abolish the slave trade. He introduced abolition bills repeatedly for 20 years." },
+      { q: "When was the slave trade abolished in Britain?", a: "The Slave Trade Act 1807 abolished the trading (buying and selling) of enslaved people in the British Empire — though slavery itself continued until 1833." },
+      { q: "When was slavery itself abolished in the British Empire?", a: "The Slavery Abolition Act 1833 freed enslaved people across the British Empire — though slaveholders were compensated £20 million. Enslaved people received nothing." },
+      { q: "What was the abolitionist movement?", a: "A campaign by reformers (including Quakers, evangelical Christians and formerly enslaved people) to end the slave trade and slavery — using petitions, pamphlets and Parliamentary pressure." },
+      { q: "What was the British Empire?", a: "A collection of territories ruled or dominated by Britain — at its peak (early 20th century) it covered about a quarter of the world's land and population." },
+      { q: "How did Britain justify its empire?", a: "Through ideas of 'civilising' other peoples, spreading Christianity, and the racist belief that white Europeans were superior. Also through economic self-interest." },
+      { q: "What was the East India Company?", a: "A powerful trading company that effectively ruled large parts of India on behalf of Britain from the 1600s. It had its own army and courts." },
+      { q: "What was the Seven Years' War (1756–63)?", a: "A global conflict in which Britain defeated France, gaining Canada, parts of India and other territories — dramatically expanding the British Empire." },
+      { q: "What was the Haitian Revolution (1791–1804)?", a: "The only successful slave revolt in history — enslaved Africans in the French colony of Saint-Domingue (Haiti) rose up and founded the world's first Black republic." },
+      { q: "How did enslaved people resist?", a: "Through everyday resistance (working slowly, breaking tools), running away, revolts (e.g. Tacky's Revolt, Jamaica 1760), and through legal and political campaigning by freed individuals." },
+      { q: "What was the legacy of the slave trade for Britain?", a: "It helped fund the Industrial Revolution, built the wealth of cities like Bristol and Liverpool, and left a long legacy of racism and inequality that continues today." },
+      { q: "Who were the Quakers in the abolition movement?", a: "A Protestant religious group (the Society of Friends) who were among the first to condemn slavery on moral grounds — they played a key role in the early abolition movement." },
+      { q: "What is the significance of 1807 vs 1833 in abolition?", a: "1807 abolished the trade in enslaved people (buying and selling) but not slavery itself. 1833 finally freed enslaved people in the British Empire — a crucial distinction." }
+    ]
+  }
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let currentTopic = 0;
+let currentIndex = 0;
+let cardOrder = [];
+let ratings = {};
+let isFlipped = false;
+let gridVisible = false;
+
+// ============================================================
+// INIT
+// ============================================================
+function loadTopic(topicIndex) {
+  currentTopic = topicIndex;
+  currentIndex = 0;
+  isFlipped = false;
+  ratings = {};
+
+  document.querySelectorAll('.topic-btn').forEach((b, i) => {
+    b.classList.toggle('active', i === topicIndex);
+  });
+
+  const t = topics[topicIndex];
+  document.querySelectorAll('[id^="count"]').forEach((el, i) => {
+    el.textContent = topics[i].cards.length;
+  });
+
+  cardOrder = t.cards.map((_, i) => i);
+
+  document.getElementById('topicTitle').textContent = t.title;
+  document.getElementById('topicDesc').textContent = t.desc;
+  document.getElementById('completeBanner').classList.remove('visible');
+
+  renderCard();
+  updateStats();
+  buildGrid();
+}
+
+function renderCard() {
+  const t = topics[currentTopic];
+  const idx = cardOrder[currentIndex];
+  const card = t.cards[idx];
+
+  document.getElementById('cardQuestion').textContent = card.q;
+  document.getElementById('cardAnswer').textContent = card.a;
+  document.getElementById('cardNum').textContent = `${currentIndex + 1} / ${cardOrder.length}`;
+
+  const fc = document.getElementById('flashcard');
+  fc.classList.remove('flipped');
+  isFlipped = false;
+
+  updateGrid();
+}
+
+function flipCard() {
+  const fc = document.getElementById('flashcard');
+  isFlipped = !isFlipped;
+  fc.classList.toggle('flipped', isFlipped);
+}
+
+function nextCard() {
+  if (currentIndex < cardOrder.length - 1) {
+    currentIndex++;
+    renderCard();
+  } else {
+    showCompletion();
+  }
+}
+
+function prevCard() {
+  if (currentIndex > 0) {
+    currentIndex--;
+    renderCard();
+  }
+}
+
+function rateCard(rating) {
+  const idx = cardOrder[currentIndex];
+  ratings[idx] = rating;
+  updateStats();
+  updateGrid();
+  nextCard();
+}
+
+function shuffleCards() {
+  const t = topics[currentTopic];
+  cardOrder = t.cards.map((_, i) => i);
+  for (let i = cardOrder.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [cardOrder[i], cardOrder[j]] = [cardOrder[j], cardOrder[i]];
+  }
+  currentIndex = 0;
+  document.getElementById('completeBanner').classList.remove('visible');
+  renderCard();
+  updateStats();
+}
+
+function resetTopic() {
+  ratings = {};
+  currentIndex = 0;
+  cardOrder = topics[currentTopic].cards.map((_, i) => i);
+  document.getElementById('completeBanner').classList.remove('visible');
+  renderCard();
+  updateStats();
+  buildGrid();
+}
+
+function updateStats() {
+  const total = cardOrder.length;
+  const seen = Object.keys(ratings).length;
+  const correct = Object.values(ratings).filter(r => r === 'correct').length;
+  const incorrect = Object.values(ratings).filter(r => r === 'incorrect').length;
+  const unseen = total - seen;
+
+  document.getElementById('correctCount').textContent = correct;
+  document.getElementById('incorrectCount').textContent = incorrect;
+  document.getElementById('unseenCount').textContent = unseen;
+  document.getElementById('progressLabel').textContent = `${seen} / ${total} seen`;
+  document.getElementById('progressFill').style.width = `${(seen / total) * 100}%`;
+}
+
+function showCompletion() {
+  const total = cardOrder.length;
+  const correct = Object.values(ratings).filter(r => r === 'correct').length;
+  const pct = Math.round((correct / total) * 100);
+
+  document.getElementById('scoreBig').textContent = `${pct}%`;
+  const msg = pct >= 80
+    ? "Excellent work, Arjun! 🌟 You really know this topic."
+    : pct >= 60
+    ? "Good effort! 👏 Review the ones you missed and try again."
+    : "Keep going! 💪 Shuffle and go through them again.";
+  document.getElementById('completeMsg').textContent = msg;
+  document.getElementById('completeBanner').classList.add('visible');
+}
+
+function buildGrid() {
+  const grid = document.getElementById('cardGrid');
+  const t = topics[currentTopic];
+  grid.innerHTML = '';
+  t.cards.forEach((card, i) => {
+    const div = document.createElement('div');
+    div.className = 'mini-card unseen';
+    div.id = `mini-${i}`;
+    div.textContent = card.q.length > 60 ? card.q.substring(0, 57) + '…' : card.q;
+    div.onclick = () => jumpToCard(i);
+    grid.appendChild(div);
+  });
+}
+
+function updateGrid() {
+  const t = topics[currentTopic];
+  const currentOriginalIdx = cardOrder[currentIndex];
+  t.cards.forEach((_, i) => {
+    const el = document.getElementById(`mini-${i}`);
+    if (!el) return;
+    const r = ratings[i];
+    el.className = 'mini-card ' + (r || 'unseen');
+    if (i === currentOriginalIdx) el.classList.add('current');
+  });
+}
+
+function jumpToCard(originalIdx) {
+  const pos = cardOrder.indexOf(originalIdx);
+  if (pos !== -1) {
+    currentIndex = pos;
+    renderCard();
+  }
+}
+
+function toggleGrid() {
+  gridVisible = !gridVisible;
+  const grid = document.getElementById('cardGrid');
+  grid.classList.toggle('visible', gridVisible);
+  document.querySelector('.btn-grid').textContent = gridVisible ? '✕ Hide overview' : '⊞ Card overview';
+  if (gridVisible) updateGrid();
+}
+
+// ── MODE TOGGLE ─────────────────────────────────────────────
+let currentMode = 'flashcards';
+
+function setMode(mode) {
+  currentMode = mode;
+  document.getElementById('modeFlashcards').classList.toggle('active', mode === 'flashcards');
+  document.getElementById('modeNotes').classList.toggle('active', mode === 'notes');
+  document.getElementById('flashcardView').classList.toggle('hidden', mode === 'notes');
+  document.getElementById('notesView').classList.toggle('visible', mode === 'notes');
+  if (mode === 'notes') renderNotes(currentTopic);
+}
+
+function selectTopic(idx) {
+  currentTopic = idx;
+  document.querySelectorAll('.topic-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+  if (currentMode === 'notes') {
+    renderNotes(idx);
+  } else {
+    loadTopic(idx);
+  }
+}
+
+// ── REVISION NOTES DATA ──────────────────────────────────────
+const notesData = [
+
+  // ── TOPIC 0: MEDIEVAL ENGLAND ──────────────────────────────
+  {
+    title: "⚔️ Medieval England",
+    intro: "This topic covers England from the Norman Conquest in 1066 through to the late medieval period. You need to know the key causes and events of 1066, how the feudal system worked, the power of the Church, and major turning points like the Magna Carta, Black Death and Peasants' Revolt.",
+    sections: [
+      {
+        title: "The Norman Conquest (1066)",
+        colour: "hdr-brown",
+        html: `
+          <div class="callout"><strong>Key date</strong>14 October 1066 — Battle of Hastings. Harold is defeated; William becomes King of England.</div>
+          <h4>Background</h4>
+          <ul>
+            <li>King Edward the Confessor died in January 1066 with no clear heir.</li>
+            <li>Three claimants: <strong>Harold Godwinson</strong> (chosen by the Witan), <strong>Harald Hardrada</strong> (Norway), and <strong>William of Normandy</strong>.</li>
+            <li>Harold defeated Hardrada at Stamford Bridge (25 Sept 1066), then marched south to face William.</li>
+          </ul>
+          <h4>Why William Won at Hastings</h4>
+          <ul>
+            <li>Harold's army was exhausted after the forced march from the north.</li>
+            <li>William had trained cavalry and archers; Harold's forces were mainly infantry.</li>
+            <li>The Normans feigned retreat, breaking the English shield wall.</li>
+          </ul>
+          <div class="callout teal"><strong>Impact</strong>William introduced a new ruling class, French language and culture, and a stronger feudal system to England.</div>
+        `
+      },
+      {
+        title: "The Feudal System",
+        colour: "hdr-blue",
+        html: `
+          <table class="notes-table">
+            <tr><th>Level</th><th>Who</th><th>Role</th></tr>
+            <tr><td><strong>Top</strong></td><td>King</td><td>Owned all land; granted it in exchange for loyalty and military service</td></tr>
+            <tr><td></td><td>Barons / Lords</td><td>Held large estates; provided knights and paid taxes to the king</td></tr>
+            <tr><td></td><td>Knights</td><td>Fought for lords in exchange for smaller land grants (manors)</td></tr>
+            <tr><td><strong>Bottom</strong></td><td>Peasants / Serfs</td><td>Farmed the land; tied to the lord's manor; paid in labour and produce</td></tr>
+          </table>
+          <div class="callout"><strong>Key term — villeins/serfs</strong>Peasants who were legally bound to the land. They could not leave, marry or sell possessions without the lord's permission.</div>
+        `
+      },
+      {
+        title: "The Power of the Church",
+        colour: "hdr-indigo",
+        html: `
+          <ul>
+            <li>The <strong>Catholic Church</strong> was the dominant institution in medieval life — everyone from king to peasant was expected to follow its teachings.</li>
+            <li>It ran <strong>schools, hospitals and courts</strong> (canon law operated separately from royal law).</li>
+            <li>People paid a <strong>tithe</strong> (10% of income) to the Church every year.</li>
+            <li>The <strong>Pope</strong> in Rome had spiritual authority over all Christian rulers.</li>
+          </ul>
+          <h4>Thomas Becket (1118–1170)</h4>
+          <ul>
+            <li>Archbishop of Canterbury and close friend of <strong>King Henry II</strong>.</li>
+            <li>Clashed with Henry over whether churchmen should be tried in royal or church courts.</li>
+            <li>Murdered in Canterbury Cathedral by four of Henry's knights (1170).</li>
+            <li>Declared a <strong>saint</strong> in 1173 — Canterbury became England's most important pilgrimage site.</li>
+          </ul>
+        `
+      },
+      {
+        title: "Magna Carta and Medieval Government",
+        colour: "hdr-teal",
+        html: `
+          <div class="callout"><strong>1215 — Magna Carta</strong>King John was forced by rebellious barons to sign this 'Great Charter'. It established that even the king must obey the law.</div>
+          <ul>
+            <li>Limited royal power over taxation without consent.</li>
+            <li>Established right to a fair trial (<em>habeas corpus</em>).</li>
+            <li>Considered a foundational document for modern democracy and human rights.</li>
+          </ul>
+          <h4>Parliament</h4>
+          <ul>
+            <li>Simon de Montfort called the first elected Parliament in 1265, including knights and burgesses.</li>
+            <li>By the late medieval period, Parliament had to approve new taxes — a significant check on royal power.</li>
+          </ul>
+        `
+      },
+      {
+        title: "The Black Death and Peasants' Revolt",
+        colour: "hdr-red",
+        html: `
+          <h4>The Black Death (1348–49)</h4>
+          <ul>
+            <li>Bubonic plague spread from Asia via trade routes, arriving in England in summer 1348.</li>
+            <li>Spread by fleas on black rats; symptoms included swollen lymph nodes (buboes), fever and death within days.</li>
+            <li>Killed approximately <strong>1 in 3 people</strong> in England (~2 million dead).</li>
+          </ul>
+          <h4>Consequences</h4>
+          <ul>
+            <li><strong>Labour shortage</strong> — peasants could demand higher wages and better conditions.</li>
+            <li>The <strong>feudal system weakened</strong> as lords competed for workers.</li>
+            <li>The Church's authority was questioned — prayers had not stopped the plague.</li>
+          </ul>
+          <h4>Peasants' Revolt (1381)</h4>
+          <ul>
+            <li>Triggered by a new, unpopular <strong>poll tax</strong> (flat tax on every person).</li>
+            <li>Led by <strong>Wat Tyler</strong> and preacher <strong>John Ball</strong> in Kent and Essex.</li>
+            <li>Rebels marched on London; the young <strong>Richard II</strong> met them and promised reforms.</li>
+            <li>Wat Tyler was killed; the

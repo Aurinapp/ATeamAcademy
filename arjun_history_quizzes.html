@@ -1,0 +1,1684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arjun's History — Quizzes & Test</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --blue: #1565c0;
+    --blue2: #1976d2;
+    --teal: #0097a7;
+    --teal2: #00bcd4;
+    --light: #f0f7ff;
+    --dark: #0a1f3c;
+    --dark2: #0d2b4e;
+    --surface: #ffffff;
+    --correct: #4caf50;
+    --incorrect: #f44336;
+    --warn: #ff9800;
+    --neutral: #9e9e9e;
+    --text-dark: #0a1f3c;
+    --text-muted: #5a7a96;
+    --border: #cde4f5;
+  }
+
+  body {
+    font-family: 'Lexend', 'Segoe UI', system-ui, sans-serif;
+    background: var(--light);
+    color: var(--text-dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  
+  line-height: 1.7;
+
+  word-spacing: 0.05em;
+
+  font-size: 1rem;
+}
+
+  header {
+    background: linear-gradient(135deg, var(--blue), var(--teal));
+    color: white;
+    padding: 16px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 3px 12px rgba(21,101,192,0.3);
+    flex-shrink: 0;
+  }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .back-btn {
+    background: rgba(255,255,255,0.2);
+    border: none; color: white; border-radius: 8px;
+    padding: 6px 12px; font-size: 0.85rem; cursor: pointer;
+    transition: background 0.2s; text-decoration: none;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .back-btn:hover { background: rgba(255,255,255,0.3); }
+  header h1 { font-size: 1.35rem; font-weight: 700; }
+  header h1 span { opacity: 0.75; font-weight: 400; font-size: 1rem; margin-left: 8px; }
+  .header-badge { background: rgba(255,255,255,0.2); border-radius: 20px; padding: 6px 14px; font-size: 0.82rem; font-weight: 600; }
+
+  .app { display: flex; flex: 1; overflow: hidden; height: calc(100vh - 64px); }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 270px; min-width: 270px;
+    background: var(--dark); color: white;
+    overflow-y: auto; padding: 16px 0 24px;
+    display: flex; flex-direction: column;
+  }
+  .sidebar-section-label { padding: 10px 18px 6px; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.35); }
+  .topic-group { margin-bottom: 4px; }
+  .topic-header-btn {
+    display: flex; align-items: center; gap: 9px;
+    width: 100%; padding: 10px 18px;
+    background: none; border: none; color: rgba(255,255,255,0.85);
+    text-align: left; cursor: pointer; font-size: 0.88rem; font-weight: 700;
+    transition: background 0.15s;
+  }
+  .topic-header-btn:hover { background: rgba(255,255,255,0.06); }
+  .topic-icon { font-size: 1.05rem; width: 22px; text-align: center; flex-shrink: 0; }
+  .topic-chevron { margin-left: auto; font-size: 0.7rem; opacity: 0.4; transition: transform 0.2s; }
+  .topic-group.open .topic-chevron { transform: rotate(90deg); }
+  .quiz-list { display: none; }
+  .topic-group.open .quiz-list { display: block; }
+  .quiz-btn {
+    display: flex; align-items: center; gap: 8px;
+    width: 100%; padding: 8px 18px 8px 44px;
+    background: none; border: none; border-left: 3px solid transparent;
+    color: rgba(255,255,255,0.6); text-align: left; cursor: pointer;
+    font-size: 0.84rem; transition: all 0.15s;
+  }
+  .quiz-btn:hover { background: rgba(255,255,255,0.05); color: white; }
+  .quiz-btn.active { background: rgba(0,188,212,0.15); color: white; border-left-color: var(--teal2); font-weight: 600; }
+  .quiz-status { margin-left: auto; font-size: 0.72rem; padding: 2px 7px; border-radius: 10px; background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.4); }
+  .quiz-status.done { background: rgba(76,175,80,0.2); color: #81c784; }
+  .sidebar-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 12px 18px; }
+  .test-btn {
+    display: flex; align-items: center; gap: 9px;
+    width: 100%; padding: 11px 18px;
+    background: none; border: none; border-left: 3px solid transparent;
+    color: rgba(255,255,255,0.75); text-align: left; cursor: pointer;
+    font-size: 0.88rem; font-weight: 600; transition: all 0.15s;
+  }
+  .test-btn:hover { background: rgba(255,255,255,0.06); color: white; }
+  .test-btn.active { background: rgba(0,188,212,0.15); color: white; border-left-color: var(--teal2); }
+  .score-summary { padding: 14px 18px; }
+  .score-summary-title { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 1.2px; color: rgba(255,255,255,0.3); margin-bottom: 8px; }
+  .score-row { display: flex; justify-content: space-between; font-size: 0.8rem; padding: 4px 0; color: rgba(255,255,255,0.6); border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .score-row .sc { font-weight: 700; color: var(--teal2); }
+
+  /* MAIN */
+  main {
+    flex: 1; overflow-y: auto; padding: 28px 32px;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .screen { display: none; width: 100%; max-width: 780px; animation: fadeIn 0.2s ease; }
+  .screen.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* HOME */
+  .home-hero {
+    background: linear-gradient(135deg, var(--blue), var(--teal));
+    border-radius: 18px; padding: 36px 32px; color: white;
+    margin-bottom: 28px; position: relative; overflow: hidden;
+  }
+  .home-hero::before { content: '🏛️'; position: absolute; right: 24px; top: 50%; transform: translateY(-50%); font-size: 4rem; opacity: 0.15; }
+  .home-hero h2 { font-size: 1.7rem; font-weight: 800; margin-bottom: 8px; }
+  .home-hero p { opacity: 0.85; font-size: 0.95rem; line-height: 1.5; max-width: 460px; }
+  .topic-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 20px; }
+  .topic-card {
+    background: white; border-radius: 14px; padding: 20px;
+    box-shadow: 0 2px 12px rgba(21,101,192,0.08);
+    border: 1px solid var(--border); cursor: pointer; transition: all 0.2s;
+  }
+  .topic-card:hover { transform: translateY(-3px); box-shadow: 0 6px 24px rgba(21,101,192,0.16); }
+  .topic-card-icon { font-size: 1.8rem; margin-bottom: 10px; }
+  .topic-card h3 { font-size: 0.95rem; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+  .topic-card p { font-size: 0.8rem; color: var(--text-muted); }
+  .topic-card .quiz-count { font-size: 0.75rem; font-weight: 600; color: var(--blue); margin-top: 10px; }
+  .test-card {
+    background: linear-gradient(135deg, var(--teal), var(--teal2));
+    border-radius: 14px; padding: 20px 24px; color: white; cursor: pointer;
+    display: flex; align-items: center; gap: 20px;
+    box-shadow: 0 3px 16px rgba(0,150,170,0.25); transition: all 0.2s;
+  }
+  .test-card:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,150,170,0.35); }
+  .test-card-icon { font-size: 2rem; }
+  .test-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 4px; }
+  .test-card p { font-size: 0.85rem; opacity: 0.85; }
+
+  /* QUIZ SCREEN */
+  .quiz-header { margin-bottom: 24px; }
+  .quiz-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+  .quiz-tag { font-size: 0.75rem; font-weight: 600; padding: 3px 10px; border-radius: 20px; background: rgba(21,101,192,0.12); color: var(--blue); }
+  .quiz-tag.t2 { background: rgba(0,151,167,0.12); color: var(--teal); }
+  .quiz-tag.t3 { background: rgba(0,188,212,0.12); color: #007c8a; }
+  .quiz-header h2 { font-size: 1.4rem; font-weight: 800; color: var(--dark); }
+  .quiz-header p { color: var(--text-muted); font-size: 0.88rem; margin-top: 4px; }
+
+  /* PROGRESS */
+  .progress-row { display: flex; align-items: center; gap: 10px; margin-bottom: 22px; }
+  .progress-bar-bg { flex: 1; height: 7px; background: var(--border); border-radius: 4px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--blue), var(--teal2)); border-radius: 4px; transition: width 0.3s ease; }
+  .progress-label { font-size: 0.82rem; color: var(--text-muted); white-space: nowrap; }
+
+  /* QUESTION CARD */
+  .question-card {
+    background: white; border-radius: 16px; padding: 28px 28px 24px;
+    box-shadow: 0 2px 16px rgba(21,101,192,0.09);
+    border: 1px solid var(--border); margin-bottom: 16px;
+  }
+  .q-number { font-size: 0.75rem; font-weight: 600; color: var(--blue); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px; }
+  .q-text { font-size: 1.05rem; font-weight: 600; color: var(--dark); line-height: 1.55; margin-bottom: 22px; }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option-btn {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 13px 16px; border-radius: 10px; border: 2px solid var(--border);
+    background: #f5fbff; cursor: pointer; text-align: left;
+    font-size: 0.93rem; color: var(--text-dark); transition: all 0.15s; line-height: 1.45;
+  }
+  .option-btn:hover:not(:disabled) { border-color: var(--blue); background: #e3f2fd; }
+  .option-btn .opt-letter { font-weight: 700; color: var(--blue); min-width: 20px; flex-shrink: 0; padding-top: 1px; }
+  .option-btn.correct { border-color: var(--correct); background: #e8f5e9; color: #2e7d32; }
+  .option-btn.correct .opt-letter { color: var(--correct); }
+  .option-btn.incorrect { border-color: var(--incorrect); background: #ffebee; color: #c62828; }
+  .option-btn.incorrect .opt-letter { color: var(--incorrect); }
+  .option-btn.revealed { border-color: var(--correct); background: #e8f5e9; color: #2e7d32; }
+  .option-btn:disabled { cursor: default; }
+
+  /* T/F */
+  .tf-row { display: flex; gap: 12px; margin-top: 4px; }
+  .tf-btn {
+    flex: 1; padding: 14px; border-radius: 10px; border: 2px solid var(--border);
+    background: #f5fbff; cursor: pointer; font-size: 1rem; font-weight: 700;
+    transition: all 0.15s; color: var(--text-dark);
+  }
+  .tf-btn:hover:not(:disabled) { border-color: var(--blue); background: #e3f2fd; }
+  .tf-btn.true-btn:hover:not(:disabled) { border-color: var(--correct); background: #e8f5e9; }
+  .tf-btn.false-btn:hover:not(:disabled) { border-color: var(--incorrect); background: #ffebee; }
+  .tf-btn.correct { border-color: var(--correct); background: #e8f5e9; color: #2e7d32; }
+  .tf-btn.incorrect { border-color: var(--incorrect); background: #ffebee; color: #c62828; }
+  .tf-btn.revealed { border-color: var(--correct); background: #e8f5e9; color: #2e7d32; }
+  .tf-btn:disabled { cursor: default; }
+
+  /* FEEDBACK */
+  .feedback-box {
+    padding: 12px 16px; border-radius: 10px; font-size: 0.88rem;
+    line-height: 1.5; margin-top: 14px; display: none;
+  }
+  .feedback-box.correct { background: #e8f5e9; color: #2e7d32; border-left: 3px solid var(--correct); }
+  .feedback-box.incorrect { background: #ffebee; color: #c62828; border-left: 3px solid var(--incorrect); }
+  .feedback-box.show { display: block; }
+  .feedback-box strong { display: block; margin-bottom: 3px; }
+
+  /* NAV */
+  .quiz-nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 4px; }
+  .nav-btn {
+    padding: 11px 22px; border-radius: 10px; border: 2px solid var(--border);
+    background: white; color: var(--dark); font-size: 0.9rem; font-weight: 600;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .nav-btn:hover { border-color: var(--blue); color: var(--blue); }
+  .nav-btn.primary { background: linear-gradient(135deg, var(--blue), var(--teal)); color: white; border: none; }
+  .nav-btn.primary:hover { opacity: 0.9; }
+  .nav-btn:disabled { opacity: 0.4; cursor: default; }
+
+  /* RESULTS */
+  .result-hero {
+    text-align: center; background: white; border-radius: 18px;
+    padding: 36px 28px; box-shadow: 0 2px 20px rgba(21,101,192,0.1);
+    border: 1px solid var(--border); margin-bottom: 24px;
+  }
+  .result-emoji { font-size: 3.5rem; margin-bottom: 14px; }
+  .result-score-big {
+    font-size: 3.2rem; font-weight: 800;
+    background: linear-gradient(135deg, var(--blue), var(--teal2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; line-height: 1.1; margin-bottom: 6px;
+  }
+  .result-label { font-size: 1rem; color: var(--text-muted); margin-bottom: 16px; }
+  .result-message { font-size: 0.95rem; color: var(--dark); font-weight: 500; margin-bottom: 20px; }
+  .result-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .result-btn {
+    padding: 11px 22px; border-radius: 10px; font-size: 0.9rem; font-weight: 600;
+    cursor: pointer; transition: all 0.15s; border: 2px solid var(--border);
+    background: white; color: var(--dark);
+  }
+  .result-btn.primary { background: linear-gradient(135deg, var(--blue), var(--teal)); color: white; border: none; }
+  .result-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+
+  /* REVIEW */
+  .review-list { display: flex; flex-direction: column; gap: 12px; }
+  .review-item { background: white; border-radius: 12px; padding: 16px 18px; border: 1px solid var(--border); font-size: 0.88rem; }
+  .review-item.correct { border-left: 4px solid var(--correct); }
+  .review-item.incorrect { border-left: 4px solid var(--incorrect); }
+  .review-q { font-weight: 600; color: var(--dark); margin-bottom: 6px; }
+  .review-answer { color: var(--text-muted); }
+  .review-answer .your { display: block; }
+  .review-answer .model { color: #2e7d32; font-weight: 600; display: block; margin-top: 2px; }
+
+  /* TEST */
+  .test-header { margin-bottom: 24px; }
+  .test-header h2 { font-size: 1.4rem; font-weight: 800; color: var(--dark); margin-bottom: 6px; }
+  .test-header p { font-size: 0.88rem; color: var(--text-muted); }
+  .test-section-title {
+    font-size: 0.8rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1px; color: var(--blue); padding: 6px 0;
+    margin: 20px 0 14px; border-bottom: 2px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .test-section-title span { font-weight: 400; color: var(--text-muted); font-size: 0.75rem; letter-spacing: 0; text-transform: none; }
+  .test-q-card {
+    background: white; border-radius: 12px; padding: 20px 22px;
+    border: 1px solid var(--border); margin-bottom: 12px;
+    box-shadow: 0 1px 8px rgba(21,101,192,0.06);
+  }
+  .test-q-num { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--blue); margin-bottom: 8px; }
+  .test-q-text { font-size: 0.96rem; font-weight: 600; color: var(--dark); line-height: 1.5; margin-bottom: 14px; }
+  .test-options { display: flex; flex-direction: column; gap: 8px; }
+  .test-option-btn {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 14px; border-radius: 9px; border: 2px solid var(--border);
+    background: #f5fbff; cursor: pointer; text-align: left;
+    font-size: 0.88rem; color: var(--text-dark); transition: all 0.12s; line-height: 1.4;
+  }
+  .test-option-btn:hover:not(:disabled) { border-color: var(--blue); background: #e3f2fd; }
+  .test-option-btn .opt-letter { font-weight: 700; color: var(--blue); min-width: 18px; flex-shrink: 0; }
+  .test-option-btn.selected { border-color: var(--blue); background: #dceefa; }
+  .test-option-btn.correct { border-color: var(--correct); background: #e8f5e9; color: #2e7d32; }
+  .test-option-btn.correct .opt-letter { color: var(--correct); }
+  .test-option-btn.incorrect { border-color: var(--incorrect); background: #ffebee; color: #c62828; }
+  .test-option-btn.revealed { border-color: var(--correct); background: #e8f5e9; color: #2e7d32; }
+  .test-option-btn:disabled { cursor: default; }
+
+  .test-tf-row { display: flex; gap: 10px; }
+  .test-tf-btn {
+    flex: 1; padding: 11px; border-radius: 9px; border: 2px solid var(--border);
+    background: #f5fbff; cursor: pointer; font-size: 0.9rem; font-weight: 700;
+    transition: all 0.12s; color: var(--text-dark);
+  }
+  .test-tf-btn:hover:not(:disabled) { border-color: var(--blue); background: #e3f2fd; }
+  .test-tf-btn.selected { border-color: var(--blue); background: #dceefa; }
+  .test-tf-btn.correct { border-color: var(--correct); background: #e8f5e9; color: #2e7d32; }
+  .test-tf-btn.incorrect { border-color: var(--incorrect); background: #ffebee; color: #c62828; }
+  .test-tf-btn.revealed { border-color: var(--correct); background: #e8f5e9; color: #2e7d32; }
+  .test-tf-btn:disabled { cursor: default; }
+
+  .test-textarea {
+    width: 100%; border: 2px solid var(--border); border-radius: 9px;
+    padding: 12px 14px; font-size: 0.88rem; font-family: inherit;
+    color: var(--text-dark); background: #f5fbff; resize: vertical;
+    min-height: 90px; transition: border-color 0.15s; line-height: 1.5;
+  }
+  .test-textarea:focus { outline: none; border-color: var(--blue); background: white; }
+  .test-textarea.large { min-height: 160px; }
+  .model-answer-box {
+    margin-top: 10px; padding: 12px 14px; background: #e8f5e9;
+    border-radius: 9px; border-left: 3px solid var(--correct);
+    font-size: 0.86rem; color: #2e7d32; line-height: 1.55; display: none;
+  }
+  .model-answer-box.show { display: block; }
+  .model-answer-box strong { display: block; margin-bottom: 4px; color: #1b5e20; }
+  .mark-scheme-box {
+    margin-top: 10px; padding: 14px 16px; background: #fff8e1;
+    border-radius: 9px; border-left: 3px solid var(--warn);
+    font-size: 0.86rem; color: #5f4000; line-height: 1.6; display: none;
+  }
+  .mark-scheme-box.show { display: block; }
+  .mark-scheme-box strong { display: block; margin-bottom: 4px; color: #5f4000; }
+  .reveal-btn {
+    margin-top: 10px; padding: 8px 16px; background: #e3f2fd;
+    border: 1px solid var(--blue); border-radius: 8px; color: var(--blue);
+    font-size: 0.84rem; font-weight: 600; cursor: pointer; transition: all 0.15s;
+  }
+  .reveal-btn:hover { background: #c8e4f8; }
+
+  .test-submit-row {
+    display: flex; justify-content: center; gap: 14px;
+    margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--border);
+  }
+  .submit-btn {
+    padding: 13px 36px; border-radius: 12px; font-size: 0.95rem; font-weight: 700;
+    cursor: pointer; transition: all 0.15s; border: none;
+    background: linear-gradient(135deg, var(--teal), var(--teal2));
+    color: white; box-shadow: 0 3px 14px rgba(0,150,170,0.3);
+  }
+  .submit-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+  /* TEST RESULTS */
+  .test-result-hero {
+    text-align: center; background: white; border-radius: 18px;
+    padding: 36px 28px; box-shadow: 0 2px 20px rgba(0,150,170,0.12);
+    border: 1px solid #b2ebf2; margin-bottom: 24px;
+  }
+  .test-score-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 20px 0; }
+  .test-score-cell { background: #e3f2fd; border-radius: 10px; padding: 14px; text-align: center; }
+  .test-score-cell .num { font-size: 1.6rem; font-weight: 800; color: var(--blue); }
+  .test-score-cell .lbl { font-size: 0.78rem; color: var(--text-muted); }
+  .test-score-cell.teal { background: #e0f7fa; }
+  .test-score-cell.teal .num { color: var(--teal); }
+
+  @media (max-width: 720px) {
+    .topic-cards { grid-template-columns: 1fr; }
+    main { padding: 20px 16px; }
+    .sidebar { width: 220px; min-width: 220px; }
+  }
+  @media (max-width: 540px) {
+    .app { flex-direction: column; height: auto; }
+    .sidebar { width: 100%; min-width: unset; max-height: 200px; }
+    .quiz-btn { padding-left: 30px; }
+  }
+
+
+  /* ── A11Y TOOLBAR ── */
+  #a11y-toolbar{position:fixed!important;bottom:24px!important;right:24px!important;z-index:2147483647!important;font-family:'Lexend','Segoe UI',sans-serif;}
+  #a11y-fab{width:50px;height:50px;border-radius:50%;background:#1565c0;border:none;color:#fff;font-size:1.3rem;cursor:pointer;box-shadow:0 4px 18px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;transition:transform .2s,background .2s;}
+  #a11y-fab:hover{background:#0d47a1;transform:scale(1.07);}
+  #a11y-fab.open{background:#0d47a1;}
+  #a11y-panel{position:absolute;bottom:62px;right:0;background:#fff;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.2);padding:16px;width:260px;border:1px solid rgba(0,0,0,.07);}
+  #a11y-panel[hidden]{display:none!important;}
+  .a11y-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#888;margin-bottom:12px;}
+  .a11y-action-btn{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border-radius:10px;background:#f0f7ff;border:1.5px solid #cde4f5;color:#1565c0;font-size:.9rem;font-weight:600;cursor:pointer;font-family:inherit;}
+  .a11y-action-btn.a11y-stop{background:#fee2e2;border-color:#fca5a5;color:#dc2626;}
+  .a11y-divider{height:1px;background:#e5e7eb;margin:12px 0;}
+  .a11y-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+  .a11y-col-row{flex-direction:column;align-items:flex-start;gap:8px;margin-bottom:4px;}
+  .a11y-label{font-size:.85rem;color:#222;font-weight:500;}
+  .a11y-pill{padding:4px 14px;border-radius:20px;border:2px solid #d1d5db;background:#f3f4f6;color:#6b7280;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;}
+  .a11y-pill.on{background:#1565c0;border-color:#1565c0;color:#fff;}
+  #a11y-colours{display:flex;gap:7px;flex-wrap:wrap;}
+  .a11y-col-chip{width:28px;height:28px;border-radius:50%;border:2.5px solid #d1d5db;cursor:pointer;font-size:.65rem;display:flex;align-items:center;justify-content:center;background:#e5e7eb;}
+  .a11y-col-chip.sel{border-color:#1565c0;border-width:3px;}
+  #a11y-overlay{position:fixed!important;inset:0;pointer-events:none;z-index:2147483646!important;transition:background .35s;}
+  b.bionic-b{font-weight:800;}
+  .a11y-stepper{display:flex;gap:4px;}
+  .a11y-step-btn{width:32px;height:28px;border-radius:8px;border:2px solid #d1d5db;background:#f3f4f6;color:#6b7280;font-size:.82rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;transition:background .15s,border-color .15s;}
+  .a11y-step-btn.on{background:#1565c0;border-color:#1565c0;color:#fff;}
+  #a11y-ruler-line{position:fixed!important;left:0;right:0;height:34px;pointer-events:none;z-index:2147483645!important;background:rgba(21,101,192,.1);border-top:2px solid rgba(21,101,192,.35);border-bottom:2px solid rgba(21,101,192,.35);display:none;top:0;}
+  body.ruler-on #a11y-ruler-line{display:block;}
+  body.opendyslexic,body.opendyslexic *{font-family:'OpenDyslexic','Lexend','Segoe UI',sans-serif!important;}
+
+</style>
+</head>
+<body>
+<div id="a11y-toolbar"><button id="a11y-fab" title="Accessibility tools" aria-label="Accessibility tools">&#9681;</button><div id="a11y-panel" hidden><div class="a11y-title">Accessibility</div><button id="a11y-tts" class="a11y-action-btn"><span id="a11y-tts-icon">&#128266;</span><span id="a11y-tts-label"> Read aloud</span></button><div class="a11y-divider"></div><div class="a11y-row"><span class="a11y-label">Bionic reading</span><button id="a11y-bionic" class="a11y-pill">Off</button></div><div class="a11y-row"><span class="a11y-label">OpenDyslexic font</span><button id="a11y-od" class="a11y-pill">Off</button></div><div class="a11y-row"><span class="a11y-label">Reading ruler</span><button id="a11y-ruler-btn" class="a11y-pill">Off</button></div><div class="a11y-divider"></div><div class="a11y-row"><span class="a11y-label">Text size</span><div class="a11y-stepper"><button class="a11y-step-btn on" id="a11y-sz1" title="Normal">A</button><button class="a11y-step-btn" id="a11y-sz2" title="Large">A+</button><button class="a11y-step-btn" id="a11y-sz3" title="XL">A++</button></div></div><div class="a11y-row"><span class="a11y-label">Line spacing</span><div class="a11y-stepper"><button class="a11y-step-btn on" id="a11y-ls1" title="Normal">1&#215;</button><button class="a11y-step-btn" id="a11y-ls2" title="Relaxed">1.5&#215;</button><button class="a11y-step-btn" id="a11y-ls3" title="Wide">2&#215;</button></div></div><div class="a11y-divider"></div><div class="a11y-row a11y-col-row"><span class="a11y-label">Colour overlay</span><div id="a11y-colours"><button class="a11y-col-chip sel" data-col="none" title="None">&#x2715;</button><button class="a11y-col-chip" data-col="cream" style="background:#fdf6e3" title="Cream"></button><button class="a11y-col-chip" data-col="yellow" style="background:#fff9c4" title="Yellow"></button><button class="a11y-col-chip" data-col="blue" style="background:#dbeafe" title="Blue"></button><button class="a11y-col-chip" data-col="green" style="background:#dcfce7" title="Green"></button><button class="a11y-col-chip" data-col="peach" style="background:#fce7f3" title="Peach"></button></div></div></div></div><div id="a11y-overlay"></div><div id="a11y-ruler-line"></div>
+
+
+<header>
+  <div class="header-left">
+    <a class="back-btn" href="index.html">← Home</a>
+    <h1>History <span>Quizzes &amp; Test</span></h1>
+  </div>
+  <div class="header-badge">Arjun · Year 8</div>
+</header>
+
+<div class="app">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-section-label">Topics &amp; Quizzes</div>
+
+    <div class="topic-group open" id="tg0">
+      <button class="topic-header-btn" onclick="toggleTopic(0)">
+        <span class="topic-icon">⚔️</span>
+        <span>Medieval England</span>
+        <span class="topic-chevron">▶</span>
+      </button>
+      <div class="quiz-list">
+        <button class="quiz-btn active" onclick="loadQuiz(0,0)" id="qbtn-0-0">
+          Quiz 1: Conquest &amp; Feudalism <span class="quiz-status" id="qs-0-0">10 Q</span>
+        </button>
+        <button class="quiz-btn" onclick="loadQuiz(0,1)" id="qbtn-0-1">
+          Quiz 2: Church &amp; Government <span class="quiz-status" id="qs-0-1">10 Q</span>
+        </button>
+        <button class="quiz-btn" onclick="loadQuiz(0,2)" id="qbtn-0-2">
+          Quiz 3: Black Death &amp; Revolt <span class="quiz-status" id="qs-0-2">10 Q</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="topic-group" id="tg1">
+      <button class="topic-header-btn" onclick="toggleTopic(1)">
+        <span class="topic-icon">🏭</span>
+        <span>Industrial Revolution</span>
+        <span class="topic-chevron">▶</span>
+      </button>
+      <div class="quiz-list">
+        <button class="quiz-btn" onclick="loadQuiz(1,0)" id="qbtn-1-0">
+          Quiz 1: Causes &amp; Inventions <span class="quiz-status" id="qs-1-0">10 Q</span>
+        </button>
+        <button class="quiz-btn" onclick="loadQuiz(1,1)" id="qbtn-1-1">
+          Quiz 2: Living &amp; Working <span class="quiz-status" id="qs-1-1">10 Q</span>
+        </button>
+        <button class="quiz-btn" onclick="loadQuiz(1,2)" id="qbtn-1-2">
+          Quiz 3: Reform &amp; Railways <span class="quiz-status" id="qs-1-2">10 Q</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="topic-group" id="tg2">
+      <button class="topic-header-btn" onclick="toggleTopic(2)">
+        <span class="topic-icon">🌍</span>
+        <span>World War I</span>
+        <span class="topic-chevron">▶</span>
+      </button>
+      <div class="quiz-list">
+        <button class="quiz-btn" onclick="loadQuiz(2,0)" id="qbtn-2-0">
+          Quiz 1: Causes of WWI <span class="quiz-status" id="qs-2-0">10 Q</span>
+        </button>
+        <button class="quiz-btn" onclick="loadQuiz(2,1)" id="qbtn-2-1">
+          Quiz 2: Trenches &amp; Battles <span class="quiz-status" id="qs-2-1">10 Q</span>
+        </button>
+        <button class="quiz-btn" onclick="loadQuiz(2,2)" id="qbtn-2-2">
+          Quiz 3: Home Front &amp; Peace <span class="quiz-status" id="qs-2-2">10 Q</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="topic-group" id="tg3">
+      <button class="topic-header-btn" onclick="toggleTopic(3)">
+        <span class="topic-icon">✈️</span>
+        <span>World War II</span>
+        <span class="topic-chevron">▶</span>
+      </button>
+      <div class="quiz-list">
+        <button class="quiz-btn" onclick="loadQuiz(3,0)" id="qbtn-3-0">
+          Quiz 1: Hitler &amp; Outbreak <span class="quiz-status" id="qs-3-0">10 Q</span>
+        </button>
+        <button class="quiz-btn" onclick="loadQuiz(3,1)" id="qbtn-3-1">
+          Quiz 2: Blitz &amp; Key Battles <span class="quiz-status" id="qs-3-1">10 Q</span>
+        </button>
+        <button class="quiz-btn" onclick="loadQuiz(3,2)" id="qbtn-3-2">
+          Quiz 3: Holocaust &amp; Legacy <span class="quiz-status" id="qs-3-2">10 Q</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="topic-group" id="tg4">
+      <button class="topic-header-btn" onclick="toggleTopic(4)">
+        <span class="topic-icon">✝️</span>
+        <span>British Reformation</span>
+        <span class="topic-chevron">▶</span>
+      </button>
+      <div class="quiz-list">
+        <button class="quiz-btn" onclick="loadQuiz(4,0)" id="qbtn-4-0">
+          Quiz 1: Henry VIII &amp; Break <span class="quiz-status" id="qs-4-0">10 Q</span>
+        </button>
+        <button class="quiz-btn" onclick="loadQuiz(4,1)" id="qbtn-4-1">
+          Quiz 2: Tudor Changes <span class="quiz-status" id="qs-4-1">10 Q</span>
+        </button>
+        <button class="quiz-btn" onclick="loadQuiz(4,2)" id="qbtn-4-2">
+          Quiz 3: Elizabeth's Settlement <span class="quiz-status" id="qs-4-2">10 Q</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="topic-group" id="tg5">
+      <button class="topic-header-btn" onclick="toggleTopic(5)">
+        <span class="topic-icon">🥐</span>
+        <span>French Revolution</span>
+        <span class="topic-chevron">▶</span>
+      </button>
+      <div class="quiz-list">
+        <button class="quiz-btn" onclick="loadQuiz(5,0)" id="qbtn-5-0">
+          Quiz 1: Causes &amp; 1789 <span class="quiz-status" id="qs-5-0">10 Q</span>
+        </button>
+        <button class="quiz-btn" onclick="loadQuiz(5,1)" id="qbtn-5-1">
+          Quiz 2: Reign of Terror <span class="quiz-status" id="qs-5-1">10 Q</span>
+        </button>
+        <button class="quiz-btn" onclick="loadQuiz(5,2)" id="qbtn-5-2">
+          Quiz 3: Napoleon &amp; Legacy <span class="quiz-status" id="qs-5-2">10 Q</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="topic-group" id="tg6">
+      <button class="topic-header-btn" onclick="toggleTopic(6)">
+        <span class="topic-icon">⚔️</span>
+        <span>English Civil War</span>
+        <span class="topic-chevron">▶</span>
+      </button>
+      <div class="quiz-list">
+        <button class="quiz-btn" onclick="loadQuiz(6,0)" id="qbtn-6-0">
+          Quiz 1: Causes &amp; Cavaliers <span class="quiz-status" id="qs-6-0">10 Q</span>
+        </button>
+        <button class="quiz-btn" onclick="loadQuiz(6,1)" id="qbtn-6-1">
+          Quiz 2: War &amp; Cromwell <span class="quiz-status" id="qs-6-1">10 Q</span>
+        </button>
+        <button class="quiz-btn" onclick="loadQuiz(6,2)" id="qbtn-6-2">
+          Quiz 3: Restoration &amp; Rights <span class="quiz-status" id="qs-6-2">10 Q</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="topic-group" id="tg7">
+      <button class="topic-header-btn" onclick="toggleTopic(7)">
+        <span class="topic-icon">🌍</span>
+        <span>Empire &amp; Slave Trade</span>
+        <span class="topic-chevron">▶</span>
+      </button>
+      <div class="quiz-list">
+        <button class="quiz-btn" onclick="loadQuiz(7,0)" id="qbtn-7-0">
+          Quiz 1: Triangular Trade <span class="quiz-status" id="qs-7-0">10 Q</span>
+        </button>
+        <button class="quiz-btn" onclick="loadQuiz(7,1)" id="qbtn-7-1">
+          Quiz 2: Life &amp; Resistance <span class="quiz-status" id="qs-7-1">10 Q</span>
+        </button>
+        <button class="quiz-btn" onclick="loadQuiz(7,2)" id="qbtn-7-2">
+          Quiz 3: Abolition &amp; Empire <span class="quiz-status" id="qs-7-2">10 Q</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section-label">Assessment</div>
+    <button class="test-btn" onclick="showTest()" id="test-nav-btn">
+      <span class="topic-icon">📋</span>
+      <span>Comprehensive Test</span>
+      <span class="quiz-status" id="qs-test" style="margin-left:auto">80 Q</span>
+    </button>
+
+    <div class="score-summary" id="score-summary" style="display:none">
+      <div class="score-summary-title">Your Scores</div>
+      <div id="score-summary-rows"></div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main>
+
+    <!-- HOME SCREEN -->
+    <div class="screen active" id="screen-home">
+      <div class="home-hero">
+        <h2>History Quizzes 🏛️</h2>
+        <p>Test your knowledge across all four History topics. Pick a quiz to practise, or jump straight to the comprehensive test!</p>
+      </div>
+      <div class="topic-cards">
+        <div class="topic-card" onclick="loadQuiz(0,0)">
+          <div class="topic-card-icon">⚔️</div>
+          <h3>Medieval England</h3>
+          <p>Norman Conquest, feudal system, the Church &amp; Black Death</p>
+          <div class="quiz-count">3 quizzes · 30 questions</div>
+        </div>
+        <div class="topic-card" onclick="loadQuiz(1,0)">
+          <div class="topic-card-icon">🏭</div>
+          <h3>Industrial Revolution</h3>
+          <p>Causes, inventions, living conditions &amp; reforms</p>
+          <div class="quiz-count">3 quizzes · 30 questions</div>
+        </div>
+        <div class="topic-card" onclick="loadQuiz(2,0)">
+          <div class="topic-card-icon">🌍</div>
+          <h3>World War I</h3>
+          <p>MAIN causes, trench warfare, key battles &amp; Versailles</p>
+          <div class="quiz-count">3 quizzes · 30 questions</div>
+        </div>
+        <div class="topic-card" onclick="loadQuiz(3,0)">
+          <div class="topic-card-icon">✈️</div>
+          <h3>World War II</h3>
+          <p>Hitler's rise, the Blitz, D-Day, Holocaust &amp; legacy</p>
+          <div class="quiz-count">3 quizzes · 30 questions</div>
+        </div>
+      </div>
+      <div class="test-card" onclick="showTest()">
+        <div class="test-card-icon">📋</div>
+        <div>
+          <h3>Comprehensive History Test</h3>
+          <p>40 questions covering all topics — mix of multiple choice, true/false &amp; written answers</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUIZ SCREEN -->
+    <div class="screen" id="screen-quiz">
+      <div class="quiz-header">
+        <div class="quiz-meta">
+          <span class="quiz-tag" id="quiz-topic-tag">Medieval England</span>
+          <span class="quiz-tag t2" id="quiz-name-tag">Quiz 1</span>
+        </div>
+        <h2 id="quiz-title">Quiz 1: Conquest &amp; Feudalism</h2>
+        <p id="quiz-desc">10 questions on the Norman Conquest and the feudal system</p>
+      </div>
+      <div class="progress-row">
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="quiz-progress" style="width:0%"></div></div>
+        <div class="progress-label" id="quiz-progress-label">0 / 10</div>
+      </div>
+      <div class="question-card">
+        <div class="q-number" id="q-num">Question 1 of 10</div>
+        <div class="q-text" id="q-text">Loading...</div>
+        <div id="q-options"></div>
+        <div class="feedback-box" id="q-feedback"></div>
+      </div>
+      <div class="quiz-nav">
+        <button class="nav-btn" onclick="showHome()">← Back</button>
+        <button class="nav-btn primary" id="quiz-next-btn" onclick="nextQuestion()" style="display:none">Next →</button>
+      </div>
+    </div>
+
+    <!-- QUIZ RESULTS SCREEN -->
+    <div class="screen" id="screen-result">
+      <div class="result-hero">
+        <div class="result-emoji" id="result-emoji">🎉</div>
+        <div class="result-score-big" id="result-score">0%</div>
+        <div class="result-label" id="result-fraction">0 / 10 correct</div>
+        <div class="result-message" id="result-msg">Well done!</div>
+        <!-- shown when score < 80% -->
+        <div id="quiz-retry-nudge" style="display:none;margin:20px 0 8px;text-align:center">
+          <p style="font-size:1.05rem;font-weight:700;color:#c62828;margin-bottom:14px">Looks like you need to do this again, bucko.</p>
+          <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+            <button class="result-btn primary" onclick="retryQuiz()">Take Test Again</button>
+            <button class="result-btn" onclick="showHome()">I Need to Study More</button>
+          </div>
+        </div>
+        <!-- shown when score >= 80% -->
+        <div id="quiz-pass-actions" class="result-actions">
+          <button class="result-btn" onclick="retryQuiz()">🔄 Try again</button>
+          <button class="result-btn primary" onclick="showHome()">← All quizzes</button>
+        </div>
+      </div>
+      <h3 style="margin-bottom:12px; font-size:1rem; color:var(--dark)">Review your answers</h3>
+      <div class="review-list" id="review-list"></div>
+    </div>
+
+    <!-- TEST SCREEN -->
+    <div class="screen" id="screen-test">
+      <div class="test-header">
+        <h2>📋 Comprehensive History Test</h2>
+        <p>40 questions across all topics. Answer as many as you can — written answers will show the model answer when you submit.</p>
+      </div>
+      <div id="test-body"></div>
+      <div class="test-submit-row">
+        <button class="submit-btn" onclick="submitTest()">Submit Test ✓</button>
+      </div>
+    </div>
+
+    <!-- TEST RESULTS SCREEN -->
+    <div class="screen" id="screen-test-result">
+      <div class="test-result-hero">
+        <div class="result-emoji" id="test-result-emoji">🎉</div>
+        <div class="result-score-big" id="test-result-score">0%</div>
+        <div class="result-label">Comprehensive History Test</div>
+        <div class="result-message" id="test-result-msg">Well done, Arjun!</div>
+        <div class="test-score-grid">
+          <div class="test-score-cell"><div class="num" id="tr-correct">0</div><div class="lbl">Correct (auto-marked)</div></div>
+          <div class="test-score-cell teal"><div class="num" id="tr-written">0</div><div class="lbl">Written questions</div></div>
+        </div>
+        <!-- shown when score < 80% -->
+        <div id="test-retry-nudge" style="display:none;margin:20px 0 8px;text-align:center">
+          <p style="font-size:1.05rem;font-weight:700;color:#c62828;margin-bottom:14px">Looks like you need to do this again, bucko.</p>
+          <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+            <button class="result-btn primary" onclick="retryTest()">Take Test Again</button>
+            <button class="result-btn" onclick="showHome()">I Need to Study More</button>
+          </div>
+        </div>
+        <!-- shown when score >= 80% -->
+        <div id="test-pass-actions" class="result-actions">
+          <button class="result-btn" onclick="retryTest()">🔄 Retake test</button>
+          <button class="result-btn primary" onclick="showHome()">← Home</button>
+        </div>
+      </div>
+      <div id="test-review-body"></div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+(function(){
+var S='ateam_a11y',st={bionic:false,overlay:'none',od:false,ruler:false,sz:1,ls:1};
+try{Object.assign(st,JSON.parse(localStorage.getItem(S)||'{}'));}catch(e){}
+var fab,panel,ttsBtn,ttsIcon,ttsLbl,bioBtn,ovl,ttsOn=false;
+function init(){
+  fab=document.getElementById('a11y-fab');
+  panel=document.getElementById('a11y-panel');
+  ttsBtn=document.getElementById('a11y-tts');
+  ttsIcon=document.getElementById('a11y-tts-icon');
+  ttsLbl=document.getElementById('a11y-tts-label');
+  bioBtn=document.getElementById('a11y-bionic');
+  ovl=document.getElementById('a11y-overlay');
+  if(!fab)return;
+  var OV={none:'transparent',cream:'rgba(253,246,227,.5)',yellow:'rgba(255,249,196,.5)',blue:'rgba(219,234,254,.5)',green:'rgba(220,252,231,.5)',peach:'rgba(252,231,243,.5)'};
+  fab.addEventListener('click',function(e){e.stopPropagation();var o=panel.hasAttribute('hidden');if(o)panel.removeAttribute('hidden');else panel.setAttribute('hidden','');fab.classList.toggle('open',o);});
+  document.addEventListener('click',function(e){var tb=document.getElementById('a11y-toolbar');if(tb&&!tb.contains(e.target))panel.setAttribute('hidden','');});
+  var ttsOn=false;
+  function getText(){var fc=document.getElementById('flashcard');if(fc){var id=fc.classList.contains('flipped')?'cardAnswer':'cardQuestion';var el=document.getElementById(id);if(el&&el.innerText.trim())return el.innerText.trim();}var q=document.querySelector('.screen.active .q-text');if(q)return q.innerText.trim();var ns=document.querySelectorAll('.notes-section.open .notes-section-body');if(ns.length)return Array.from(ns).map(function(n){return n.innerText.trim();}).join('\n\n');var m=document.querySelector('main')||document.querySelector('.screen.active');return m?m.innerText.trim().slice(0,2500):'';}
+  function startTTS(){window.speechSynthesis.cancel();var t=getText();if(!t)return;var u=new SpeechSynthesisUtterance(t);u.rate=0.88;u.onend=u.onerror=function(){setTS(false);};window.speechSynthesis.speak(u);setTS(true);}
+  function stopTTS(){window.speechSynthesis.cancel();setTS(false);}
+  function setTS(on){ttsOn=on;ttsBtn.classList.toggle('a11y-stop',on);ttsIcon.innerHTML=on?'&#9209;':'&#128266;';ttsLbl.textContent=on?' Stop':' Read aloud';}
+  ttsBtn.addEventListener('click',function(){ttsOn?stopTTS():startTTS();});
+  function bioW(w){if(w.length<=2)return w;var h=Math.ceil(w.length/2);return '<b class="bionic-b">'+w.slice(0,h)+'</b>'+w.slice(h);}
+  function walkBold(node){if(node.nodeType===3){var t=node.textContent;if(!t.trim())return;var html=t.replace(/([A-Za-zÀ-ɏ]{2,})/g,function(w){return bioW(w);});if(html===t)return;var s=document.createElement('span');s.innerHTML=html;node.parentNode.replaceChild(s,node);}else if(node.nodeType===1&&!/^(SCRIPT|STYLE|B|BUTTON|INPUT)$/.test(node.tagName))Array.from(node.childNodes).forEach(walkBold);}
+  var TG='#cardQuestion,#cardAnswer,.q-text,.option-btn,.notes-section-body,.card-text,.home-hero p';
+  function applyBio(){document.querySelectorAll(TG).forEach(function(el){if(el.dataset.bd)return;el.dataset.bd='1';el.dataset.bo=el.innerHTML;walkBold(el);});}
+  function removeBio(){document.querySelectorAll('[data-bd]').forEach(function(el){el.innerHTML=el.dataset.bo||el.innerHTML;delete el.dataset.bd;delete el.dataset.bo;});}
+  ['flipCard','loadQuestion','showQuestion','nextCard','prevCard'].forEach(function(fn){if(typeof window[fn]==='function'){var o=window[fn];window[fn]=function(){var r=o.apply(this,arguments);if(st.bionic)setTimeout(applyBio,80);return r;};}});
+  var bt;new MutationObserver(function(){if(!st.bionic)return;clearTimeout(bt);bt=setTimeout(applyBio,80);}).observe(document.body,{childList:true,subtree:true});
+  function setBio(on){st.bionic=on;bioBtn.textContent=on?'On':'Off';bioBtn.classList.toggle('on',on);if(on)applyBio();else removeBio();save();}
+  bioBtn.addEventListener('click',function(){setBio(!st.bionic);});
+  function setOvl(col){st.overlay=col;ovl.style.background=OV[col]||'transparent';document.querySelectorAll('.a11y-col-chip').forEach(function(c){c.classList.toggle('sel',c.dataset.col===col);});save();}
+  document.querySelectorAll('.a11y-col-chip').forEach(function(btn){btn.addEventListener('click',function(){setOvl(btn.dataset.col);});});
+  // OpenDyslexic font
+  var odBtn=document.getElementById('a11y-od');
+  function setOD(on){st.od=on;document.body.classList.toggle('opendyslexic',on);if(on&&!document.getElementById('od-font')){var l=document.createElement('link');l.id='od-font';l.rel='stylesheet';l.href='https://fonts.cdnfonts.com/css/opendyslexic';document.head.appendChild(l);}if(odBtn){odBtn.textContent=on?'On':'Off';odBtn.classList.toggle('on',on);}save();}
+  if(odBtn)odBtn.addEventListener('click',function(){setOD(!st.od);});
+  // Reading ruler
+  var rulerEl=document.getElementById('a11y-ruler-line'),rulerBtn=document.getElementById('a11y-ruler-btn');
+  function setRuler(on){st.ruler=on;document.body.classList.toggle('ruler-on',on);if(rulerBtn){rulerBtn.textContent=on?'On':'Off';rulerBtn.classList.toggle('on',on);}save();}
+  document.addEventListener('mousemove',function(e){if(st.ruler&&rulerEl)rulerEl.style.top=(e.clientY-17)+'px';});
+  if(rulerBtn)rulerBtn.addEventListener('click',function(){setRuler(!st.ruler);});
+  // Text size (3 steps: 100% / 118% / 136%)
+  var SZ=[1,1.18,1.36],szBtns=[document.getElementById('a11y-sz1'),document.getElementById('a11y-sz2'),document.getElementById('a11y-sz3')];
+  function setSz(i){st.sz=i;document.documentElement.style.fontSize=(SZ[i-1]*16)+'px';szBtns.forEach(function(b,idx){if(b)b.classList.toggle('on',idx+1===i);});save();}
+  szBtns.forEach(function(b,i){if(b)b.addEventListener('click',function(){setSz(i+1);});});
+  // Line spacing (3 steps: 1.7 / 2.1 / 2.6)
+  var LS=[1.7,2.1,2.6],lsBtns=[document.getElementById('a11y-ls1'),document.getElementById('a11y-ls2'),document.getElementById('a11y-ls3')];
+  function setLs(i){st.ls=i;document.body.style.lineHeight=LS[i-1];lsBtns.forEach(function(b,idx){if(b)b.classList.toggle('on',idx+1===i);});save();}
+  lsBtns.forEach(function(b,i){if(b)b.addEventListener('click',function(){setLs(i+1);});});
+  // Save & restore all settings
+  function save(){try{localStorage.setItem(S,JSON.stringify({bionic:st.bionic,overlay:st.overlay,od:st.od,ruler:st.ruler,sz:st.sz,ls:st.ls}));}catch(e){}}
+  setOvl(st.overlay);if(st.bionic)setBio(true);setOD(!!st.od);setRuler(!!st.ruler);setSz(st.sz||1);setLs(st.ls||1);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+<script>
+// ============================================================
+// QUIZ DATA
+// ============================================================
+const quizData = [
+  // ── TOPIC 0: MEDIEVAL ENGLAND ──────────────────────────
+  [
+    // Quiz 0-0: Conquest & Feudalism
+    { q: "In what year did William the Conqueror invade England?", type: "mcq", options: ["1054","1066","1072","1100"], answer: 1, explain: "The Battle of Hastings was on 14 October 1066." },
+    { q: "Who did William defeat at the Battle of Hastings?", type: "mcq", options: ["Harald Hardrada","King Edward","King Harold II","King Alfred"], answer: 2, explain: "Harold Godwinson (King Harold II) was defeated and killed — traditionally by an arrow." },
+    { q: "What did William build across England to control the population?", type: "mcq", options: ["Monasteries","Castles","Cathedrals","Markets"], answer: 1, explain: "Castles showed Norman power and served as military bases." },
+    { q: "In the feudal system, who sat at the very top of the hierarchy?", type: "mcq", options: ["Barons","Knights","The Pope","The King"], answer: 3, explain: "The King owned all the land and granted it to barons in exchange for loyalty." },
+    { q: "Serfs were free to leave the lord's land whenever they wished.", type: "tf", answer: false, explain: "Serfs (villeins) were legally bound to the land — they needed the lord's permission to leave." },
+    { q: "What was the Domesday Book?", type: "mcq", options: ["A religious text","A survey of land ownership for taxation","A record of battles","A list of barons"], answer: 1, explain: "William ordered it in 1086 to record land ownership and value for taxation purposes." },
+    { q: "What did Normans bring to England that changed the spoken language of the upper class?", type: "mcq", options: ["Latin","Welsh","French","Norse"], answer: 2, explain: "The Normans spoke French, which heavily influenced Old English and the language of the court." },
+    { q: "What was the role of a knight in the feudal system?", type: "mcq", options: ["To collect tithes","To fight for the lord in exchange for land","To manage the peasants' crops","To advise the king on laws"], answer: 1, explain: "Knights held land (manors) granted by lords and in return provided military service." },
+    { q: "Harold defeated Harald Hardrada at the Battle of Stamford Bridge before facing William.", type: "tf", answer: true, explain: "Harold marched north to defeat the Norwegian invasion, then marched south — his army was exhausted at Hastings." },
+    { q: "What was a manor?", type: "mcq", options: ["A type of castle","The basic unit of feudal society — an estate run by a lord","A church building","A market town"], answer: 1, explain: "The manor included farmland, a village, a church and a mill — all under the lord's authority." },
+  ],
+  // Quiz 0-1: Church & Government
+  [
+    { q: "What was a tithe?", type: "mcq", options: ["A type of serf","A tax of one-tenth paid to the Church","A royal fine","A list of knights"], answer: 1, explain: "Everyone, including peasants, had to give 10% of their income or produce to the Church." },
+    { q: "Where was Thomas Becket murdered in 1170?", type: "mcq", options: ["Westminster Abbey","The Tower of London","Canterbury Cathedral","York Minster"], answer: 2, explain: "Becket was killed by Henry II's knights in Canterbury Cathedral, making it the top pilgrimage site in England." },
+    { q: "The Magna Carta was signed in 1215 by King John.", type: "tf", answer: true, explain: "Forced by rebellious barons, King John signed it at Runnymede — establishing that even the king must obey the law." },
+    { q: "What did the Magna Carta mainly limit?", type: "mcq", options: ["The Church's power","Peasants' rights","Royal power and taxation without consent","The number of knights a baron could keep"], answer: 2, explain: "It established that the king could not tax without consent and guaranteed the right to a fair trial." },
+    { q: "Simon de Montfort called the first elected Parliament in 1265.", type: "tf", answer: true, explain: "This parliament included knights and burgesses, and is seen as a foundation of English democracy." },
+    { q: "Why was Thomas Becket declared a saint?", type: "mcq", options: ["He wrote the Magna Carta","He died defending the Church's independence from royal interference","He led a crusade","He founded Canterbury Cathedral"], answer: 1, explain: "He was declared a saint in 1173 — his willingness to die for the Church made him a martyr." },
+    { q: "What type of court did the Church run separately from royal courts?", type: "mcq", options: ["Feudal courts","Canon law courts","Parliament","Common law courts"], answer: 1, explain: "The Church had its own 'canon law' courts for clergy, which was a major source of tension with the king." },
+    { q: "What were the Crusades?", type: "mcq", options: ["Viking raids on England","Religious wars to recapture the Holy Land","Trade missions to the East","Peasant rebellions"], answer: 1, explain: "Christian rulers launched crusades (1095–1291) to recapture Jerusalem from Muslim rule." },
+    { q: "King Henry II and Thomas Becket were enemies from the beginning of their relationship.", type: "tf", answer: false, explain: "They were close friends — Henry made Becket Archbishop of Canterbury, expecting loyalty. The split came over Church vs royal authority." },
+    { q: "Why was Canterbury such an important pilgrimage site?", type: "mcq", options: ["It was the location of the Domesday Book","Thomas Becket was murdered there and declared a saint","William the Conqueror is buried there","It was the oldest cathedral in England"], answer: 1, explain: "Pilgrims came from across Europe to pray at Becket's shrine — Chaucer's Canterbury Tales is about pilgrims heading there." },
+  ],
+  // Quiz 0-2: Black Death & Revolt
+  [
+    { q: "Approximately what fraction of England's population died during the Black Death?", type: "mcq", options: ["1 in 10","1 in 5","1 in 3","1 in 2"], answer: 2, explain: "Roughly one-third of the population died — about 2 million people in England." },
+    { q: "How was the bubonic plague primarily spread?", type: "mcq", options: ["Through contaminated water","By fleas on rats","By breathing cold air","Through touch"], answer: 1, explain: "Fleas on black rats carried the bacterium Yersinia pestis. The rats travelled on trade ships." },
+    { q: "When did the Black Death reach England?", type: "mcq", options: ["1300","1327","1348","1381"], answer: 2, explain: "The plague arrived in England in the summer of 1348, having spread from Asia via trade routes." },
+    { q: "The Black Death strengthened the feudal system.", type: "tf", answer: false, explain: "It weakened it — labour shortages meant peasants could demand better wages and conditions from lords who needed workers." },
+    { q: "What long-term effect did the Black Death have on peasants?", type: "mcq", options: ["They were forced to pay higher taxes","They gained more bargaining power due to labour shortages","They became more tied to the land","They all converted to a new religion"], answer: 1, explain: "With fewer workers available, surviving peasants could demand higher wages and more freedom." },
+    { q: "What triggered the Peasants' Revolt of 1381?", type: "mcq", options: ["A poor harvest","A new poll tax","The death of the king","A foreign invasion"], answer: 1, explain: "The unpopular poll tax — a flat tax charged on every person regardless of wealth — was the immediate trigger." },
+    { q: "Who led the Peasants' Revolt?", type: "mcq", options: ["William Tyler and John Ball","Wat Tyler and Simon de Montfort","Wat Tyler and John Ball","Robert Owen and Wat Tyler"], answer: 2, explain: "Wat Tyler led the rebels from Kent; John Ball was the radical preacher who inspired them ('When Adam delved and Eve span...')." },
+    { q: "The young King Richard II met the rebels and promised to meet their demands.", type: "tf", answer: true, explain: "Richard II was only 14. He met the rebels at Smithfield — but after Wat Tyler was killed, the promises were broken." },
+    { q: "What happened to Wat Tyler?", type: "mcq", options: ["He became an adviser to the king","He was killed during negotiations","He escaped to France","He was imprisoned"], answer: 1, explain: "He was stabbed by the Mayor of London during the meeting at Smithfield — ending the revolt." },
+    { q: "The Peasants' Revolt was entirely successful in winning rights for peasants.", type: "tf", answer: false, explain: "The revolt was suppressed and promises were broken. However, it showed growing peasant confidence and the poll tax was eventually abolished." },
+  ],
+  // ── TOPIC 1: INDUSTRIAL REVOLUTION ───────────────────────
+  [
+    // Quiz 1-0: Causes & Inventions
+    { q: "When did the Industrial Revolution roughly begin in Britain?", type: "mcq", options: ["Around 1700","Around 1760","Around 1800","Around 1820"], answer: 1, explain: "The Industrial Revolution is generally dated from around 1760, with Britain being the first country to industrialise." },
+    { q: "Who improved the steam engine in 1769, making it far more efficient?", type: "mcq", options: ["George Stephenson","Robert Owen","James Watt","Richard Arkwright"], answer: 2, explain: "James Watt's improvements to the steam engine were central to powering factories, mines and eventually railways." },
+    { q: "What did James Hargreaves invent in 1764?", type: "mcq", options: ["The water frame","The spinning jenny","The power loom","The steam locomotive"], answer: 1, explain: "The spinning jenny spun multiple threads at once, dramatically increasing textile output." },
+    { q: "Britain industrialised first partly because it had large reserves of coal and iron.", type: "tf", answer: true, explain: "Coal powered steam engines; iron was used for machines and railways. Britain had both in abundance." },
+    { q: "What were the Enclosure Acts and how did they affect industrialisation?", type: "mcq", options: ["They opened new trade routes","They drove people off common land into towns, providing factory labour","They protected factory workers","They created new farmland"], answer: 1, explain: "As common land was enclosed by wealthy landowners, poor farmers had to migrate to towns — providing the workforce for factories." },
+    { q: "Richard Arkwright's water frame used what power source?", type: "mcq", options: ["Steam","Coal","Water","Wind"], answer: 2, explain: "The water frame used water power for spinning — it led to the first proper factories, built near rivers." },
+    { q: "Edmund Cartwright invented the power loom in 1785.", type: "tf", answer: true, explain: "The power loom mechanised weaving, allowing cloth to be produced far faster in factories." },
+    { q: "How did Britain's empire help the Industrial Revolution?", type: "mcq", options: ["It provided a skilled workforce","It provided raw materials cheaply and markets for finished goods","It funded the NHS","It introduced the railway system"], answer: 1, explain: "Britain imported raw cotton from India and America and exported finished textiles, driving industrial growth." },
+    { q: "Who built the Rocket locomotive and opened the first inter-city railway?", type: "mcq", options: ["James Watt","George Stephenson","Robert Owen","Edmund Cartwright"], answer: 1, explain: "Stephenson's Rocket (1829) competed in the Rainhill Trials; the Liverpool–Manchester Railway opened in 1830." },
+    { q: "Before the Industrial Revolution, most British people worked in factories.", type: "tf", answer: false, explain: "Before industrialisation, most people worked on the land (agriculture). The shift to factory work was the defining change." },
+  ],
+  // Quiz 1-1: Living & Working
+  [
+    { q: "How many hours a day did many factory workers typically work during the Industrial Revolution?", type: "mcq", options: ["6–8 hours","8–10 hours","12–16 hours","4–6 hours"], answer: 2, explain: "12–16 hour days, six days a week, were common — with no paid holidays, sick pay or rights." },
+    { q: "What was a 'back-to-back' house?", type: "mcq", options: ["A large house for factory owners","A cheap terraced house sharing walls on three sides, built for workers","A farmhouse in the countryside","A type of castle"], answer: 1, explain: "Back-to-back houses were dark, damp and overcrowded — built quickly and cheaply to house factory workers." },
+    { q: "Children as young as 5 worked in factories and mines during the Industrial Revolution.", type: "tf", answer: true, explain: "Children were cheap labour who could fit in small spaces — they worked as chimney sweeps, hurriers in coal mines, and factory hands." },
+    { q: "What disease frequently broke out in industrial cities due to poor sanitation?", type: "mcq", options: ["Bubonic plague","Malaria","Cholera","Typhoid"], answer: 2, explain: "Cholera outbreaks were common — contaminated water supplies (no sewers) spread the disease rapidly in cramped slums." },
+    { q: "What was the average life expectancy in the slums of Manchester in the 1840s?", type: "mcq", options: ["Around 65 years","Around 50 years","Around 28 years","Around 40 years"], answer: 2, explain: "Poor diet, disease and terrible living conditions made life in the slums brutally short — around 28 years on average." },
+    { q: "Factory owners lived in the same conditions as their workers.", type: "tf", answer: false, explain: "Factory owners and the new middle class lived in comfortable villas on the outskirts — a stark class divide existed." },
+    { q: "What were 'hurriers' in coal mines?", type: "mcq", options: ["Supervisors of workers","Children who pushed coal tubs through mine tunnels","Workers who loaded coal onto carts","Mine inspectors"], answer: 1, explain: "Hurriers (often young children) pushed or dragged heavy coal tubs through narrow underground tunnels." },
+    { q: "What health hazard did workers face from machinery in early factories?", type: "mcq", options: ["Smoke inhalation only","No machinery hazards — machines were safe","Unguarded machines causing injuries and deaths","Only noise-related issues"], answer: 2, explain: "Machines had no safety guards — loose clothing, hair or limbs could be caught, causing terrible injuries." },
+    { q: "The Industrial Revolution created a new middle class of factory owners and professionals.", type: "tf", answer: true, explain: "A new wealthy and educated middle class emerged — distinct from the old aristocracy and the working poor." },
+    { q: "Why did people move from the countryside to towns during the Industrial Revolution?", type: "mcq", options: ["They were forced by the government","Enclosure Acts removed common land; factory wages attracted them","Towns were more fashionable","The king ordered them to"], answer: 1, explain: "Enclosure Acts and agricultural change pushed people off the land, while factory wages (however poor) pulled them to towns." },
+  ],
+  // Quiz 1-2: Reform & Railways
+  [
+    { q: "What did the Factory Act 1833 ban?", type: "mcq", options: ["Women working in factories","Children under 9 working in factories","All night shifts","Men working over 12 hours"], answer: 1, explain: "The 1833 Act banned children under 9 from factories and limited hours for children aged 9–13." },
+    { q: "The Mines Act 1842 banned women and children under 10 from working underground.", type: "tf", answer: true, explain: "Shocked by a parliamentary report on child labour in mines, Parliament passed this Act in 1842." },
+    { q: "What were the Tolpuddle Martyrs?", type: "mcq", options: ["Factory owners who lobbied for reform","Farm workers transported to Australia for forming a union","Children who led a factory revolt","Engineers who built the first railway"], answer: 1, explain: "Six farm labourers from Tolpuddle, Dorset, were transported to Australia in 1834. Public outrage eventually won them pardons." },
+    { q: "When was the Stockton–Darlington Railway, the first public steam railway, opened?", type: "mcq", options: ["1814","1825","1830","1845"], answer: 1, explain: "The Stockton–Darlington Railway opened in 1825, carrying both passengers and goods." },
+    { q: "By 1850, there were over 6,000 miles of railway track across Britain.", type: "tf", answer: true, explain: "The 'railway mania' of the 1840s saw massive investment — railways transformed trade, travel and commerce." },
+    { q: "Who was Robert Owen and why was he significant?", type: "mcq", options: ["A politician who banned child labour","A factory owner who provided decent conditions at New Lanark, showing industry could be humane","A railway engineer","An inventor of the steam engine"], answer: 1, explain: "Owen ran New Lanark cotton mills in Scotland and provided housing, schools and fair wages — a model for future reformers." },
+    { q: "The Great Exhibition of 1851 was held in a building called the Crystal Palace.", type: "tf", answer: true, explain: "The Crystal Palace in Hyde Park, London, was designed by Joseph Paxton — a spectacular iron-and-glass structure." },
+    { q: "What was the main purpose of the Great Exhibition of 1851?", type: "mcq", options: ["To celebrate the end of the Napoleonic Wars","To showcase British industrial achievement to the world","To launch Queen Victoria's reign","To display works of art"], answer: 1, explain: "Over 6 million people visited — it was a symbol of Victorian pride in Britain's industrial dominance." },
+    { q: "What did trade unions campaign for during the Industrial Revolution?", type: "mcq", options: ["Lower wages","Longer working hours","Better pay, shorter hours and safer conditions","The abolition of Parliament"], answer: 2, explain: "Trade unions organised workers collectively to campaign for better conditions — often facing fierce opposition from employers and government." },
+    { q: "Railways helped spread a standardised clock time across Britain.", type: "tf", answer: true, explain: "Before railways, each town kept its own local time. Railways needed timetables, so 'railway time' (Greenwich Mean Time) became standard." },
+  ],
+  // ── TOPIC 2: WORLD WAR I ─────────────────────────────────
+  [
+    // Quiz 2-0: Causes of WWI
+    { q: "What does the 'M' in the acronym MAIN stand for (causes of WWI)?", type: "mcq", options: ["Morocco","Militarism","Monarchy","Migration"], answer: 1, explain: "MAIN = Militarism, Alliance system, Imperialism, Nationalism — the four long-term causes." },
+    { q: "Who was assassinated to trigger the start of WWI?", type: "mcq", options: ["Kaiser Wilhelm II","President Wilson","Archduke Franz Ferdinand","Tsar Nicholas II"], answer: 2, explain: "The heir to the Austro-Hungarian throne was shot by Gavrilo Princip in Sarajevo on 28 June 1914." },
+    { q: "Germany, Austria-Hungary and Italy formed the Triple Alliance.", type: "tf", answer: true, explain: "This was opposed by the Triple Entente: Britain, France and Russia." },
+    { q: "Why did Britain declare war on Germany in August 1914?", type: "mcq", options: ["Germany sank a British ship","Germany invaded neutral Belgium","Germany attacked France directly","Germany declared war on Britain first"], answer: 1, explain: "Germany invaded Belgium as part of the Schlieffen Plan — Britain had guaranteed Belgian neutrality by treaty." },
+    { q: "What was the Schlieffen Plan?", type: "mcq", options: ["Germany's plan to build the world's biggest navy","Germany's plan to defeat France quickly by invading through Belgium","Britain's plan to blockade Germany","France's plan to attack Germany in Alsace-Lorraine"], answer: 1, explain: "Germany planned to knock France out quickly in the west (through Belgium), then turn east to fight Russia." },
+    { q: "Nationalism was a cause of WWI — especially in the Balkans where Slavic peoples wanted independence from Austria-Hungary.", type: "tf", answer: true, explain: "Slavic nationalism, supported by Russia and threatening Austria-Hungary, was a major underlying tension." },
+    { q: "What was the Triple Entente?", type: "mcq", options: ["Germany, Austria-Hungary, Italy","Britain, France, Russia","Britain, USA, France","Germany, Russia, Turkey"], answer: 1, explain: "Britain, France and Russia formed the Triple Entente — an alliance that opposed the Triple Alliance." },
+    { q: "What is 'militarism' as a cause of WWI?", type: "mcq", options: ["Pride in one's country","Competition for colonies","The build-up of large armies and navies as a show of national strength","The assassination of a leader"], answer: 2, explain: "Major European powers, particularly Germany and Britain, were in an arms race — building up huge militaries." },
+    { q: "Austria-Hungary declared war on Serbia exactly one month after Franz Ferdinand's assassination.", type: "tf", answer: true, explain: "After an ultimatum was rejected, Austria-Hungary declared war on Serbia on 28 July 1914 — triggering the alliance system." },
+    { q: "The USA entered WWI in 1914 alongside Britain and France.", type: "tf", answer: false, explain: "The USA maintained neutrality until April 1917, when unrestricted submarine warfare and the Zimmermann Telegram prompted entry." },
+  ],
+  // Quiz 2-1: Trenches & Battles
+  [
+    { q: "Why did the Western Front become a stalemate?", type: "mcq", options: ["Both sides ran out of ammunition","Defensive technology (machine guns, barbed wire) was stronger than offensive tactics","The generals refused to fight","Disease stopped all fighting"], answer: 1, explain: "Machine guns, barbed wire and trenches made it nearly impossible to advance — both sides dug in for 4 years." },
+    { q: "What was 'no-man's-land'?", type: "mcq", options: ["Land owned by civilians between the armies","The territory between the two lines of trenches","A region of France not occupied by either side","The area behind the front lines"], answer: 1, explain: "No-man's-land was the deadly strip of ground between opposing trenches — swept by machine gun fire." },
+    { q: "Trench foot was caused by standing in cold, waterlogged mud for long periods.", type: "tf", answer: true, explain: "If untreated, trench foot could lead to gangrene and amputation — it was extremely common in the wet trenches." },
+    { q: "On which date was the first day of the Battle of the Somme, the bloodiest day in British military history?", type: "mcq", options: ["1 June 1916","1 July 1916","14 August 1916","11 November 1916"], answer: 1, explain: "1 July 1916 — 57,000 British casualties in a single day. It remains the worst day in British military history." },
+    { q: "Which weapon was first used by Germany on the Western Front in 1915?", type: "mcq", options: ["Tanks","Aeroplanes","Poison gas","Submarines"], answer: 2, explain: "Germany used chlorine gas at the Second Battle of Ypres in April 1915 — later both sides used various poison gases." },
+    { q: "Tanks were first used by Britain in 1916 at the Battle of the Somme.", type: "tf", answer: true, explain: "Mark I tanks crossed trenches and barbed wire at the Somme, though their impact was limited in the first use." },
+    { q: "What was 'shell shock'?", type: "mcq", options: ["A physical injury from a shell explosion","A psychological condition (PTSD) caused by trauma of combat — tremors, nightmares, breakdown","A type of artillery shell","Fear of loud noises"], answer: 1, explain: "Shell shock (now PTSD) affected thousands — many were not believed or were treated as cowards at the time." },
+    { q: "The Battle of Passchendaele (Third Battle of Ypres) in 1917 was fought mainly in deep mud.", type: "tf", answer: true, explain: "Prolonged shelling destroyed drainage channels — the battlefield became a swamp. Over 300,000 British casualties." },
+    { q: "What does 'going over the top' mean?", type: "mcq", options: ["Climbing to the top of a hill to observe the enemy","Soldiers climbing out of trenches to charge enemy lines","A senior officer giving orders","Firing artillery over friendly forces"], answer: 1, explain: "At a signal (whistle), soldiers climbed out of trenches and advanced towards enemy lines — facing devastating machine gun fire." },
+    { q: "Rats in the trenches were a major problem for soldiers.", type: "tf", answer: true, explain: "Millions of rats fed on food supplies and — grimly — on the dead. They were the size of cats and spread disease." },
+  ],
+  // Quiz 2-2: Home Front & Peace
+  [
+    { q: "What was DORA?", type: "mcq", options: ["A type of poison gas","The Defence of the Realm Act — giving government sweeping wartime powers","A women's organisation","A type of artillery"], answer: 1, explain: "DORA (1914) let the government control the press, industry and civilian behaviour to support the war effort." },
+    { q: "When was conscription introduced in Britain?", type: "mcq", options: ["August 1914","January 1916","June 1917","March 1915"], answer: 1, explain: "After voluntary recruitment fell short, the Military Service Act (January 1916) made military service compulsory for men aged 18–41." },
+    { q: "Women in Britain gained the right to vote partly because of their contribution to WWI.", type: "tf", answer: true, explain: "The Representation of the People Act (1918) gave women over 30 (who met property requirements) the vote — widely seen as recognition of their war service." },
+    { q: "What were conscientious objectors?", type: "mcq", options: ["Soldiers who deserted","Men who refused to fight on moral or religious grounds","Women who protested the war","Officers who disagreed with strategy"], answer: 1, explain: "COs faced social stigma and sometimes imprisonment. Some did non-combat roles like stretcher-bearing." },
+    { q: "What did Kitchener's famous poster say?", type: "mcq", options: ["'Fight for Freedom'","'Your Country Needs YOU'","'Join the Navy'","'England Expects'"], answer: 1, explain: "Lord Kitchener's 'Your Country Needs YOU' poster became one of the most iconic recruitment images in history." },
+    { q: "The USA entered WWI in 1917 after Germany's unrestricted submarine warfare threatened American ships.", type: "tf", answer: true, explain: "The Zimmermann Telegram (German offer to Mexico to attack the USA) also played a role in prompting US entry in April 1917." },
+    { q: "Which clause of the Treaty of Versailles made Germany accept full blame for WWI?", type: "mcq", options: ["Clause 101","War Guilt Clause (Article 231)","Reparations Clause","The Disarmament Clause"], answer: 1, explain: "Article 231, the 'War Guilt Clause', forced Germany to accept responsibility — causing deep resentment." },
+    { q: "How much were Germany's WWI reparations set at?", type: "mcq", options: ["£1 million","£100 million","£6.6 billion","£600 million"], answer: 2, explain: "£6.6 billion — a sum so enormous it took Germany until 2010 to finish paying the interest." },
+    { q: "The Treaty of Versailles helped cause WWII by humiliating Germany and creating economic hardship.", type: "tf", answer: true, explain: "The resentment caused by Versailles allowed extremists like Hitler to gain popular support in Germany during the 1930s." },
+    { q: "The armistice ending WWI was signed on 11 November 1918 at 11am.", type: "tf", answer: true, explain: "The 'eleventh hour of the eleventh day of the eleventh month' — Remembrance Day is still commemorated at 11am on 11 November." },
+  ],
+  // ── TOPIC 3: WORLD WAR II ────────────────────────────────
+  [
+    // Quiz 3-0: Hitler & Outbreak
+    { q: "When did WWII begin?", type: "mcq", options: ["1 September 1938","3 September 1939","1 September 1939","1 January 1940"], answer: 2, explain: "Germany invaded Poland on 1 September 1939; Britain and France declared war two days later, on 3 September." },
+    { q: "When did Hitler become Chancellor of Germany?", type: "mcq", options: ["1929","1933","1935","1939"], answer: 1, explain: "Appointed Chancellor in January 1933, Hitler quickly consolidated power — becoming Führer (total dictator) in 1934." },
+    { q: "The Great Depression helped Hitler rise to power by causing mass unemployment and desperation in Germany.", type: "tf", answer: true, explain: "6 million unemployed Germans were receptive to Hitler's promises of restoring German greatness and providing jobs." },
+    { q: "What was appeasement?", type: "mcq", options: ["An Allied military strategy","Giving Hitler concessions to avoid war — a policy that ultimately failed","The Allied plan to invade Germany","A peace treaty signed in 1938"], answer: 1, explain: "Britain and France allowed Hitler to rearm and expand (Austria, Sudetenland) hoping to prevent another war — it failed." },
+    { q: "Neville Chamberlain famously claimed to have secured 'peace for our time' after the Munich Agreement.", type: "tf", answer: true, explain: "Chamberlain returned from Munich in 1938 saying this — Hitler invaded the rest of Czechoslovakia just months later." },
+    { q: "Why did Britain declare war on Germany in September 1939?", type: "mcq", options: ["Germany bombed London","Germany invaded Poland, violating the guarantee Britain had given","Germany invaded France","Germany sank a British warship"], answer: 1, explain: "Britain had guaranteed Polish independence. When Germany invaded, Britain was obligated to declare war." },
+    { q: "What was the Weimar Republic?", type: "mcq", options: ["Hitler's Nazi government","Germany's democratic government (1919–1933), which was weak and unstable","A region of Germany","A type of propaganda magazine"], answer: 1, explain: "The Weimar Republic was blamed for accepting the humiliating Treaty of Versailles — its weakness allowed the Nazis to rise." },
+    { q: "Hitler was born in Germany.", type: "tf", answer: false, explain: "Hitler was born in Austria (1889) and moved to Germany after WWI, where he joined the Nazi Party." },
+    { q: "What were the Nuremberg Laws (1935)?", type: "mcq", options: ["Laws banning trade unions","Laws stripping Jews of German citizenship and rights","Laws that created the German army","Laws establishing the Nazi Party"], answer: 1, explain: "The Nuremberg Laws officially made Jews second-class non-citizens — a key step in the persecution that led to the Holocaust." },
+    { q: "What was Kristallnacht?", type: "mcq", options: ["A famous Nazi battle","The 'Night of Broken Glass' — a pogrom where Jewish businesses and synagogues were attacked","The night Hitler came to power","A type of propaganda film"], answer: 1, explain: "On 9–10 November 1938, Nazis and ordinary Germans attacked Jewish property across Germany and Austria — a major escalation." },
+  ],
+  // Quiz 3-1: Blitz & Key Battles
+  [
+    { q: "What was the Blitz?", type: "mcq", options: ["A German land invasion of Britain","A German bombing campaign targeting British cities (1940–41)","A naval battle in the North Sea","A secret British weapon"], answer: 1, explain: "German bombers targeted London (bombed 57 consecutive nights) and other cities — killing around 43,000 civilians." },
+    { q: "What was the Battle of Britain (1940)?", type: "mcq", options: ["A land battle in France","The air battle between the RAF and the German Luftwaffe over British skies","A naval battle in the English Channel","A battle for control of British ports"], answer: 1, explain: "The RAF, though outnumbered, held off the Luftwaffe — forcing Hitler to cancel Operation Sea Lion (the planned invasion)." },
+    { q: "Dunkirk is remembered as a heroic evacuation of over 330,000 Allied troops from France.", type: "tf", answer: true, explain: "May–June 1940 — hundreds of naval and civilian vessels crossed the Channel to rescue stranded troops." },
+    { q: "What was Operation Barbarossa?", type: "mcq", options: ["The Allied invasion of Normandy","Germany's invasion of the Soviet Union in June 1941","The German bombing of London","Germany's plan to invade Britain"], answer: 1, explain: "Germany attacked the USSR in June 1941 — initially advancing rapidly, but ultimately overextended and defeated at Stalingrad." },
+    { q: "The Battle of Stalingrad (1942–43) was a turning point because Germany suffered its first major defeat.", type: "tf", answer: true, explain: "The German 6th Army was encircled and destroyed. Over 800,000 Axis soldiers were killed — Germany never recovered the initiative in the east." },
+    { q: "When was D-Day?", type: "mcq", options: ["6 June 1943","6 June 1944","1 June 1944","6 July 1944"], answer: 1, explain: "6 June 1944 — the largest seaborne invasion in history, landing on the beaches of Normandy, France." },
+    { q: "D-Day involved Allied forces landing on beaches in southern France.", type: "tf", answer: false, explain: "D-Day was in Normandy, northern France. The landings were codenamed Utah, Omaha, Gold, Juno and Sword." },
+    { q: "What brought the USA into WWII?", type: "mcq", options: ["Germany invading France","Japan's surprise attack on Pearl Harbor, Hawaii, in December 1941","Britain asking for help","The Holocaust being discovered"], answer: 1, explain: "Japan attacked the US Pacific Fleet on 7 December 1941 — the USA declared war on Japan the next day, and Germany declared war on the USA." },
+    { q: "Who was Winston Churchill?", type: "mcq", options: ["British Prime Minister from 1938","British Prime Minister from May 1940, known for wartime leadership and speeches","British general who led D-Day","Leader of the Labour government after the war"], answer: 1, explain: "Churchill's speeches ('We shall never surrender') were crucial for maintaining British morale during the darkest days of WWII." },
+    { q: "Germany fell before Japan in WWII — VE Day was on 8 May 1945.", type: "tf", answer: true, explain: "VE Day (Victory in Europe) was 8 May 1945. VJ Day (Victory over Japan) followed on 15 August 1945." },
+  ],
+  // Quiz 3-2: Holocaust & Legacy
+  [
+    { q: "How many Jewish people were killed in the Holocaust?", type: "mcq", options: ["Around 1 million","Around 3 million","Around 6 million","Around 10 million"], answer: 2, explain: "Six million Jews were murdered — about two-thirds of all Jews in Europe. Millions of others were also killed." },
+    { q: "The Wannsee Conference (1942) formalised the 'Final Solution' — the systematic extermination of Jews.", type: "tf", answer: true, explain: "Senior Nazi officials met at Wannsee, Berlin, in January 1942 to coordinate the logistics of mass murder." },
+    { q: "Where was the largest Nazi extermination camp?", type: "mcq", options: ["Dachau, Germany","Treblinka, Poland","Auschwitz-Birkenau, Poland","Bergen-Belsen, Germany"], answer: 2, explain: "Over 1 million people, mostly Jews, were killed at Auschwitz-Birkenau in occupied Poland." },
+    { q: "Children in British cities were evacuated to the countryside during the Blitz.", type: "tf", answer: true, explain: "Around 1.5 million children were evacuated (often separated from parents) to rural areas to escape the bombing." },
+    { q: "What was rationing in WWII Britain?", type: "mcq", options: ["Conscription of soldiers","Government control of food and supplies to ensure fair distribution","A propaganda programme","Destruction of crops to deny them to the enemy"], answer: 1, explain: "Rationing started in January 1940 — each person had a ration book limiting their food, clothing and fuel." },
+    { q: "The atomic bombs were dropped on Hiroshima and Nagasaki in August 1945.", type: "tf", answer: true, explain: "Hiroshima (6 August) and Nagasaki (9 August) — Japan surrendered on 15 August 1945, ending WWII." },
+    { q: "What organisation was set up after WWII to prevent future wars?", type: "mcq", options: ["The League of Nations","NATO","The United Nations","The European Union"], answer: 2, explain: "The United Nations (UN) was founded in 1945 — replacing the failed League of Nations." },
+    { q: "The Nuremberg Trials established that individuals can be held accountable under international law for war crimes.", type: "tf", answer: true, explain: "Senior Nazi leaders were tried at Nuremberg (1945–46) — a landmark moment establishing international criminal law." },
+    { q: "What was the long-term political impact of WWII on Britain's empire?", type: "mcq", options: ["Britain expanded its empire","Britain's empire declined rapidly as colonies gained independence","The empire remained unchanged","Britain conquered new territories"], answer: 1, explain: "Britain was weakened economically. Colonies like India (1947) achieved independence — the age of empire was over." },
+    { q: "The State of Israel was created in 1948, partly in response to the Holocaust.", type: "tf", answer: true, explain: "The horrors of the Holocaust gave massive impetus to Jewish calls for a homeland — Israel was established on 14 May 1948." },
+  ],
+  // ── TOPIC 4: BRITISH REFORMATION ────────────────────────────
+  [
+    // Quiz 4-0: Henry VIII & the Break with Rome
+    { q: "Why did Henry VIII want to break from the Catholic Church?", type: "mcq", options: ["He disagreed with Catholic theology","Pope Clement VII refused to annul his marriage to Catherine of Aragon","He wanted to make England richer","He was influenced by Martin Luther"], answer: 1, explain: "Henry needed the marriage annulled to remarry and produce a male heir. When the Pope refused, Henry took matters into his own hands." },
+    { q: "What was the Act of Supremacy (1534)?", type: "mcq", options: ["A law banning Catholicism in England","A law making the King of England Supreme Head of the Church of England","A law giving Parliament power over the King","A treaty with the Pope"], answer: 1, explain: "The Act of Supremacy made Henry VIII the Supreme Head of the Church of England, replacing the Pope's authority." },
+    { q: "The Dissolution of the Monasteries helped Henry VIII get richer by seizing Church wealth.", type: "tf", answer: true, explain: "Between 1536 and 1541, Henry dissolved over 800 monasteries, seizing their land and wealth. This raised huge sums for the Crown." },
+    { q: "Who was Henry VIII's first wife, whose marriage he sought to annul?", type: "mcq", options: ["Anne Boleyn","Jane Seymour","Catherine Howard","Catherine of Aragon"], answer: 3, explain: "Catherine of Aragon was the widow of Henry's brother. Their 20-year marriage produced only one surviving child, Mary — Henry wanted a male heir." },
+    { q: "Thomas More was executed for refusing to accept the Act of Supremacy.", type: "tf", answer: true, explain: "Henry's Lord Chancellor refused to accept Henry as Supreme Head of the Church. He was beheaded in 1535 — later made a Catholic saint." },
+    { q: "What was the Pilgrimage of Grace (1536)?", type: "mcq", options: ["A Protestant march against the Pope","A Catholic rebellion against Henry VIII's religious changes","A royal procession to York","A peace treaty with Scotland"], answer: 1, explain: "Around 40,000 Catholics in the north of England marched to protest Henry's dissolution of the monasteries and attack on the Church." },
+    { q: "Henry VIII was originally a devout Catholic who received the title 'Defender of the Faith' from the Pope.", type: "tf", answer: true, explain: "The Pope awarded Henry this title in 1521 for writing a book attacking Martin Luther. The title is still used by British monarchs today." },
+    { q: "Anne Boleyn was executed on charges of:", type: "mcq", options: ["Treason and adultery","Heresy","Witchcraft","Refusing to convert to Protestantism"], answer: 0, explain: "Anne was accused of adultery and treason in 1536. Historians generally believe the charges were fabricated so Henry could remarry." },
+    { q: "The monasteries served important social functions before their dissolution.", type: "tf", answer: true, explain: "Monasteries provided hospitals, schools, hospitality for travellers and poor relief — their dissolution removed these services from communities." },
+    { q: "How many wives did Henry VIII have in total?", type: "mcq", options: ["4","5","6","7"], answer: 2, explain: "Henry had six wives: Catherine of Aragon, Anne Boleyn, Jane Seymour, Anne of Cleves, Catherine Howard, and Catherine Parr." },
+  ],
+  // Quiz 4-1: Tudor Religious Changes
+  [
+    { q: "Henry VIII's son Edward VI moved England in which religious direction?", type: "mcq", options: ["Back to Catholicism","More strongly Protestant","Towards the Eastern Orthodox Church","He kept Henry's settlement unchanged"], answer: 1, explain: "Edward VI's advisers were strongly Protestant — the Book of Common Prayer (1549) made church services in English and promoted Protestant ideas." },
+    { q: "Mary I earned the nickname 'Bloody Mary' because she:", type: "mcq", options: ["Was cruel to her servants","Burned nearly 300 Protestants at the stake","Invaded France","Executed all her advisers"], answer: 1, explain: "Mary I returned England to Catholicism and executed almost 300 Protestants between 1555–58, earning her the nickname 'Bloody Mary'." },
+    { q: "Mary I was the daughter of Henry VIII and Catherine of Aragon.", type: "tf", answer: true, explain: "Mary was a devout Catholic — she reversed her father's Reformation and restored papal authority." },
+    { q: "The Book of Common Prayer (1549) was written in English so ordinary people could understand church services.", type: "tf", answer: true, explain: "This was a key Protestant reform — making worship accessible in the vernacular rather than in Latin." },
+    { q: "Thomas Cranmer was Archbishop of Canterbury under Edward VI and wrote the Book of Common Prayer. What was his fate under Mary I?", type: "mcq", options: ["He fled to France","He was imprisoned but released","He was burned at the stake","He converted back to Catholicism and was pardoned"], answer: 2, explain: "Cranmer briefly recanted his Protestant beliefs under pressure, but then withdrew his recantation and was burned in 1556." },
+    { q: "Mary I's restoration of Catholicism was permanent and lasted beyond her reign.", type: "tf", answer: false, explain: "Mary died in 1558 after only 5 years as queen. Her Protestant half-sister Elizabeth I then reversed the changes." },
+    { q: "Under Edward VI, what language replaced Latin in church services?", type: "mcq", options: ["French","Welsh","English","Greek"], answer: 2, explain: "The English Reformation introduced church services in English — a key Protestant principle that worship should be accessible to all." },
+    { q: "The Prayer Book Rebellion of 1549 protested against:", type: "mcq", options: ["The execution of Thomas More","The new English-language prayer book","Henry VIII's divorce","The dissolution of monasteries"], answer: 1, explain: "Cornish people especially objected to the new English prayer book — some called it 'a Christmas game' as they spoke Cornish, not English." },
+    { q: "Jane Grey was Queen of England for only nine days before being replaced by Mary I.", type: "tf", answer: true, explain: "Jane Grey was put on the throne by Protestant councillors when Edward VI died in 1553, but was quickly overthrown by the Catholic Mary." },
+    { q: "Edward VI became king at what age?", type: "mcq", options: ["5","9","14","18"], answer: 1, explain: "Edward was 9 years old when he became king in 1547 — his reign was managed by a Regency Council of Protestant advisers." },
+  ],
+  // Quiz 4-2: Elizabeth's Settlement & the Armada
+  [
+    { q: "What was the Elizabethan Religious Settlement (1559)?", type: "mcq", options: ["A return to strict Catholicism","A compromise Protestant Church that aimed to keep most English people happy","A deal with the Pope","A ban on all non-Church of England worship"], answer: 1, explain: "Elizabeth created a moderate Protestant Church — keeping some Catholic-style ceremony while following Protestant doctrine." },
+    { q: "Elizabeth I's Settlement described the monarch as 'Supreme Governor' of the Church, not 'Supreme Head'.", type: "tf", answer: true, explain: "Elizabeth chose 'Supreme Governor' rather than 'Supreme Head' — partly to avoid offending those who felt a woman couldn't head the Church." },
+    { q: "Why was Philip II of Spain motivated to send the Armada against England in 1588?", type: "mcq", options: ["England had stolen Spanish gold","Elizabeth had executed Mary, Queen of Scots and supported Protestant rebels in the Netherlands","England refused to trade with Spain","Elizabeth had invaded Portugal"], answer: 1, explain: "Philip was enraged by the execution of the Catholic Mary Queen of Scots and England's support for Protestant rebels in Spanish-controlled Netherlands." },
+    { q: "The Spanish Armada of 1588 was defeated partly by English fire ships and storms.", type: "tf", answer: true, explain: "English fire ships scattered the Armada at Calais; storms then wrecked many Spanish ships as they tried to return via Scotland and Ireland." },
+    { q: "Mary, Queen of Scots was a Catholic claimant to the English throne. Why did Elizabeth imprison her?", type: "mcq", options: ["For spreading Protestantism","As a potential Catholic rival and focus for plots against Elizabeth","For invading England","For marrying a French king"], answer: 1, explain: "Mary was implicated in several plots against Elizabeth (including the Babington Plot) and was eventually executed in 1587." },
+    { q: "Sir Francis Drake helped defeat the Spanish Armada.", type: "tf", answer: true, explain: "Drake was vice-admiral of the English fleet. He also famously completed the second circumnavigation of the world (1577–80)." },
+    { q: "What were recusants?", type: "mcq", options: ["Protestant extremists who wanted a plain church","Catholics who refused to attend Church of England services","Scottish Protestants","Monks who hid after the Reformation"], answer: 1, explain: "Recusants faced heavy fines. Some sheltered Catholic priests in 'priest holes' hidden in their homes." },
+    { q: "The Elizabethan Settlement ended all religious conflict in England permanently.", type: "tf", answer: false, explain: "Religious tension continued — between Catholics (who wanted the old Church) and Puritans (who wanted a more radically Protestant church)." },
+    { q: "What was the significance of Elizabeth I's speech at Tilbury (1588)?", type: "mcq", options: ["She announced peace with Spain","She rallied English troops facing the Armada, famously declaring she had 'the heart and stomach of a king'","She announced her marriage to Philip II","She declared war on France"], answer: 1, explain: "Elizabeth's Tilbury speech showed great political courage — appearing before her troops to inspire them even as the Armada threatened invasion." },
+    { q: "Elizabeth I died without an heir, ending the Tudor dynasty.", type: "tf", answer: true, explain: "Elizabeth never married (earning the title 'The Virgin Queen'). On her death in 1603, the throne passed to James VI of Scotland, beginning the Stuart dynasty." },
+  ],
+  // ── TOPIC 5: FRENCH REVOLUTION ──────────────────────────────
+  [
+    // Quiz 5-0: Causes & 1789
+    { q: "What was the Ancien Régime?", type: "mcq", options: ["The new French government after the Revolution","The old social and political system of France before 1789","The French army","The Catholic Church in France"], answer: 1, explain: "The Ancien Régime was the social hierarchy of pre-revolutionary France — dominated by the King, nobility and Church, with ordinary people bearing most of the tax burden." },
+    { q: "France was divided into three Estates. Which paid the most tax?", type: "mcq", options: ["The First Estate (clergy)","The Second Estate (nobility)","The Third Estate (commoners)","All three paid equally"], answer: 2, explain: "The Third Estate — 97% of France's population — paid virtually all the taxes, while the clergy and nobility were largely exempt." },
+    { q: "The immediate trigger for the storming of the Bastille was the dismissal of a popular finance minister.", type: "tf", answer: true, explain: "Louis XVI dismissed Jacques Necker on 11 July 1789 — Parisians feared royalist repression and stormed the Bastille on 14 July." },
+    { q: "When was the Bastille stormed?", type: "mcq", options: ["14 June 1789","14 July 1789","4 August 1789","26 August 1789"], answer: 1, explain: "14 July 1789 — Bastille Day is still the French national holiday. The fortress represented royal tyranny; only 7 prisoners were found inside." },
+    { q: "The Declaration of the Rights of Man (August 1789) stated that all men are born free and equal.", type: "tf", answer: true, explain: "Inspired by Enlightenment ideas and the American Declaration of Independence, it declared liberty, equality and popular sovereignty." },
+    { q: "What was the significance of the Tennis Court Oath (June 1789)?", type: "mcq", options: ["Members of the Third Estate vowed to keep playing tennis","Representatives of the Third Estate swore not to disperse until France had a new constitution","The King swore to protect the Estates-General","Nobles swore to pay more taxes"], answer: 1, explain: "Locked out of their meeting hall, Third Estate deputies gathered on a tennis court and swore to write a new constitution — a direct challenge to royal authority." },
+    { q: "The main long-term causes of the French Revolution included food shortages, heavy taxes and Enlightenment ideas.", type: "tf", answer: true, explain: "Bad harvests in 1788 caused bread prices to soar. Combined with anger at inequality and Enlightenment ideas about rights, pressure for change became unstoppable." },
+    { q: "What was the Estates-General?", type: "mcq", options: ["The French army","The Parliament of France","A meeting of representatives from all three Estates, called by Louis XVI in 1789","A revolutionary committee"], answer: 2, explain: "Louis called the Estates-General to deal with France's financial crisis — it hadn't met since 1614. It quickly became a flashpoint for revolution." },
+    { q: "Louis XVI was known as a strong, decisive ruler who handled the crisis well.", type: "tf", answer: false, explain: "Louis was indecisive and ill-suited to the crisis — his hesitation at key moments repeatedly escalated tensions rather than defusing them." },
+    { q: "The march on Versailles in October 1789 forced the royal family to:", type: "mcq", options: ["Leave France","Move to Paris, where they could be watched by the people","Agree to a new constitution","Give up all royal power immediately"], answer: 1, explain: "Thousands of Parisian women marched to Versailles, demanding bread and forcing Louis and his family to move to the Tuileries Palace in Paris." },
+  ],
+  // Quiz 5-1: The Republic & Reign of Terror
+  [
+    { q: "When was Louis XVI executed?", type: "mcq", options: ["10 August 1792","21 January 1793","16 October 1793","9 Thermidor 1794"], answer: 1, explain: "Louis XVI was guillotined on 21 January 1793. His execution shocked monarchies across Europe and led to war with Britain." },
+    { q: "What was the guillotine used for during the Revolution?", type: "mcq", options: ["A printing press","A weapon of war","An execution device used on those accused of being enemies of the Revolution","A method of torture"], answer: 2, explain: "The guillotine was seen as a humane, egalitarian method of execution — it killed nobles and commoners alike, with no distinction of rank." },
+    { q: "The Reign of Terror lasted from 1793 to 1794.", type: "tf", answer: true, explain: "From September 1793 to July 1794, the Committee of Public Safety executed approximately 40,000 people accused of counter-revolutionary activity." },
+    { q: "Who led the Committee of Public Safety during the Reign of Terror?", type: "mcq", options: ["Louis XVI","Voltaire","Maximilien Robespierre","Napoleon Bonaparte"], answer: 2, explain: "Robespierre became the dominant figure of the Terror, believing ruthless repression was necessary to protect the Revolution." },
+    { q: "The Jacobins were a radical revolutionary group who supported the Terror.", type: "tf", answer: true, explain: "The Jacobins, led by Robespierre, believed the Revolution must be defended at all costs — even by executing thousands of suspected opponents." },
+    { q: "How did the Reign of Terror end?", type: "mcq", options: ["Napoleon seized power","A counter-revolution by royalists","Robespierre was arrested and executed on 9 Thermidor","Foreign invasion ended it"], answer: 2, explain: "On 9 Thermidor (27 July 1794), members of the Convention turned on Robespierre — he was arrested and guillotined the next day." },
+    { q: "Marie Antoinette was executed during the Reign of Terror.", type: "tf", answer: true, explain: "She was guillotined on 16 October 1793, weeks after her husband. She was widely blamed for France's financial problems and called 'Madame Deficit'." },
+    { q: "What were the 'September Massacres' of 1792?", type: "mcq", options: ["Battles with Prussian forces","The execution of the royal family","Mass killings of prisoners in Paris by crowds fearing foreign invasion","Peasant uprisings in the countryside"], answer: 2, explain: "As Prussian forces advanced, Parisian mobs killed around 1,400 prisoners in September 1792, fearing they would join the enemy." },
+    { q: "The levée en masse was a mass conscription of French citizens to defend the Revolution.", type: "tf", answer: true, explain: "In 1793, the Convention called up 300,000 men — it was the first modern mass army, creating a force that could fight all of Europe." },
+    { q: "What was the Directory?", type: "mcq", options: ["A list of revolutionaries to be executed","The five-man government that ruled France from 1795 to 1799","Napoleon's government","A revolutionary newspaper"], answer: 1, explain: "The Directory replaced Robespierre's Committee of Public Safety — it was unstable, corrupt, and eventually overthrown by Napoleon in 1799." },
+  ],
+  // Quiz 5-2: Napoleon & Legacy
+  [
+    { q: "How did Napoleon come to power in France?", type: "mcq", options: ["He was elected President","He seized power in a coup d'état (18 Brumaire) in 1799","He was the son of Louis XVI","He won a revolution against the Directory"], answer: 1, explain: "Napoleon's coup on 18–19 Brumaire (9–10 November 1799) ended the Directory, making him First Consul — effectively dictator of France." },
+    { q: "The Napoleonic Code was a set of uniform laws that spread across Europe.", type: "tf", answer: true, explain: "The Code Napoléon (1804) standardised French law — introducing equality before the law, property rights and religious tolerance. It influenced legal systems worldwide." },
+    { q: "When did Napoleon declare himself Emperor of France?", type: "mcq", options: ["1799","1802","1804","1806"], answer: 2, explain: "Napoleon crowned himself Emperor in Notre-Dame Cathedral in December 1804, famously placing the crown on his own head before the Pope could do it." },
+    { q: "Napoleon's invasion of Russia in 1812 was a major turning point because:", type: "mcq", options: ["Russia joined his empire","His Grand Army was destroyed by the Russian winter and scorched earth tactics","He captured Moscow and held it permanently","His navy was destroyed"], answer: 1, explain: "Napoleon invaded with 600,000 men; fewer than 100,000 returned. The catastrophic Russian campaign fatally weakened his empire." },
+    { q: "Napoleon was finally defeated at Waterloo in 1815.", type: "tf", answer: true, explain: "Napoleon was defeated by Wellington's Anglo-Dutch forces and Prussian reinforcements on 18 June 1815 — ending the Napoleonic Wars." },
+    { q: "Where was Napoleon exiled after Waterloo?", type: "mcq", options: ["Elba","Corsica","St. Helena","Malta"], answer: 2, explain: "After Waterloo, Napoleon was exiled to the remote island of St. Helena in the South Atlantic, where he died in 1821." },
+    { q: "The French Revolution's slogan was 'Liberty, Equality, Fraternity'.", type: "tf", answer: true, explain: "Liberté, égalité, fraternité became the motto of the Revolution and later the official motto of the French Republic." },
+    { q: "What was the Congress of Vienna (1814–15)?", type: "mcq", options: ["A meeting to decide Napoleon's fate","A meeting of European powers to redraw the map of Europe after Napoleon's defeat","A French revolutionary assembly","A peace treaty between France and Britain"], answer: 1, explain: "The Congress redrawn Europe's borders, restored many monarchies and tried to create a stable balance of power — largely ignoring the nationalism Napoleon had stirred." },
+    { q: "The French Revolution inspired later revolutions and independence movements around the world.", type: "tf", answer: true, explain: "The Revolution's ideas of liberty, equality and popular sovereignty inspired the Haitian Revolution (1791), Latin American independence movements and later European revolutions of 1848." },
+    { q: "Napoleon was born in:", type: "mcq", options: ["Paris, France","Corsica (just recently acquired by France)","Elba","Lyon, France"], answer: 1, explain: "Napoleon was born in Ajaccio, Corsica in 1769, the year after France acquired the island from Genoa — making him technically French by a year." },
+  ],
+  // ── TOPIC 6: ENGLISH CIVIL WAR ──────────────────────────────
+  [
+    // Quiz 6-0: Causes & the Cavaliers
+    { q: "What is the 'Divine Right of Kings'?", type: "mcq", options: ["The right of Parliament to choose the King","The belief that Kings are chosen by God and cannot be questioned","A type of law passed by Parliament","The King's right to collect taxes"], answer: 1, explain: "Charles I believed strongly in Divine Right — that he answered only to God, not Parliament. This brought him into direct conflict with MPs." },
+    { q: "Charles I ruled without Parliament for 11 years (1629–1640), a period known as the Personal Rule.", type: "tf", answer: true, explain: "Charles dismissed Parliament in 1629 and governed alone. He raised money through unpopular measures like Ship Money, creating wide resentment." },
+    { q: "What was Ship Money and why was it controversial?", type: "mcq", options: ["A tax on imported goods, unpopular with merchants","A tax originally for coastal counties, extended by Charles I to all of England without Parliament's consent","A type of ship used by the Royal Navy","A fine for not joining the navy"], answer: 1, explain: "Ship Money was an emergency coastal defence tax — Charles extended it nationwide. Collecting it without parliamentary consent was seen as illegal taxation." },
+    { q: "The Civil War was triggered partly by Charles I's attempt to impose the English Prayer Book on Scotland.", type: "tf", answer: true, explain: "In 1637, Charles tried to impose an English prayer book on Presbyterian Scotland — causing riots and forcing him to recall Parliament to raise money for war." },
+    { q: "What does the Grand Remonstrance (1641) show about Parliament's concerns?", type: "mcq", options: ["Parliament supported the King's policies","Parliament listed its grievances against 11 years of Charles's rule and demanded parliamentary approval for ministers","Parliament wanted to abolish the monarchy","MPs demanded Charles leave England"], answer: 1, explain: "The Grand Remonstrance was a 200-point list of Parliament's grievances — Charles's rejection of it made war almost inevitable." },
+    { q: "What were Cavaliers and Roundheads?", type: "mcq", options: ["Cavaliers were Parliamentary forces, Roundheads supported the King","Cavaliers supported the King, Roundheads supported Parliament","Both names refer to Parliamentary forces","Both names refer to Royalist forces"], answer: 1, explain: "Cavaliers (Royalists) had long flowing hair; Roundheads (Parliamentarians) wore their hair shorter. The names were originally used as insults." },
+    { q: "The City of London largely supported Parliament during the Civil War.", type: "tf", answer: true, explain: "Parliament controlled London and the south-east — England's richest region. This gave them crucial financial and naval advantages." },
+    { q: "Charles I attempted to arrest five Members of Parliament in 1642. What was the significance of this?", type: "mcq", options: ["It had no significance — he succeeded","It showed Parliament was weak","The MPs had fled and Charles left empty-handed — his authority was humiliated and civil war soon followed","Parliament surrendered shortly after"], answer: 2, explain: "Charles entered the Commons personally with soldiers — a major breach of parliamentary privilege. He failed to arrest the MPs and left humiliated. War began months later." },
+    { q: "The Church of England under Archbishop Laud became more Catholic in ceremony under Charles I.", type: "tf", answer: true, explain: "Archbishop Laud's 'High Church' reforms alarmed Puritans, who feared a return to Catholicism — strengthening opposition to Charles." },
+    { q: "Most northern and western England supported which side in the Civil War?", type: "mcq", options: ["Parliament","The King","Neither — they were neutral","Scotland"], answer: 1, explain: "The King's support was strongest in the north, west and Wales — rural and traditional areas. Parliament was stronger in the south-east, towns and ports." },
+  ],
+  // Quiz 6-1: War, Execution & Cromwell
+  [
+    { q: "The Battle of Marston Moor (1644) was significant because:", type: "mcq", options: ["It was the first battle of the Civil War","Parliament's victory gave them control of the north of England","The King captured London","Both sides agreed a peace treaty"], answer: 1, explain: "Marston Moor was the largest battle of the Civil War — over 40,000 men. Parliamentary victory ended Royalist control of the north." },
+    { q: "Oliver Cromwell formed the New Model Army, a professional, disciplined parliamentary force.", type: "tf", answer: true, explain: "The New Model Army (1645) was paid regularly, promoted on merit, and trained to a high standard — transforming parliamentary military effectiveness." },
+    { q: "The Battle of Naseby (1645) effectively ended the first Civil War because:", type: "mcq", options: ["The King was captured there","Parliament's New Model Army destroyed the main Royalist field army","The King surrendered there","France intervened to help Parliament"], answer: 1, explain: "At Naseby, the New Model Army routed Charles's main army. Charles's private correspondence was captured, revealing his plans to bring in foreign troops — destroying his credibility." },
+    { q: "Charles I surrendered to the Scottish army in 1646 and was later handed to Parliament.", type: "tf", answer: true, explain: "Charles surrendered at Newark to the Scots, who handed him to Parliament in exchange for £400,000 — still owed when Parliament decided his fate." },
+    { q: "What was 'Pride's Purge' (December 1648)?", type: "mcq", options: ["A Royalist attack on Parliament","Colonel Pride removed MPs who favoured negotiating with the King, leaving only the 'Rump Parliament'","A purge of soldiers from the New Model Army","A Parliamentary vote to remove Cromwell"], answer: 1, explain: "Colonel Pride and his soldiers physically barred and arrested MPs who supported continuing negotiations with Charles — leaving only those willing to try him." },
+    { q: "Charles I was tried and executed in January 1649. He was the first English monarch to be publicly executed.", type: "tf", answer: true, explain: "Charles was executed on 30 January 1649 outside the Banqueting House, Whitehall. He was charged with being a 'tyrant, traitor, murderer and public enemy'." },
+    { q: "Oliver Cromwell's title as ruler of England from 1653 was:", type: "mcq", options: ["King","Emperor","Lord Protector","President"], answer: 2, explain: "Cromwell became Lord Protector of the Commonwealth in 1653 — he ruled without a king but with near-absolute power." },
+    { q: "Cromwell was offered the Crown but refused it.", type: "tf", answer: true, explain: "In 1657 Parliament offered Cromwell the kingship — he agonised over it but ultimately refused, partly from republican principle and army opposition." },
+    { q: "What was the Republic of England (1649–1660) known as?", type: "mcq", options: ["The Commonwealth","The Protectorate","The Republic of the Saints","The Free State"], answer: 0, explain: "England was declared a Commonwealth (republic) after Charles's execution — ruled first by a 'Rump Parliament' then by Cromwell as Lord Protector." },
+    { q: "Cromwell's rule was sometimes harsh — he banned Christmas celebrations and closed theatres.", type: "tf", answer: true, explain: "The Puritanical Commonwealth suppressed what it saw as sinful pleasures. These restrictions made many English people long for the return of a monarchy." },
+  ],
+  // Quiz 6-2: Restoration, Glorious Revolution & Rights
+  [
+    { q: "When was Charles II restored as King of England?", type: "mcq", options: ["1656","1658","1660","1665"], answer: 2, explain: "After Cromwell's death in 1658 and political chaos, Charles II was invited back — the Restoration of the monarchy took place on 29 May 1660." },
+    { q: "What was the Habeas Corpus Act (1679)?", type: "mcq", options: ["An act abolishing Parliament","A law requiring the King's permission for all legislation","A law protecting people from being imprisoned without charge or trial","An act establishing the Church of England"], answer: 2, explain: "Habeas Corpus meant 'you have the body' — the Act required that prisoners be brought before a court and given a reason for their imprisonment." },
+    { q: "James II was removed from the throne in 1688 largely because he was Catholic and had a Catholic son.", type: "tf", answer: true, explain: "James's pro-Catholic policies alarmed Protestant England. When his wife gave birth to a male heir (threatening a Catholic succession), leading politicians invited William of Orange to invade." },
+    { q: "What was the 'Glorious Revolution' of 1688?", type: "mcq", options: ["A French Revolution that inspired England","The peaceful replacement of James II by William III and Mary II, secured by Parliament","A violent civil war","An English invasion of France"], answer: 1, explain: "William of Orange landed with an army; James II fled without a fight. It was called 'Glorious' because it was largely bloodless." },
+    { q: "The Bill of Rights (1689) established that Parliament was supreme over the monarch.", type: "tf", answer: true, explain: "The Bill of Rights limited royal power — the monarch could not suspend laws, raise taxes or maintain an army in peacetime without Parliament's consent." },
+    { q: "What does 'constitutional monarchy' mean?", type: "mcq", options: ["A country with no monarch","A system where the monarch rules with unlimited power","A system where the monarch's powers are limited and defined by law and Parliament","A republic governed by elected representatives"], answer: 2, explain: "Britain's constitutional monarchy emerged from the Civil War and Glorious Revolution — the monarch reigns but Parliament governs." },
+    { q: "The English Civil War and Glorious Revolution had no influence on other democracies.", type: "tf", answer: false, explain: "Hugely influential — the English example of limiting royal power directly inspired American revolutionary thinkers (like Locke) who shaped the US Constitution." },
+    { q: "Who wrote Two Treatises of Government, arguing that people have the right to remove rulers who abuse power?", type: "mcq", options: ["Thomas Hobbes","John Milton","John Locke","Oliver Cromwell"], answer: 2, explain: "Locke's Two Treatises (1689) argued government must have the consent of the governed — revolutionary ideas that influenced the American and French Revolutions." },
+    { q: "The Toleration Act (1689) gave some religious freedoms to non-Anglican Protestants.", type: "tf", answer: true, explain: "The Act allowed Nonconformists (like Baptists and Quakers) to worship freely — though it didn't extend to Catholics or Jews." },
+    { q: "What was the long-term constitutional significance of the Civil War?", type: "mcq", options: ["It ended democracy in England","It established that Parliament — not the monarch — was ultimately sovereign in England","It gave the Church of England supreme power","It created a permanent republic"], answer: 1, explain: "The Civil War, Interregnum, Restoration and Glorious Revolution together established parliamentary sovereignty — the principle that Parliament is supreme." },
+  ],
+  // ── TOPIC 7: EMPIRE & SLAVE TRADE ───────────────────────────
+  [
+    // Quiz 7-0: The Triangular Trade
+    { q: "What was the Triangular Trade?", type: "mcq", options: ["Trade between England, France and Spain","A three-stage trading network between Britain, West Africa and the Americas","Trade of three specific goods: sugar, tobacco and cotton","Trade along three rivers in Africa"], answer: 1, explain: "Stage 1: British ships took manufactured goods to West Africa. Stage 2: Enslaved Africans transported to the Americas (Middle Passage). Stage 3: Colonial goods (sugar, tobacco, cotton) shipped back to Britain." },
+    { q: "Approximately how many Africans were transported across the Atlantic in the transatlantic slave trade?", type: "mcq", options: ["500,000","2 million","12 million","50 million"], answer: 2, explain: "Approximately 12.5 million Africans were enslaved and transported across the Atlantic between the 16th and 19th centuries." },
+    { q: "The 'Middle Passage' referred to the journey of enslaved Africans from Africa to the Americas.", type: "tf", answer: true, explain: "Conditions on Middle Passage ships were appalling — enslaved people were chained below decks in horrific conditions. Mortality rates were very high." },
+    { q: "Which British cities grew wealthy from the slave trade?", type: "mcq", options: ["London only","Bristol and Liverpool especially, along with London","Manchester and Leeds","Newcastle and Edinburgh"], answer: 1, explain: "Bristol and Liverpool were the main British slave-trading ports. Their merchants, shipbuilders and insurers all profited — as did their civic infrastructure." },
+    { q: "Enslaved people were chained together on slave ships with very little space, food or fresh air.", type: "tf", answer: true, explain: "The 1788 Dolben Act (one of the first regulations) limited the number of enslaved people a ship could carry per tonnage — but conditions remained horrific." },
+    { q: "What goods did Britain receive from its Caribbean slave colonies?", type: "mcq", options: ["Gold and diamonds","Sugar, tobacco, coffee and cotton","Spices and silk","Iron and coal"], answer: 1, explain: "Sugar was the most valuable — by the late 18th century, Caribbean sugar plantations supplied most of Britain's sugar. Tobacco, coffee and cotton were also major products." },
+    { q: "The Royal African Company had a monopoly on Britain's slave trade from 1672.", type: "tf", answer: true, explain: "The RAC was granted a royal monopoly — it transported approximately 100,000 enslaved Africans in its first 40 years. The monopoly ended in 1698, opening the trade to all British merchants." },
+    { q: "Why did enslaved Africans outnumber white colonists in many Caribbean islands?", type: "mcq", options: ["White colonists frequently returned to Britain","Planters needed huge numbers of workers for sugar cultivation, and high death rates required constant replacement","African people voluntarily emigrated","Disease killed most white colonists"], answer: 1, explain: "Sugar production required enormous labour. Death rates on plantations were extremely high — meaning slave traders had to constantly import new enslaved people to maintain numbers." },
+    { q: "The profits from the slave trade helped fund Britain's Industrial Revolution.", type: "tf", answer: true, explain: "Historians debate the extent, but slave-trade profits funded banks, insurance companies and manufacturers in Bristol, Liverpool and London — capital that helped fuel industrialisation." },
+    { q: "What was a 'plantation'?", type: "mcq", options: ["A garden in an English city","A large agricultural estate in the Americas worked by enslaved people","A type of British warship","A farming village in West Africa"], answer: 1, explain: "Plantations were huge farms producing cash crops — sugar in the Caribbean, tobacco and cotton in North America — entirely dependent on enslaved labour." },
+  ],
+  // Quiz 7-1: Life under Slavery & Resistance
+  [
+    { q: "Who was Olaudah Equiano?", type: "mcq", options: ["A British slave-trade captain","A West African king who sold enslaved people","A formerly enslaved African who wrote a famous autobiography and campaigned for abolition","A Jamaican planter"], answer: 2, explain: "Equiano's 'Interesting Narrative' (1789) described his experiences of enslavement. It was a bestseller and powerful evidence used by abolitionists." },
+    { q: "Enslaved people on Caribbean plantations worked around 18 hours a day during harvest season.", type: "tf", answer: true, explain: "Sugar cultivation was brutal — enslaved people worked from before dawn to after dark during harvest, seven days a week, in intense heat." },
+    { q: "What were slave codes?", type: "mcq", options: ["Secret communication systems used by enslaved people","Laws that defined enslaved people as property and controlled every aspect of their lives","Codes of conduct for slave ship captains","Religious rules about the treatment of enslaved people"], answer: 1, explain: "Slave codes stripped enslaved people of all legal rights — they could not marry, own property or testify in court. Punishments for resistance were brutal." },
+    { q: "The Zong Massacre (1781) helped advance the abolitionist cause. What happened?", type: "mcq", options: ["An enslaved person killed the ship's captain","The captain ordered 133 enslaved people thrown overboard to claim insurance money","A slave ship was shipwrecked off Britain's coast","Enslaved people successfully took over a British ship"], answer: 1, explain: "Captain Collingwood ordered 133 sick enslaved people thrown overboard to collect insurance (insured as cargo, not people). The case outraged the British public and galvanised abolitionists." },
+    { q: "Enslaved people never resisted their enslavement.", type: "tf", answer: false, explain: "Resistance took many forms — day-to-day resistance (working slowly, breaking tools, feigning illness) and large-scale rebellions like Tacky's Revolt (Jamaica, 1760)." },
+    { q: "What was the Haitian Revolution?", type: "mcq", options: ["A French Revolution colony that remained loyal","A successful slave rebellion in Haiti (1791–1804) that created the world's first Black republic","A British suppression of a Caribbean slave revolt","A Spanish takeover of Haiti"], answer: 1, explain: "The Haitian Revolution (1791–1804) terrified slave-owning colonists across the Americas — proving that enslaved people could successfully throw off their enslavers." },
+    { q: "Quobna Ottobah Cugoano was an African-born abolitionist who published a book condemning slavery in 1787.", type: "tf", answer: true, explain: "Cugoano's 'Thoughts and Sentiments on the Evil of Slavery' was one of the first books by an African to directly condemn the slave trade and demand abolition." },
+    { q: "What were 'maroon' communities?", type: "mcq", options: ["Communities of free African-Americans in the USA","Communities of escaped enslaved people who set up free settlements in mountainous or forested areas","Mixed-race communities on Caribbean islands","Communities of poor white planters"], answer: 1, explain: "Maroons in Jamaica and elsewhere escaped plantations and established their own communities — fighting off British attempts to recapture them. Some signed peace treaties." },
+    { q: "Punishment for rebellion or escape attempts was designed to be as brutal as possible to deter others.", type: "tf", answer: true, explain: "Punishments were horrific by design — public mutilation and execution were meant to terrorise other enslaved people into submission." },
+    { q: "The Somersett Case (1772) ruled that enslaved people could not be forcibly removed from England.", type: "tf", answer: true, explain: "Lord Mansfield's ruling that enslaved James Somersett could not be forced to leave England was a landmark — though it didn't abolish slavery, it limited it on English soil." },
+  ],
+  // Quiz 7-2: Abolition & the British Empire
+  [
+    { q: "Who was William Wilberforce?", type: "mcq", options: ["A slave ship captain","An MP who led the parliamentary campaign to abolish the slave trade","A plantation owner who freed his enslaved workers","A Caribbean colonial governor"], answer: 1, explain: "Wilberforce introduced abolition bills in Parliament almost every year from 1787 until the Slave Trade Act passed in 1807." },
+    { q: "The Slave Trade Act of 1807 abolished:", type: "mcq", options: ["All slavery in the British Empire","The buying and selling of enslaved people by British subjects","The ownership of enslaved people in Britain","Slavery on all British ships"], answer: 1, explain: "The 1807 Act banned British participation in the transatlantic slave trade — but people already enslaved remained enslaved until the 1833 Slavery Abolition Act." },
+    { q: "The Slavery Abolition Act of 1833 immediately freed all enslaved people in the British Empire.", type: "tf", answer: false, explain: "Enslaved people had to complete an 'apprenticeship' period (working for their former enslavers for free) before full freedom — this ended in 1838." },
+    { q: "When slave owners were 'compensated' after 1833, who received the £20 million payment?", type: "mcq", options: ["Formerly enslaved people","Slave ship captains","Plantation owners and slave traders","The British government"], answer: 2, explain: "Plantation owners received £20 million (around £2 billion today) in compensation — formerly enslaved people received nothing. This debt wasn't fully paid off until 2015." },
+    { q: "The British Empire covered approximately one quarter of the world's land at its peak.", type: "tf", answer: true, explain: "At its peak in the 1920s, the British Empire covered about 25% of the Earth's land surface and governed around 500 million people." },
+    { q: "The East India Company played a key role in establishing British control of India.", type: "mcq", options: ["No — the British government controlled India directly from the start","Yes — it started as a trading company but gained political and military power in India over time","It was a Dutch company, not British","It only traded in silk and spices"], answer: 1, explain: "The EIC began trading in India in 1600 and gradually expanded its power — fighting battles, controlling territories, and governing huge populations before the Crown took over in 1858." },
+    { q: "The Indian Rebellion (1857) was caused partly by anger at British disrespect for Indian customs and religion.", type: "tf", answer: true, explain: "The trigger was a rumour that new rifle cartridges were greased with pig and cow fat — offensive to Muslim and Hindu soldiers. This was one cause among many wider grievances." },
+    { q: "What happened to the British Empire after WWII?", type: "mcq", options: ["Britain kept all its colonies","Britain's empire rapidly decolonised as colonies gained independence","The empire expanded to include new territories","The USA took over the empire"], answer: 1, explain: "Britain was economically weakened by WWII. Independence movements grew, and one by one colonies gained independence — India and Pakistan in 1947, many African countries in the 1960s." },
+    { q: "The legacy of slavery and empire is still debated and felt today in Britain.", type: "tf", answer: true, explain: "Debates about reparations, statues (e.g. Edward Colston), the Windrush generation, and wealth inequalities all connect to the legacies of the slave trade and empire." },
+    { q: "What was the abolitionist network the 'Sons of Africa'?", type: "mcq", options: ["A West African trading company","A group of African writers and formerly enslaved people in Britain who campaigned publicly against slavery","A British missionary society","A group of plantation owners who opposed abolition"], answer: 1, explain: "The Sons of Africa, including Equiano and Cugoano, were a network of Black abolitionists in Britain who wrote, spoke publicly and petitioned Parliament in the 1780s–90s." },
+  ],
+];
+
+// Quiz metadata
+const quizMeta = [
+  [
+    { topic: "Medieval England", name: "Quiz 1", title: "Quiz 1: Conquest & Feudalism", desc: "10 questions on the Norman Conquest and the feudal system" },
+    { topic: "Medieval England", name: "Quiz 2", title: "Quiz 2: Church & Government", desc: "10 questions on the Church, Becket and the Magna Carta" },
+    { topic: "Medieval England", name: "Quiz 3", title: "Quiz 3: Black Death & Revolt", desc: "10 questions on plague, its effects and the Peasants' Revolt" },
+  ],
+  [
+    { topic: "Industrial Revolution", name: "Quiz 1", title: "Quiz 1: Causes & Inventions", desc: "10 questions on why Britain industrialised and key inventors" },
+    { topic: "Industrial Revolution", name: "Quiz 2", title: "Quiz 2: Living & Working", desc: "10 questions on conditions in factories and cities" },
+    { topic: "Industrial Revolution", name: "Quiz 3", title: "Quiz 3: Reform & Railways", desc: "10 questions on Factory Acts, unions and railways" },
+  ],
+  [
+    { topic: "World War I", name: "Quiz 1", title: "Quiz 1: Causes of WWI", desc: "10 questions on MAIN causes and the outbreak of war" },
+    { topic: "World War I", name: "Quiz 2", title: "Quiz 2: Trenches & Battles", desc: "10 questions on trench warfare and key battles" },
+    { topic: "World War I", name: "Quiz 3", title: "Quiz 3: Home Front & Peace", desc: "10 questions on Britain at home and the Treaty of Versailles" },
+  ],
+  [
+    { topic: "World War II", name: "Quiz 1", title: "Quiz 1: Hitler & Outbreak", desc: "10 questions on the rise of Nazism and the start of WWII" },
+    { topic: "World War II", name: "Quiz 2", title: "Quiz 2: Blitz & Key Battles", desc: "10 questions on major battles and events of WWII" },
+    { topic: "World War II", name: "Quiz 3", title: "Quiz 3: Holocaust & Legacy", desc: "10 questions on the Holocaust and WWII's long-term impact" },
+  ],
+  [
+    { topic: "British Reformation", name: "Quiz 1", title: "Quiz 1: Henry VIII & Break with Rome", desc: "10 questions on Henry VIII and the split from the Catholic Church" },
+    { topic: "British Reformation", name: "Quiz 2", title: "Quiz 2: Tudor Religious Changes", desc: "10 questions on Edward VI, Mary I and religious upheaval" },
+    { topic: "British Reformation", name: "Quiz 3", title: "Quiz 3: Elizabeth's Settlement & Armada", desc: "10 questions on Elizabeth I's religious compromise and the Spanish Armada" },
+  ],
+  [
+    { topic: "French Revolution", name: "Quiz 1", title: "Quiz 1: Causes & 1789", desc: "10 questions on why revolution broke out and the key events of 1789" },
+    { topic: "French Revolution", name: "Quiz 2", title: "Quiz 2: The Republic & Reign of Terror", desc: "10 questions on the radical phase of the Revolution" },
+    { topic: "French Revolution", name: "Quiz 3", title: "Quiz 3: Napoleon & Legacy", desc: "10 questions on Napoleon's rise, rule and the Revolution's impact" },
+  ],
+  [
+    { topic: "English Civil War", name: "Quiz 1", title: "Quiz 1: Causes & the Cavaliers", desc: "10 questions on why civil war broke out and the opposing sides" },
+    { topic: "English Civil War", name: "Quiz 2", title: "Quiz 2: War, Execution & Cromwell", desc: "10 questions on the battles, the regicide and the Interregnum" },
+    { topic: "English Civil War", name: "Quiz 3", title: "Quiz 3: Restoration, Glorious Revolution & Rights", desc: "10 questions on constitutional monarchy and the Bill of Rights" },
+  ],
+  [
+    { topic: "Empire & Slave Trade", name: "Quiz 1", title: "Quiz 1: The Triangular Trade", desc: "10 questions on the mechanics and scale of the transatlantic slave trade" },
+    { topic: "Empire & Slave Trade", name: "Quiz 2", title: "Quiz 2: Life under Slavery & Resistance", desc: "10 questions on enslaved people's experiences and resistance" },
+    { topic: "Empire & Slave Trade", name: "Quiz 3", title: "Quiz 3: Abolition & the British Empire", desc: "10 questions on the abolitionist movement and imperial legacy" },
+  ],
+];
+
+// Comprehensive test (80 questions — 10 per topic, mix of types)
+const testQuestions = [
+  // Medieval (10)
+  { section: "⚔️ Medieval England", q: "What year did the Battle of Hastings take place?", type: "mcq", options: ["1050","1066","1086","1215"], answer: 1 },
+  { section: null, q: "What was the feudal system?", type: "written", model: "A hierarchy where the King owned all land and granted it down through barons and knights to peasants, in exchange for loyalty and military service." },
+  { section: null, q: "Serfs were free peasants who could move wherever they wanted.", type: "tf", answer: false },
+  { section: null, q: "The Domesday Book (1086) was used for what purpose?", type: "mcq", options: ["As a religious text","To record land ownership for taxation","To list all England's knights","To plan the Crusades"], answer: 1 },
+  { section: null, q: "Who was forced to sign the Magna Carta in 1215?", type: "mcq", options: ["King Richard I","King Henry II","King John","King Edward I"], answer: 2 },
+  { section: null, q: "Approximately what fraction of England's population died in the Black Death?", type: "mcq", options: ["1 in 10","1 in 5","1 in 3","1 in 2"], answer: 2 },
+  { section: null, q: "Who led the Peasants' Revolt in 1381?", type: "mcq", options: ["Simon de Montfort","Wat Tyler","Thomas Becket","John Wycliffe"], answer: 1 },
+  { section: null, q: "The Black Death weakened the feudal system by causing labour shortages.", type: "tf", answer: true },
+  { section: null, q: "In what building was Thomas Becket murdered?", type: "mcq", options: ["Westminster Abbey","York Minster","Canterbury Cathedral","The Tower of London"], answer: 2 },
+  { section: null, q: "Explain one long-term consequence of the Norman Conquest for England.", type: "written", model: "Possible answers: Introduction of the feudal system; French language influencing English; new ruling Norman aristocracy; castle-building across England; the Domesday Book." },
+  // Industrial (10)
+  { section: "🏭 Industrial Revolution", q: "Who improved the steam engine in 1769?", type: "mcq", options: ["George Stephenson","James Hargreaves","James Watt","Robert Owen"], answer: 2 },
+  { section: null, q: "What were 'back-to-back' houses?", type: "written", model: "Cheap terraced houses built for factory workers, sharing walls on three sides. They were dark, damp and overcrowded with no gardens or proper sanitation." },
+  { section: null, q: "The Factory Act 1833 banned all children from working in factories.", type: "tf", answer: false },
+  { section: null, q: "George Stephenson is famous for building the first successful steam locomotive.", type: "tf", answer: true },
+  { section: null, q: "The Enclosure Acts drove people off common land, increasing the factory workforce.", type: "tf", answer: true },
+  { section: null, q: "What was the purpose of the Great Exhibition of 1851?", type: "mcq", options: ["To celebrate the end of the Napoleonic Wars","To showcase British industrial achievement","To launch the NHS","To mark Queen Victoria's coronation"], answer: 1 },
+  { section: null, q: "What did the Mines Act 1842 ban?", type: "mcq", options: ["All underground mining","Children under 5 from any work","Women and children under 10 from working underground","Men from working night shifts"], answer: 2 },
+  { section: null, q: "Describe one reason why living conditions in industrial cities were so poor.", type: "written", model: "Rapid, unplanned urbanisation created overcrowded slums with no sewers or clean water. Disease (especially cholera) spread rapidly. Workers couldn't afford better housing." },
+  { section: null, q: "What were trade unions and what did they campaign for?", type: "written", model: "Organisations where workers joined together collectively to campaign for better pay, shorter working hours and safer conditions. They faced fierce opposition from employers and were initially banned." },
+  { section: null, q: "Railways helped the Industrial Revolution grow by connecting markets across Britain.", type: "tf", answer: true },
+  // WWI (10)
+  { section: "🌍 World War I", q: "What does MAIN stand for (causes of WWI)?", type: "mcq", options: ["Militarism, Alliances, Imperialism, Nationalism","Monarchy, Alliances, Industry, Nationalism","Militarism, Armies, Imperialism, Neutrality","Monarchy, Arms, Income, Nations"], answer: 0 },
+  { section: null, q: "Who was assassinated to spark WWI?", type: "mcq", options: ["Kaiser Wilhelm II","Tsar Nicholas II","Archduke Franz Ferdinand","Prime Minister Asquith"], answer: 2 },
+  { section: null, q: "The Schlieffen Plan involved Germany invading France through Belgium.", type: "tf", answer: true },
+  { section: null, q: "Conscription was introduced in Britain in:", type: "mcq", options: ["August 1914","January 1916","June 1915","March 1917"], answer: 1 },
+  { section: null, q: "What was shell shock?", type: "written", model: "A psychological condition (now called PTSD) caused by the trauma and stress of combat. Symptoms included tremors, nightmares, paralysis and mental breakdown. Many soldiers were not believed or accused of cowardice." },
+  { section: null, q: "The Battle of the Somme (1 July 1916) resulted in 57,000 British casualties on the first day.", type: "tf", answer: true },
+  { section: null, q: "The USA entered WWI in:", type: "mcq", options: ["1914","1915","1917","1918"], answer: 2 },
+  { section: null, q: "Explain why the Treaty of Versailles was controversial.", type: "written", model: "Germany was forced to accept war guilt (Clause 231), pay £6.6bn in reparations, lose territory and drastically reduce its military. This created mass resentment and economic hardship — conditions that helped Hitler rise to power and contributed to WWII." },
+  { section: null, q: "Trench foot was a condition caused by cold, wet conditions in the trenches.", type: "tf", answer: true },
+  { section: null, q: "Women gained the vote in 1918 partly as recognition of their contribution to the war effort.", type: "tf", answer: true },
+  // WWII (10)
+  { section: "✈️ World War II", q: "When did WWII begin?", type: "mcq", options: ["1 September 1938","3 September 1939","1 September 1939","1 October 1939"], answer: 2 },
+  { section: null, q: "Hitler became Chancellor of Germany in:", type: "mcq", options: ["1929","1931","1933","1935"], answer: 2 },
+  { section: null, q: "Appeasement was Britain's policy of standing firm against Hitler's demands.", type: "tf", answer: false },
+  { section: null, q: "What happened at Dunkirk (May–June 1940)?", type: "written", model: "Over 330,000 Allied troops were trapped on the beaches of Dunkirk, France, after the Fall of France. A large fleet of naval and civilian vessels evacuated them across the English Channel. It was a military defeat but portrayed as a heroic rescue." },
+  { section: null, q: "The Battle of Britain was fought between the RAF and the Luftwaffe in 1940.", type: "tf", answer: true },
+  { section: null, q: "D-Day was on:", type: "mcq", options: ["6 June 1943","6 June 1944","1 June 1944","8 May 1945"], answer: 1 },
+  { section: null, q: "Approximately how many Jewish people were killed in the Holocaust?", type: "mcq", options: ["1 million","3 million","6 million","10 million"], answer: 2 },
+  { section: null, q: "Explain why the Holocaust is considered one of history's worst crimes.", type: "written", model: "It was a systematic, state-organised genocide — 6 million Jews killed alongside millions of others. The industrial scale of the killing (gas chambers, extermination camps) and the use of government power to target civilians make it uniquely horrifying. The Nuremberg Trials later established it as a crime against humanity." },
+  { section: null, q: "Japan surrendered after atomic bombs were dropped on Hiroshima and Nagasaki in August 1945.", type: "tf", answer: true },
+  { section: null, q: "The United Nations was founded after WWII to help prevent future conflicts.", type: "tf", answer: true },
+  // British Reformation (10)
+  { section: "✝️ British Reformation", q: "What was the Act of Supremacy (1534)?", type: "mcq", options: ["A ban on all Catholic practices","A law making the King Supreme Head of the Church of England","A treaty with the Pope","A law granting Parliament control of the Church"], answer: 1 },
+  { section: null, q: "Why did Henry VIII want to break from the Catholic Church?", type: "written", model: "Pope Clement VII refused to annul Henry's marriage to Catherine of Aragon. Henry needed a new wife to produce a male heir. He broke from Rome, making himself head of a new Church of England so he could grant his own annulment." },
+  { section: null, q: "The Dissolution of the Monasteries between 1536 and 1541 allowed Henry VIII to seize Church wealth.", type: "tf", answer: true },
+  { section: null, q: "Mary I earned the nickname 'Bloody Mary' because she:", type: "mcq", options: ["Was cruel to servants","Burned nearly 300 Protestants at the stake","Invaded France","Started a civil war"], answer: 1 },
+  { section: null, q: "Edward VI moved England in which religious direction?", type: "mcq", options: ["Back to Catholicism","More strongly Protestant","He kept Henry's settlement unchanged","Towards Orthodox Christianity"], answer: 1 },
+  { section: null, q: "Explain what the Elizabethan Religious Settlement was.", type: "written", model: "Elizabeth I created a moderate Protestant Church of England that tried to satisfy most English people. It kept some Catholic-style ceremony but was Protestant in doctrine. The monarch was 'Supreme Governor' (not 'Supreme Head'). It aimed for a broad compromise." },
+  { section: null, q: "The Spanish Armada (1588) was sent by Philip II partly because Elizabeth executed Mary Queen of Scots.", type: "tf", answer: true },
+  { section: null, q: "How many wives did Henry VIII have?", type: "mcq", options: ["4","5","6","7"], answer: 2 },
+  { section: null, q: "Thomas More was executed for refusing to accept Henry VIII as head of the Church.", type: "tf", answer: true },
+  { section: null, q: "What religious changes did Edward VI make?", type: "written", model: "Edward's Protestant advisers introduced the Book of Common Prayer (1549) in English, replacing Latin services. Church decoration was removed, priests could marry, and doctrine became more Protestant. These changes alarmed Catholics." },
+  // French Revolution (10)
+  { section: "🥐 French Revolution", q: "What was the Third Estate in France?", type: "mcq", options: ["The King and royal family","The clergy","The nobility","Commoners — about 97% of the French population"], answer: 3 },
+  { section: null, q: "When was the Bastille stormed?", type: "mcq", options: ["14 June 1789","14 July 1789","4 August 1789","21 January 1793"], answer: 1 },
+  { section: null, q: "The Tennis Court Oath was a vow by Third Estate representatives to write a new constitution.", type: "tf", answer: true },
+  { section: null, q: "Explain three causes of the French Revolution.", type: "written", model: "1. Financial: France was bankrupt after wars; heavy taxes fell on commoners while nobles were exempt. 2. Social: The Ancien Regime was deeply unequal. 3. Enlightenment ideas: thinkers like Rousseau argued for liberty and popular sovereignty. 4. Food crisis: bad harvests in 1788 caused bread prices to soar." },
+  { section: null, q: "The Reign of Terror (1793–94) executed approximately 40,000 people accused of counter-revolutionary activity.", type: "tf", answer: true },
+  { section: null, q: "Who led the Committee of Public Safety during the Terror?", type: "mcq", options: ["Napoleon Bonaparte","Louis XVI","Maximilien Robespierre","Marie Antoinette"], answer: 2 },
+  { section: null, q: "When was Louis XVI executed?", type: "mcq", options: ["14 July 1789","10 August 1792","21 January 1793","9 Thermidor 1794"], answer: 2 },
+  { section: null, q: "Napoleon seized power in France in 1799 via a coup d'état.", type: "tf", answer: true },
+  { section: null, q: "Napoleon's invasion of Russia (1812) was a major turning point — his Grand Army was destroyed.", type: "tf", answer: true },
+  { section: null, q: "What was Napoleon's legacy in Europe?", type: "written", model: "Napoleon spread the Napoleonic Code (uniform laws, equality before the law) across Europe. He redrew the map of Europe. His defeats led to the Congress of Vienna. His promotion of nationalism and liberty inspired later revolutions. He was finally defeated at Waterloo (1815)." },
+  // English Civil War (10)
+  { section: "⚔️ English Civil War", q: "What is the 'Divine Right of Kings'?", type: "mcq", options: ["The right of Parliament to choose the King","The belief that Kings are chosen by God and cannot be questioned","A type of parliamentary law","The King's right to raise taxes"], answer: 1 },
+  { section: null, q: "Charles I raised Ship Money across all of England without Parliament's consent.", type: "tf", answer: true },
+  { section: null, q: "What were Cavaliers and Roundheads?", type: "written", model: "Cavaliers were supporters of King Charles I (Royalists) — typically noblemen, Catholics and Anglicans from northern and western England. Roundheads were supporters of Parliament — typically Puritans, merchants and tradespeople from London and the south-east." },
+  { section: null, q: "The Battle of Naseby (1645) effectively ended the first Civil War because:", type: "mcq", options: ["Charles was captured there","Parliament's New Model Army destroyed the main Royalist field army","Charles surrendered there","Scotland invaded England"], answer: 1 },
+  { section: null, q: "Charles I was executed on 30 January 1649.", type: "tf", answer: true },
+  { section: null, q: "Oliver Cromwell's title as ruler of England from 1653 was:", type: "mcq", options: ["King","Emperor","Lord Protector","President"], answer: 2 },
+  { section: null, q: "What was the Glorious Revolution of 1688?", type: "mcq", options: ["A violent civil war","The peaceful replacement of James II by William III and Mary II, secured by Parliament","A French invasion of England","A Scottish rebellion"], answer: 1 },
+  { section: null, q: "The Bill of Rights (1689) established that Parliament was supreme over the monarch.", type: "tf", answer: true },
+  { section: null, q: "What was the long-term constitutional significance of the Civil War?", type: "written", model: "The Civil War established that Parliament, not the monarch, was ultimately sovereign in England. Charles I's execution showed no king was above the law. The Glorious Revolution and Bill of Rights 1689 cemented parliamentary sovereignty." },
+  { section: null, q: "John Locke argued that people have the right to remove rulers who abuse power.", type: "tf", answer: true },
+  // Empire & Slave Trade (10)
+  { section: "🌍 Empire & Slave Trade", q: "What was the Triangular Trade?", type: "mcq", options: ["Trade between Britain, France and Spain","A three-stage trade: manufactured goods to Africa, enslaved Africans to Americas, colonial goods to Britain","A system of trading three goods","Trade between three Caribbean islands"], answer: 1 },
+  { section: null, q: "Approximately how many Africans were transported in the transatlantic slave trade?", type: "mcq", options: ["500,000","2 million","12 million","50 million"], answer: 2 },
+  { section: null, q: "The 'Middle Passage' was the journey of enslaved Africans from Africa to the Americas.", type: "tf", answer: true },
+  { section: null, q: "Describe the conditions on a Middle Passage slave ship.", type: "written", model: "Enslaved people were chained below decks with minimal space, food or fresh air. Disease spread rapidly. Mortality rates were very high. Some people were thrown overboard when sick, as in the Zong Massacre (1781)." },
+  { section: null, q: "Who was Olaudah Equiano?", type: "mcq", options: ["A British slave-trade captain","A West African king","A formerly enslaved African who wrote a bestselling autobiography","A Jamaican plantation owner"], answer: 2 },
+  { section: null, q: "Enslaved people always accepted their enslavement without resistance.", type: "tf", answer: false },
+  { section: null, q: "The Slave Trade Act of 1807 abolished the buying and selling of enslaved people by British subjects.", type: "tf", answer: true },
+  { section: null, q: "William Wilberforce was the MP who led the parliamentary campaign to abolish the slave trade.", type: "tf", answer: true },
+  { section: null, q: "When the 1833 Slavery Abolition Act passed, who received the £20 million compensation?", type: "mcq", options: ["Formerly enslaved people","Plantation owners","The British government","Abolitionist campaigners"], answer: 1 },
+  { section: null, q: "Explain the legacy of the British slave trade and empire.", type: "written", model: "The slave trade caused immense suffering for millions. British cities and the Industrial Revolution were partly funded by slave trade profits. Plantation owners received compensation in 1833 — enslaved people received nothing. The British Empire, at its peak covering 25% of the world, has a complex legacy of exploitation still debated today." },
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let currentQuizT = 0, currentQuizQ = 0;
+let currentQIdx = 0;
+let quizAnswers = [];
+let quizScores = {};
+let quizCompleted = {};
+let activeQuiz = null;
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function showHome() { showScreen('screen-home'); clearActiveQuizBtn(); }
+
+function toggleTopic(idx) {
+  const tg = document.getElementById(`tg${idx}`);
+  tg.classList.toggle('open');
+}
+
+function clearActiveQuizBtn() {
+  document.querySelectorAll('.quiz-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('test-nav-btn').classList.remove('active');
+}
+
+// ============================================================
+// QUIZ
+// ============================================================
+function getQuestion(t, q, idx) {
+  return quizData[t * 3 + q][idx];
+}
+
+function loadQuiz(topicIdx, quizIdx) {
+  clearActiveQuizBtn();
+  const btn = document.getElementById(`qbtn-${topicIdx}-${quizIdx}`);
+  if (btn) btn.classList.add('active');
+
+  const tg = document.getElementById(`tg${topicIdx}`);
+  if (!tg.classList.contains('open')) tg.classList.add('open');
+
+  currentQuizT = topicIdx;
+  currentQuizQ = quizIdx;
+  activeQuiz = { t: topicIdx, q: quizIdx };
+  currentQIdx = 0;
+  quizAnswers = new Array(10).fill(null);
+
+  const meta = quizMeta[topicIdx][quizIdx];
+  document.getElementById('quiz-topic-tag').textContent = meta.topic;
+  document.getElementById('quiz-name-tag').textContent = meta.name;
+  document.getElementById('quiz-title').textContent = meta.title;
+  document.getElementById('quiz-desc').textContent = meta.desc;
+
+  showScreen('screen-quiz');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const qs = getQuestion(currentQuizT, currentQuizQ, currentQIdx);
+  const total = 10;
+
+  document.getElementById('q-num').textContent = `Question ${currentQIdx + 1} of ${total}`;
+  document.getElementById('q-text').textContent = qs.q;
+  document.getElementById('quiz-progress').style.width = `${(currentQIdx / total) * 100}%`;
+  document.getElementById('quiz-progress-label').textContent = `${currentQIdx} / ${total}`;
+
+  const fb = document.getElementById('q-feedback');
+  fb.className = 'feedback-box';
+  fb.innerHTML = '';
+
+  const optEl = document.getElementById('q-options');
+  optEl.innerHTML = '';
+  document.getElementById('quiz-next-btn').style.display = 'none';
+
+  if (qs.type === 'mcq') {
+    const div = document.createElement('div');
+    div.className = 'options';
+    const letters = ['A', 'B', 'C', 'D'];
+    qs.options.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.innerHTML = `<span class="opt-letter">${letters[i]}</span>${opt}`;
+      btn.onclick = () => answerMCQ(i, qs.answer, qs.explain, btn, div);
+      div.appendChild(btn);
+    });
+    optEl.appendChild(div);
+  } else if (qs.type === 'tf') {
+    const row = document.createElement('div');
+    row.className = 'tf-row';
+    ['✅ True', '❌ False'].forEach((label, i) => {
+      const btn = document.createElement('button');
+      btn.className = `tf-btn ${i === 0 ? 'true-btn' : 'false-btn'}`;
+      btn.textContent = label;
+      btn.onclick = () => answerTF(i === 0, qs.answer, qs.explain, btn, row);
+      row.appendChild(btn);
+    });
+    optEl.appendChild(row);
+  } else {
+    const ta = document.createElement('textarea');
+    ta.className = 'written-input';
+    ta.placeholder = 'Write your answer here…';
+    ta.rows = 4;
+    optEl.appendChild(ta);
+    const submitBtn = document.createElement('button');
+    submitBtn.className = 'submit-written-btn';
+    submitBtn.textContent = 'Check Model Answer';
+    submitBtn.onclick = () => answerWritten(ta.value, qs.model);
+    optEl.appendChild(submitBtn);
+  }
+}
+
+function answerMCQ(chosen, correct, explain, btn, container) {
+  container.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+  const isCorrect = chosen === correct;
+  btn.classList.add(isCorrect ? 'correct' : 'wrong');
+  container.querySelectorAll('.option-btn')[correct].classList.add('correct');
+  quizAnswers[currentQIdx] = chosen;
+  showFeedback(isCorrect, explain);
+}
+
+function answerTF(chosen, correct, explain, btn, row) {
+  row.querySelectorAll('.tf-btn').forEach(b => b.disabled = true);
+  const isCorrect = chosen === correct;
+  btn.classList.add(isCorrect ? 'correct' : 'wrong');
+  quizAnswers[currentQIdx] = chosen;
+  showFeedback(isCorrect, explain);
+}
+
+function answerWritten(userText, model) {
+  quizAnswers[currentQIdx] = userText;
+  const fb = document.getElementById('q-feedback');
+  fb.className = 'feedback-box written-fb';
+  fb.innerHTML = `<strong>Model answer:</strong><br>${model}`;
+  document.getElementById('quiz-next-btn').style.display = 'block';
+  document.querySelectorAll('.submit-written-btn').forEach(b => b.disabled = true);
+}
+
+function showFeedback(isCorrect, explain) {
+  const fb = document.getElementById('q-feedback');
+  fb.className = `feedback-box ${isCorrect ? 'correct-fb' : 'wrong-fb'}`;
+  fb.innerHTML = `<strong>${isCorrect ? '✅ Correct!' : '❌ Not quite.'}</strong> ${explain || ''}`;
+  document.getElementById('quiz-next-btn').style.display = 'block';
+}
+
+function nextQuestion() {
+  currentQIdx++;
+  if (currentQIdx >= 10) {
+    showQuizResult();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showQuizResult() {
+  let correct = 0;
+  const data = quizData[currentQuizT * 3 + currentQuizQ];
+  data.forEach((q, i) => {
+    if (q.type !== 'written' && quizAnswers[i] !== null) {
+      if (quizAnswers[i] === q.answer) correct++;
+    }
+  });
+
+  const pct = Math.round((correct / 10) * 100);
+  document.getElementById('result-score').textContent = `${pct}%`;
+  document.getElementById('result-fraction').textContent = `${correct} / 10 correct`;
+
+  let emoji = '😕', msg = 'Keep going — practise the ones you missed!';
+  if (pct >= 90) { emoji = '🌟'; msg = 'Brilliant work, Arjun! Nearly perfect!'; }
+  else if (pct >= 70) { emoji = '🎉'; msg = 'Great effort! Review the ones you missed.'; }
+  else if (pct >= 50) { emoji = '👏'; msg = 'Decent start — go over the revision notes and try again.'; }
+
+  document.getElementById('result-emoji').textContent = emoji;
+  document.getElementById('result-msg').textContent = msg;
+
+  const qid = `${currentQuizT}-${currentQuizQ}`;
+  quizScores[qid] = `${correct}/10`;
+  quizCompleted[qid] = true;
+  const qs = document.getElementById(`qs-${qid}`);
+  if (qs) { qs.textContent = `${correct}/10`; qs.className = 'quiz-status done'; }
+  persistProgress();
+
+  const list = document.getElementById('review-list');
+  list.innerHTML = '';
+  data.forEach((q, i) => {
+    const isCorrect = q.type !== 'written' && quizAnswers[i] === q.answer;
+    const div = document.createElement('div');
+    div.className = `review-item ${q.type === 'written' ? 'correct' : (isCorrect ? 'correct' : 'incorrect')}`;
+    const letters = ['A','B','C','D'];
+    const yourAns = q.type === 'tf'
+      ? (quizAnswers[i] === true ? 'True' : quizAnswers[i] === false ? 'False' : 'Not answered')
+      : (q.type === 'mcq' && quizAnswers[i] !== null ? `${letters[quizAnswers[i]]}: ${q.options[quizAnswers[i]]}` : 'Not answered');
+    const modelAns = q.type === 'tf'
+      ? (q.answer ? 'True' : 'False')
+      : (q.type === 'mcq' ? `${letters[q.answer]}: ${q.options[q.answer]}` : '');
+    div.innerHTML = `<div class="review-q">${q.q}</div>
+      <div class="review-answer">
+        <span class="your">Your answer: <strong>${yourAns}</strong></span>
+        ${q.type !== 'written' ? `<span class="model">✓ Correct: ${modelAns}</span>` : ''}
+      </div>`;
+    list.appendChild(div);
+  });
+
+  updateScoreSummary();
+  document.getElementById('quiz-retry-nudge').style.display = pct < 80 ? 'block' : 'none';
+  document.getElementById('quiz-pass-actions').style.display = pct < 80 ? 'none' : 'flex';
+  showScreen('screen-result');
+}
+
+function retryQuiz() {
+  loadQuiz(currentQuizT, currentQuizQ);
+}
+
+function updateScoreSummary() {
+  if (Object.keys(quizScores).length === 0) return;
+  const summary = document.getElementById('score-summary');
+  const rows = document.getElementById('score-summary-rows');
+  const labels = [
+    ['0-0','Med: Conquest'],['0-1','Med: Church'],['0-2','Med: Black Death'],
+    ['1-0','Ind: Inventions'],['1-1','Ind: Conditions'],['1-2','Ind: Reform'],
+    ['2-0','WWI: Causes'],['2-1','WWI: Trenches'],['2-2','WWI: Home Front'],
+    ['3-0','WWII: Hitler'],['3-1','WWII: Battles'],['3-2','WWII: Holocaust'],
+    ['4-0','Ref: Henry VIII'],['4-1','Ref: Tudor Changes'],['4-2','Ref: Elizabeth'],
+    ['5-0','FR: Causes'],['5-1','FR: Terror'],['5-2','FR: Napoleon'],
+    ['6-0','CW: Causes'],['6-1','CW: Cromwell'],['6-2','CW: Restoration'],
+    ['7-0','Emp: Trade'],['7-1','Emp: Slavery'],['7-2','Emp: Abolition'],
+  ];
+  rows.innerHTML = labels.filter(([id]) => quizScores[id]).map(([id, label]) =>
+    `<div class="score-row"><span>${label}</span><span class="sc">${quizScores[id]}</span></div>`
+  ).join('');
+  summary.style.display = 'block';
+}
+
+// ============================================================
+// TEST
+// ============================================================
+function showTest() {
+  clearActiveQuizBtn();
+  document.getElementById('test-nav-btn').classList.add('active');
+  buildTest();
+  showScreen('screen-test');
+}
+
+let testUserAnswers = {};
+
+function buildTest() {
+  const body = document.getElementById('test-body');
+  body.innerHTML = '';
+  testUserAnswers = {};
+  const letters = ['A','B','C','D'];
+  let qNum = 0;
+
+  testQuestions.forEach((tq, i) => {
+    if (tq.section) {
+      const sec = document.createElement('div');
+      sec.className = 'test-section-title';
+      sec.innerHTML = `${tq.section} <span>Questions ${qNum + 1}–${qNum + 10}</span>`;
+      body.appendChild(sec);
+    }
+    qNum++;
+
+    const card = document.createElement('div');
+    card.className = 'test-q-card';
+    card.innerHTML = `<div class="test-q-num">Q${qNum}</div><div class="test-q-text">${tq.q}</div>`;
+
+    if (tq.type === 'mcq') {
+      const opts = document.createElement('div');
+      opts.className = 'test-options';
+      tq.options.forEach((opt, j) => {
+        const btn = document.createElement('button');
+        btn.className = 'test-opt-btn';
+        btn.innerHTML = `<span class="opt-letter">${letters[j]}</span>${opt}`;
+        btn.dataset.qi = i;
+        btn.dataset.ai = j;
+        btn.onclick = function() {
+          opts.querySelectorAll('.test-opt-btn').forEach(b => b.classList.remove('selected'));
+          this.classList.add('selected');
+          testUserAnswers[i] = j;
+        };
+        opts.appendChild(btn);
+      });
+      card.appendChild(opts);
+    } else if (tq.type === 'tf') {
+      const row = document.createElement('div');
+      row.className = 'test-tf-row';
+      ['True','False'].forEach((label, j) => {
+        const btn = document.createElement('button');
+        btn.className = 'test-tf-btn';
+        btn.textContent = label;
+        btn.onclick = function() {
+          row.querySelectorAll('.test-tf-btn').forEach(b => b.classList.remove('selected'));
+          this.classList.add('selected');
+          testUserAnswers[i] = j === 0;
+        };
+        row.appendChild(btn);
+      });
+      card.appendChild(row);
+    } else {
+      const ta = document.createElement('textarea');
+      ta.className = 'test-written-input';
+      ta.placeholder = 'Write your answer here…';
+      ta.rows = 3;
+      ta.oninput = function() { testUserAnswers[i] = this.value; };
+      card.appendChild(ta);
+    }
+
+    body.appendChild(card);
+  });
+}
+
+function submitTest() {
+  let correct = 0, total = 0;
+  const sectionScores = {};
+
+  testQuestions.forEach((tq, i) => {
+    if (tq.section) {
+      sectionScores[tq.section] = { correct: 0, total: 0 };
+    }
+    const currentSection = [...Object.keys(sectionScores)].pop();
+    if (tq.type !== 'written') {
+      total++;
+      sectionScores[currentSection].total++;
+      if (testUserAnswers[i] === tq.answer) {
+        correct++;
+        sectionScores[currentSection].correct++;
+      }
+    }
+  });
+
+  const pct = Math.round((correct / total) * 100);
+  const writtenCount = testQuestions.filter(q => q.type === 'written').length;
+
+  let emoji, msg;
+  if (pct >= 90)      { emoji = '🌟'; msg = 'Outstanding, Arjun! An exceptional result.'; }
+  else if (pct >= 80) { emoji = '🎉'; msg = 'Really well done — a strong performance.'; }
+  else if (pct >= 60) { emoji = '👍'; msg = 'Good effort. Review the sections you missed.'; }
+  else                { emoji = '📖'; msg = "Keep revising — you'll improve with practice."; }
+
+  document.getElementById('test-result-emoji').textContent = emoji;
+  document.getElementById('test-result-score').textContent = pct + '%';
+  document.getElementById('test-result-msg').textContent = msg;
+  document.getElementById('tr-correct').textContent = correct + '/' + total;
+  document.getElementById('tr-written').textContent = writtenCount + ' (self-mark)';
+
+  quizScores['test'] = correct + '/' + total;
+  const qsTest = document.getElementById('qs-test');
+  if (qsTest) { qsTest.textContent = correct + '/' + total; qsTest.className = 'quiz-status done'; }
+  persistProgress();
+  updateScoreSummary();
+
+  document.getElementById('test-retry-nudge').style.display = pct < 80 ? 'block' : 'none';
+  document.getElementById('test-pass-actions').style.display = pct < 80 ? 'none' : 'flex';
+
+  // Build review
+  const body = document.getElementById('test-review-body');
+  body.innerHTML = '';
+  testQuestions.forEach((tq, i) => {
+    if (tq.section) {
+      const hdr = document.createElement('h3');
+      hdr.style.cssText = 'margin:24px 0 10px;font-size:1rem;font-weight:800;color:var(--dark)';
+      hdr.textContent = tq.section;
+      body.appendChild(hdr);
+    }
+    const card = document.createElement('div');
+    const isWritten = tq.type === 'written';
+    const isCorrect = !isWritten && testUserAnswers[i] === tq.answer;
+    card.className = 'review-item ' + (isWritten ? 'correct' : (isCorrect ? 'correct' : 'incorrect'));
+    const letters = ['A','B','C','D'];
+    let yourAns = 'Not answered';
+    let modelAns = '';
+    if (tq.type === 'mcq' && testUserAnswers[i] !== undefined) {
+      yourAns = letters[testUserAnswers[i]] + ': ' + tq.options[testUserAnswers[i]];
+      modelAns = letters[tq.answer] + ': ' + tq.options[tq.answer];
+    } else if (tq.type === 'tf') {
+      yourAns = testUserAnswers[i] === true ? 'True' : testUserAnswers[i] === false ? 'False' : 'Not answered';
+      modelAns = tq.answer ? 'True' : 'False';
+    } else if (tq.type === 'written') {
+      yourAns = testUserAnswers[i] || '(no answer written)';
+    }
+    card.innerHTML = '<div class="review-q">' + tq.q + '</div>'
+      + '<div class="review-answer">'
+      + '<span class="your">Your answer: <strong>' + yourAns + '</strong></span>'
+      + (isWritten
+          ? '<span class="model">\u{1F4DD} Model answer: ' + tq.model + '</span>'
+          : (!isCorrect ? '<span class="model">\u2713 Correct: ' + modelAns + '</span>' : ''))
+      + '</div>';
+    body.appendChild(card);
+  });
+
+  showScreen('screen-test-result');
+}
+
+function retryTest() {
+  buildTest();
+  showScreen('screen-test');
+}
+
+
+// ---- Progress persistence (test/quiz completion + scores) ----
+const PROG_KEY = 'ateam_progress_arjun_history';
+function loadProg(){ try{ return JSON.parse(localStorage.getItem(PROG_KEY)||'{}'); }catch(e){ return {}; } }
+function saveProg(p){ try{ localStorage.setItem(PROG_KEY, JSON.stringify(p)); }catch(e){} }
+function persistProgress(){
+  const p = { quizScores: quizScores };
+  if (typeof quizCompleted !== 'undefined') p.quizCompleted = quizCompleted;
+  saveProg(p);
+}
+function restoreProgress(){
+  const p = loadProg();
+  if (p.quizScores) Object.assign(quizScores, p.quizScores);
+  if (p.quizCompleted) Object.assign(quizCompleted, p.quizCompleted);
+  Object.keys(quizScores).forEach(qid => {
+    const qs = document.getElementById('qs-' + qid);
+    if (qs) { qs.textContent = quizScores[qid]; qs.className = 'quiz-status done'; }
+  });
+  updateScoreSummary();
+}
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  restoreProgress();
+  document.getElementById('tg0').classList.add('open');
+  loadQuiz(0, 0);
+});
+</script></body>
+</html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
